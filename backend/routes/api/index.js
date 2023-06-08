@@ -1,8 +1,11 @@
 const router = require('express').Router();
 
-router.post('/test', function (req, res) {
-    console.log("hi")
-    res.json({ requestBody: req.body });
-});
+const { restoreUser } = require('../../utils/auth.js');
+
+
+
+// any routes that make it to this router will be  middleware
+router.use(restoreUser);
+
 
 module.exports = router;
