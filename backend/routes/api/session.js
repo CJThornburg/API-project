@@ -6,6 +6,8 @@ const { setTokenCookie, restoreUser } = require('../../utils/auth');
 const { User } = require('../../db/models')
 const router = express.Router();
 
+
+// login user
 router.post('/', async (req, res, next) => {
     //credential will be email or username
     const { credential, password } = req.body;
@@ -50,6 +52,8 @@ router.post('/', async (req, res, next) => {
 
 
 
+
+// log out
 router.delete('/', (_req, res) => {
     res.clearCookie('token');
     return res.json({ message: 'success' });
@@ -57,9 +61,21 @@ router.delete('/', (_req, res) => {
 );
 
 
-
-
-
+// api/session get
+router.get('/', (req, res) => {
+    const { user } = req;
+    if (user) {
+        const safeUser = {
+            id: user.id,
+            email: user.email,
+            username: user.username,
+        };
+        return res.json({
+            user: safeUser
+        });
+    } else return res.json({ user: null });
+}
+);
 
 
 
