@@ -5,6 +5,8 @@ const { secret, expiresIn } = jwtConfig; //deconstructs secret and expiresIn fro
 const { User } = require('../db/models'); //
 
 
+
+
 // Sends a JWT Cookie:
 const setTokenCookie = (res, user) => {
     // set the payload based on the query results by id,
@@ -60,7 +62,7 @@ const restoreUser = (req, res, next) => {
             return next();
         }
 
-        if (!req.user) res.clearCookie('token'); //if id no longer exist, 
+        if (!req.user) res.clearCookie('token'); //if id no longer exist,
         console.log(req.user)
         return next();
     });

@@ -5,10 +5,25 @@ const bcrypt = require('bcryptjs');
 const { setTokenCookie, restoreUser } = require('../../utils/auth');
 const { User } = require('../../db/models')
 const router = express.Router();
+const { check } = require('express-validator');
+const { handleValidationErrors } = require('../../utils/validation');
+
+
+// middleware to check body if it even holds the right params needed for the route
+const validateLogin = [
+    check('credential')
+        .exists({ checkFalsy: true })
+        .notEmpty()
+        .withMessage('Please provide a valid email or username.'),
+    check('password')
+        .exists({ checkFalsy: true })
+        .withMessage('Please provide a password.'),
+    handleValidationErrors
+];
 
 
 // login user
-router.post('/', async (req, res, next) => {
+router.post('/', validateLogin, async (req, res, next) => {
     //credential will be email or username
     const { credential, password } = req.body;
 
