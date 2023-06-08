@@ -13,29 +13,29 @@ router.post('/', async (req, res, next) => {
     // unscoped removed the default scope options
     // an return if username matched cred or email matches cred
     const user = await User.unscoped().findOne({
-      where: {
-        [Op.or]: {
-          username: credential,
-          email: credential
+        where: {
+            [Op.or]: {
+                username: credential,
+                email: credential
+            }
         }
-      }
     });
 
     // if user was not found or if bcrypt hashes password and does not match throw an error
     if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
-      const err = new Error('Login failed');
-      err.status = 401;
-      err.title = 'Login failed';
-      err.errors = { credential: 'The provided credentials were invalid.' };
-      return next(err);
+        const err = new Error('Login failed');
+        err.status = 401;
+        err.title = 'Login failed';
+        err.errors = { credential: 'The provided credentials were invalid.' };
+        return next(err);
     }
 
     // gets to this point know the user should be could so save user objet
     //! but with only the id, email and username
     const safeUser = {
-      id: user.id,
-      email: user.email,
-      username: user.username,
+        id: user.id,
+        email: user.email,
+        username: user.username,
     };
 
     // pass in res and safeUser "obj" so token can be added to res, remember this just has id, email and username
@@ -43,14 +43,18 @@ router.post('/', async (req, res, next) => {
 
     // return safeuser objet
     return res.json({
-      user: safeUser
+        user: safeUser
     });
-  }
+}
 );
 
 
 
-
+router.delete('/', (_req, res) => {
+    res.clearCookie('token');
+    return res.json({ message: 'success' });
+}
+);
 
 
 
