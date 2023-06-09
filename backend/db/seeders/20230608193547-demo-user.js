@@ -8,24 +8,32 @@ if (process.env.NODE_ENV === 'production') {
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    
+  async up(queryInterface, Sequelize) {
+
     options.tableName = 'Users';
     return queryInterface.bulkInsert(options, [
       {
         email: 'demo@user.io',
         username: 'Demo-lition',
-        hashedPassword: bcrypt.hashSync('password')
+        hashedPassword: bcrypt.hashSync('password'),
+        firstName: 'chris',
+        lastName: "Thornburg"
       },
       {
         email: 'user1@user.io',
         username: 'FakeUser1',
         hashedPassword: bcrypt.hashSync('password2')
+        ,
+        firstName: 'Jenny',
+        lastName: "Lee"
       },
       {
         email: 'user2@user.io',
         username: 'FakeUser2',
         hashedPassword: bcrypt.hashSync('password3')
+        ,
+        firstName: 'Seabass',
+        lastName: "Minh"
       }
     ], {});
   },

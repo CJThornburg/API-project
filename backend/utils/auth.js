@@ -63,7 +63,7 @@ const restoreUser = (req, res, next) => {
         }
 
         if (!req.user) res.clearCookie('token'); //if id no longer exist,
-        console.log(req.user)
+       
         return next();
     });
 };
