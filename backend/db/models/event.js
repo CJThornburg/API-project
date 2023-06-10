@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     description: DataTypes.TEXT,
     type: {
-      type: DataTypes.ENUM,
+      type: DataTypes.ENUM("fancy", "casual"),
       allowNull: false
     },
     capacity: DataTypes.INTEGER,
