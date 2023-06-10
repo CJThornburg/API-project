@@ -3,4 +3,5 @@ node_modules
 build
 .DS_Store
 *.db
-notes.txt
+/notes
+/notes/rawapi.txt
