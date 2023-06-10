@@ -1,4 +1,9 @@
 'use strict';
+let options = {};
+
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA
+}
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -16,7 +21,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       status: {
-        type: Sequelize.ENUM("present","absent"),
+        type: Sequelize.ENUM("present", "absent"),
         allowNull: false
       },
       createdAt: {
@@ -27,9 +32,11 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    }, options);
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Attendances');
+    options.tableName = 'Attendances';
+    await queryInterface.dropTable(options);
+
   }
 };
