@@ -21,7 +21,7 @@ module.exports = {
         allowNull: false,
       },
       type: {
-        type: Sequelize.ENUM,
+        type: Sequelize.ENUM("1", "two"),
         allowNull: false,
       },
       private: {
