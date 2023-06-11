@@ -15,7 +15,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       organizerId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Users'
+        },
+        //when the oganizer deletes his account, this group should also be deleted
+        onDelete: 'CASCADE'
       },
       name: {
         type: Sequelize.STRING,

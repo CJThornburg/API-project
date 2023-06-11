@@ -15,7 +15,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       groupId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+          references: {
+           model: 'Groups'
+         },
+        //  if group is deleted, all associated venues should be deleted
+          onDelete: 'CASCADE'
       },
       address: {
         type: Sequelize.STRING

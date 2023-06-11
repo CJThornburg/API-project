@@ -15,7 +15,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       groupId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Groups'
+        },
+        //  if group is deleted all associated groupImages should be deleted
+        onDelete: 'CASCADE'
       },
       url: {
         type: Sequelize.STRING
@@ -40,7 +45,7 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     options.tableName = 'GroupImages';
     await queryInterface.dropTable(options);
-  
+
 
   }
 };

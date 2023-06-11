@@ -4,13 +4,51 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Group extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+
+
     static associate(models) {
-      // define association here
+
+      // user to group "owner"
+      Group.belongsTo(models.User, {
+        foreignKey: 'organizerId',
+
+      })
+
+      // group to their memberships
+      Group.hasMany(models.Membership, {
+        foreignKey: 'groupId',
+        onDelete: 'CASCADE',
+        hooks: true
+
+      })
+
+
+      // group to image collection
+      Group.hasMany(models.GroupImage, {
+        foreignKey: 'groupId',
+        onDelete: 'CASCADE',
+        hooks: true
+
+      })
+
+
+      // group to venues
+      Group.hasMany(models.Venue, {
+        foreignKey: 'groupId',
+        onDelete: 'CASCADE',
+        hooks: true
+
+      })
+
+
+      Group.hasMany(models.Event, {
+        foreignKey: 'groupId',
+        onDelete: 'CASCADE',
+        hooks: true
+
+      })
+
+
     }
   }
   Group.init({

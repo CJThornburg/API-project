@@ -15,10 +15,18 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       eventId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+           references: {
+            model: 'Events'
+          },
+           onDelete: 'CASCADE'
       },
       userId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+          references: {
+           model: 'Users'
+         },
+          onDelete: 'CASCADE'
       },
       status: {
         type: Sequelize.ENUM("present", "absent"),

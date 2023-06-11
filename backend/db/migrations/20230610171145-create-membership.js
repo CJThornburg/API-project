@@ -15,10 +15,20 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       userId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Users'
+        },
+        //  so if a user is deleted, the membership record is also deleted? maybe not cause their is a status col ???
+        onDelete: 'CASCADE'
       },
       groupId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Groups'
+        },
+        //  if a group is deleted all their membership records should be deleted
+        onDelete: 'CASCADE'
       },
       status: {
         allowNull: false,
