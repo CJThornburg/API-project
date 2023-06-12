@@ -1,6 +1,5 @@
 'use strict';
 let options = {};
-
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA
 }
@@ -31,7 +30,7 @@ module.exports = {
         allowNull: false,
       },
       type: {
-        type: Sequelize.ENUM("1", "two"),
+        type: Sequelize.ENUM("In person", "Online", "Hybrid"),
         allowNull: false,
       },
       private: {

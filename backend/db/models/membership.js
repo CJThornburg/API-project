@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     userId: DataTypes.INTEGER,
     groupId: DataTypes.INTEGER,
     status: {
-      type: DataTypes.ENUM("active", "inactive"),
+      type: DataTypes.ENUM("pending", "member"),
       allowNull: false
     }
   }, {
@@ -37,3 +37,4 @@ module.exports = (sequelize, DataTypes) => {
   });
   return Membership;
 };
+
