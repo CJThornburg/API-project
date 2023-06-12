@@ -42,7 +42,7 @@ module.exports = {
         "price": 1.50,
         "description": "come make blankets for the homeless",
         "startDate": "2023-12-19 03:00:00",
-        "endDate": "2023-112-19 08:00:00",
+        "endDate": "2023-12-19 08:00:00",
       }
 
 
