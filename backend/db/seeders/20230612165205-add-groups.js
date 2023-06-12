@@ -19,7 +19,7 @@ module.exports = {
         name: "Extreme Living",
         about: "group for extreme sports",
         type: "In person",
-        private: 0,
+        private: false,
         city: "fairfax",
         state: "virginia"
       },
@@ -28,7 +28,7 @@ module.exports = {
         name: "apex legends fanclub",
         about: "group for playing apex legends",
         type: "Online",
-        private: 1,
+        private: true,
         city: "springfield",
         state: "virginia"
       },
@@ -37,7 +37,7 @@ module.exports = {
         name: "knitting fanclub",
         about: "group that love knitting",
         type: "Hybrid",
-        private: 0,
+        private: false,
         city: "Fairy",
         state: "virginia"
       },
