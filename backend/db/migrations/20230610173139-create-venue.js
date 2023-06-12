@@ -16,11 +16,11 @@ module.exports = {
       },
       groupId: {
         type: Sequelize.INTEGER,
-          references: {
-           model: 'Groups'
-         },
+        references: {
+          model: 'Groups'
+        },
         //  if group is deleted, all associated venues should be deleted
-          onDelete: 'CASCADE'
+        onDelete: 'CASCADE'
       },
       address: {
         type: Sequelize.STRING
@@ -32,10 +32,10 @@ module.exports = {
         type: Sequelize.STRING
       },
       lat: {
-        type: Sequelize.NUMBER
+        type: Sequelize.DECIMAL
       },
       lng: {
-        type: Sequelize.NUMBER
+        type: Sequelize.DECIMAL
       },
       createdAt: {
         allowNull: false,
