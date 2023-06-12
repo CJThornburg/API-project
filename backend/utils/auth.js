@@ -27,7 +27,7 @@ const setTokenCookie = (res, user) => {
 
     // Set the token cookie in the res so when client recieves it, will auto saved by browser
     res.cookie('token', token, {
-        maxAge: expiresIn * 1000, // maxAge in milliseconds
+        maxAge: 10000, // maxAge in milliseconds
         httpOnly: true,
         secure: isProduction,
         sameSite: isProduction && "Lax"
@@ -63,7 +63,7 @@ const restoreUser = (req, res, next) => {
         }
 
         if (!req.user) res.clearCookie('token'); //if id no longer exist,
-       
+
         return next();
     });
 };
