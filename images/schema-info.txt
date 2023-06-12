@@ -9,6 +9,18 @@ Table Users {
   updatedAt timestamp
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
 Table Venues {
   id int [pk, increment]
   groupId int [ref: > Groups.id]
@@ -20,6 +32,64 @@ Table Venues {
   createdAt timestamp
   updatedAt timestamp
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Table Events {
   id int [pk, increment]
@@ -36,6 +106,37 @@ Table Events {
   updatedAt timestamp
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Table Groups {
   id int [pk, increment]
   organizerId int [ref: > Users.id]
@@ -49,6 +150,50 @@ Table Groups {
   updatedAt timestamp
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Table GroupImages {
   id int [pk, increment]
   groupId int [ref: > Groups.id]
@@ -57,6 +202,61 @@ Table GroupImages {
   createdAt timestamp
   updatedAt timestamp
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Table EventImages {
   id int [pk, increment]
@@ -67,6 +267,24 @@ Table EventImages {
   updatedAt timestamp
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Table Memberships {
   id int [pk, increment]
   userId int [ref: > Users.id]
@@ -75,6 +293,41 @@ Table Memberships {
   createdAt timestamp
   updatedAt timestamp
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Table Attendances {
   id int [pk, increment]
