@@ -27,7 +27,7 @@ const setTokenCookie = (res, user) => {
 
     // Set the token cookie in the res so when client recieves it, will auto saved by browser
     res.cookie('token', token, {
-        maxage: expiresIn * 1000, // maxAge in milliseconds
+        maxAge: expiresIn * 1000, // maxAge in milliseconds
         httpOnly: true,
         secure: isProduction,
         sameSite: isProduction && "Lax"
