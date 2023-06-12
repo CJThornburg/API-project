@@ -48,7 +48,7 @@ router.post('/', validateSignup, async (req, res) => {
   // console.log("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii", userCheck)'abor
 
 
-  user = await User.create({ email, username, hashedPassword, firstName, lastName });
+  const user = await User.create({ email, username, hashedPassword, firstName, lastName });
 
 
 
