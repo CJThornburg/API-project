@@ -1,5 +1,5 @@
 const express = require('express');
-const { Group, GroupImage, Membership } = require('../../db/models');
+const { Group, GroupImage, Membership, Venue, User } = require('../../db/models');
 const router = express.Router();
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -80,21 +80,21 @@ const addGroupInfo = async () => {
 
 
 router.get("/current", requireAuth, grabCurrentUser, async (req, res) => {
-    // let [header, payload, signature] = req.cookies.token.split(".")
 
-    // console.log(req.userHeader)
+
+
     const addGroups = new Set()
-    console.log(req.currentUser.data.id)
+
     let id = req.currentUser.data.id
     const groups = await Group.findAll(
         { where: { organizerId: id } }
     )
 
-    console.log(groups)
+
 
     const memberOf = await Membership.findAll({ where: { userId: id } })
 
-    console.log(memberOf)
+
 
     // groupsCompleted = addGroupInfo(groups)
     // memberOfCompleted = addGroupInfo(memberOf)
@@ -136,8 +136,8 @@ router.get("/current", requireAuth, grabCurrentUser, async (req, res) => {
 
             groups.push(group)
         }
-       
-        console.log("member of:", group)
+
+
 
     }
 
@@ -154,6 +154,51 @@ router.get("/current", requireAuth, grabCurrentUser, async (req, res) => {
 
 
 
+router.get("/:groupId", async (req, res, next) => {
+    const { groupId } = req.params
+
+
+    const group = await Group.findByPk(groupId, {
+
+        include: [
+            {
+                model: GroupImage,
+                attributes: {
+                    exclude: ["groupId", "createdAt", "updatedAt"]
+                }
+            },
+            {
+                model: User,
+                attributes: ["id", "firstName", "lastName"]
+            },
+            { model: Venue },
+
+        ]
+
+    })
+
+    if (group) {
+
+        let trimmedGroup = group.toJSON()
+        const member = await group.getMemberships()
+        const count = member.length
+        trimmedGroup.numMembers = count
+        trimmedGroup.Organizer = trimmedGroup.User
+        delete trimmedGroup.User
+
+
+        return res.json(
+            trimmedGroup
+        )
+    }
+    const err = new Error()
+    err.message = "Group couldn't be found"
+    res.status(404)
+    return res.json(
+        err
+    )
+
+})
 
 
 

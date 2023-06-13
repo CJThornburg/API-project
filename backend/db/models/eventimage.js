@@ -24,6 +24,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'EventImage',
+    defaultScope: {
+      attributes: {
+        exclude: [ "createdAt", "updatedAt"]
+      }
+    }
   });
   return EventImage;
 };
