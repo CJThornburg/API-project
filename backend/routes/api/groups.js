@@ -42,7 +42,28 @@ const validateNewGroup = [
     handleValidationErrors
 ];
 
-
+const validateVenue = [
+    check('address')
+        .exists({ checkFalsy: true })
+        .withMessage('Street address is required'),
+    check('city')
+        .exists({ checkFalsy: true })
+        .withMessage('City is required'),
+    check('state')
+        .exists({ checkFalsy: true })
+        .withMessage('State is required'),
+    check('lat')
+        .custom((value, { req }) => {
+            return value >= -90 && value <= 90
+        })
+        .withMessage("Latitude is not valid"),
+    check('lng')
+        .custom((value, { req }) => {
+            return value >= -180 && value <= 180
+        })
+        .withMessage("Longitude is not valid"),
+    handleValidationErrors
+];
 
 
 
@@ -251,8 +272,8 @@ router.post("/", requireAuth, grabCurrentUser, validateNewGroup, async (req, res
             organizerId: id
         })
 
-        const hi = await newGroup.save()
-        console.log(hi)
+        await newGroup.save()
+
     } else {
         const err = new Error()
         err.message = "This group already exists :("
@@ -394,8 +415,66 @@ router.get("/:groupId/venues", requireAuth, grabCurrentUser, async (req, res, ne
 })
 
 
+router.post("/:groupId/venues", requireAuth, grabCurrentUser, validateVenue, async (req, res, next) => {
+    let id = req.currentUser.data.id
+    const groupId = req.params.groupId
+    const { address, city, state, lat, lng } = req.body
+
+    const groupInfo = await Group.findByPk(groupId);
+
+    if (!groupInfo) {
+        const err = new Error()
+        err.message = "Group couldn't be found"
+        err.title = "Resource Not Found"
+        err.status = 404
+        next(err)
+    }
 
 
+    trimmedGI = groupInfo.toJSON()
+
+
+    const cohost = await Membership.findOne(
+        {
+            where: {
+                [Op.and]: [{ userId: id }, { status: "co-host" }, { groupId: groupId }]
+            }
+        }
+
+    )
+
+
+    if ((trimmedGI.organizerId === id) || cohost) {
+
+        newVenue = Venue.build({
+            address,
+            city,
+            state,
+            lat,
+            lng,
+            groupId: parseInt(groupId)
+        })
+
+
+        await newVenue.save()
+
+        newVenue = newVenue.toJSON()
+        delete newVenue.createdAt
+        delete newVenue.updatedAt
+
+
+        res.json(newVenue)
+
+    } else {
+        const err = new Error()
+        err.status = 403
+        err.message = "Forbidden"
+        return next(err)
+    }
+
+
+
+})
 
 
 module.exports = router;
