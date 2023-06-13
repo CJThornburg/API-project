@@ -8,12 +8,36 @@ const group = require('../../db/models/group');
 
 
 
-const validateSignup = [
-    // check('email')
-    //   .exists({ checkFalsy: true })
-    //   .isEmail()
-    //   .withMessage('Please provide a valid email.'),
-
+const validateNewGroup = [
+    check('name')
+        .exists({ checkFalsy: true })
+        .withMessage('Name must be provided')
+        .isLength({ max: 60 })
+        .withMessage('Name must be 60 characters or less')
+        .isLength({ min: 2 })
+        .withMessage('Name must be at least 2 characters or less')
+    ,
+    check('about')
+        .exists({ checkFalsy: true })
+        .withMessage('About must be provided')
+        .isLength({ min: 50 })
+        .withMessage('About must be 50 characters or more'),
+    check('type')
+        .custom((value, { req }) => {
+            return value === "Online" || value === "In person"
+        })
+        .withMessage("Type must be 'Online' or 'In person'"),
+    check('private')
+        .exists({ checkFalsy: true })
+        .withMessage("private option must be selected")
+        .isBoolean()
+        .withMessage('Private must be a boolean'),
+    check('city')
+        .exists({ checkFalsy: true })
+        .withMessage('City is Required'),
+    check('state')
+        .exists({ checkFalsy: true })
+        .withMessage('state is Required'),
     handleValidationErrors
 ];
 
@@ -206,7 +230,41 @@ router.get("/:groupId", async (req, res, next) => {
 
 
 
+router.post("/", requireAuth, grabCurrentUser, validateNewGroup, async (req, res) => {
+    const { name, about, type, private, city, state } = req.body
 
+    let id = req.currentUser.data.id
+
+    const exist = await Group.findOne({ where: { name: name } })
+
+    let newGroup
+    if (!exist) {
+        newGroup = Group.build({
+            name,
+            about,
+            type,
+            private,
+            city,
+            state,
+            organizerId: id
+        })
+
+        const hi = await newGroup.save()
+        console.log(hi)
+    } else {
+        const err = new Error()
+        err.message = "This group already exists :("
+        return res.json(
+            err
+        )
+    }
+
+
+    return res.json(
+        newGroup
+    )
+
+})
 
 
 
