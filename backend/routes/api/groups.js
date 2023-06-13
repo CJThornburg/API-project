@@ -82,7 +82,7 @@ router.get("/", async (req, res) => {
 
 
         groups[i].dataValues.numMembers = count
-        const preImage = await GroupImage.findOne({ where: { id: i, preview: true } })
+        const preImage = await GroupImage.findOne({ where: { id: groups[i].dataValues.id, preview: true } })
         if (preImage) {
             let trimmed = preImage.toJSON()
             groups[i].dataValues.previewImage = trimmed.url
@@ -303,7 +303,7 @@ router.put("/:groupId", requireAuth, grabCurrentUser, validateNewGroup, async (r
         err.message = "Group couldn't be found"
         err.title = "Resource Not Found"
         err.status = 404
-        next(err)
+        return next(err)
     }
 
     const trimmedGI = groupInfo.toJSON()
@@ -316,8 +316,8 @@ router.put("/:groupId", requireAuth, grabCurrentUser, validateNewGroup, async (r
         groupInfo.state = state;
 
         await groupInfo.save();
-        const newGroupInfo = await Group.findByPk(groupId);
-        res.json(newGroupInfo)
+        const updatedGroupInfo = await Group.findByPk(groupId);
+        return res.json(updatedGroupInfo)
     } else {
         const err = new Error()
         err.status = 403
