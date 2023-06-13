@@ -43,6 +43,9 @@ const validateNewGroup = [
 
 
 
+
+
+
 router.get("/", async (req, res) => {
 
     const groups = await Group.findAll()
@@ -217,10 +220,8 @@ router.get("/:groupId", async (req, res, next) => {
     }
     const err = new Error()
     err.message = "Group couldn't be found"
-    res.status(404)
-    return res.json(
-        err
-    )
+    err.status = 404
+    next(err)
 
 })
 
@@ -230,7 +231,7 @@ router.get("/:groupId", async (req, res, next) => {
 
 
 
-router.post("/", requireAuth, grabCurrentUser, validateNewGroup, async (req, res) => {
+router.post("/", requireAuth, grabCurrentUser, validateNewGroup, async (req, res, next) => {
     const { name, about, type, private, city, state } = req.body
 
     let id = req.currentUser.data.id
@@ -254,9 +255,8 @@ router.post("/", requireAuth, grabCurrentUser, validateNewGroup, async (req, res
     } else {
         const err = new Error()
         err.message = "This group already exists :("
-        return res.json(
-            err
-        )
+        err.status = 400
+        next(err)
     }
 
 
@@ -270,7 +270,42 @@ router.post("/", requireAuth, grabCurrentUser, validateNewGroup, async (req, res
 
 
 
+router.put("/:groupId", requireAuth, grabCurrentUser, validateNewGroup, async (req, res, next) => {
+    const { name, about, type, private, city, state } = req.body
+    let id = req.currentUser.data.id
+    const groupId = req.params.groupId
 
+    const groupInfo = await Group.findByPk(groupId);
+    if (!groupInfo) {
+        const err = new Error()
+        err.message = "Group couldn't be found"
+        err.title = "Resource Not Found"
+        err.status = 404
+        next(err)
+    }
+
+    const trimmedGI = groupInfo.toJSON()
+    if (trimmedGI.organizerId === id) {
+        groupInfo.name = name;
+        groupInfo.about = about;
+        groupInfo.type = type;
+        groupInfo.private = private;
+        groupInfo.city = city;
+        groupInfo.state = state;
+
+        await groupInfo.save();
+        const newGroupInfo = await Group.findByPk(groupId);
+        res.json(newGroupInfo)
+    } else {
+        const err = new Error()
+        err.status = 403
+        err.message = "Forbidden"
+        return next(err)
+    }
+
+
+
+})
 
 
 
