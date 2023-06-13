@@ -309,6 +309,38 @@ router.put("/:groupId", requireAuth, grabCurrentUser, validateNewGroup, async (r
 
 
 
+router.delete("/:groupId", requireAuth, grabCurrentUser, async (req, res, next) => {
+    let id = req.currentUser.data.id
+    const groupId = req.params.groupId
+
+
+    const groupInfo = await Group.findByPk(groupId);
+    if (!groupInfo) {
+        const err = new Error()
+        err.message = "Group couldn't be found"
+        err.title = "Resource Not Found"
+        err.status = 404
+        next(err)
+    }
+    const trimmedGI = groupInfo.toJSON()
+
+    if (trimmedGI.organizerId === id) {
+
+        const hi = await groupInfo.destroy()
+        console.log(hi)
+
+        res.json({
+            "message": "Successfully deleted"
+        })
+    } else {
+        const err = new Error()
+        err.status = 403
+        err.message = "Forbidden"
+        return next(err)
+    }
+
+
+})
 
 
 
