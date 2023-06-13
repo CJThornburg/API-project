@@ -52,13 +52,7 @@ router.put("/:venueId", requireAuth, grabCurrentUser, validateVenue, async (req,
                     }
 
                 }]
-                // include: [{
-                //     model: Membership,
-                //     where: {
-                //         [Op.and]: [{ userId: id }, { status: "co-host" }]
-                //     }
-                // }
-                // ]
+
             }
 
 
@@ -100,7 +94,7 @@ router.put("/:venueId", requireAuth, grabCurrentUser, validateVenue, async (req,
 
 
 
-   
+
 
 
 })
