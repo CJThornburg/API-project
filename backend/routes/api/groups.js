@@ -5,6 +5,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { requireAuth, grabCurrentUser } = require('../../utils/auth');
 const group = require('../../db/models/group');
+const { Op } = require('sequelize')
 
 
 
@@ -341,6 +342,57 @@ router.delete("/:groupId", requireAuth, grabCurrentUser, async (req, res, next) 
 
 
 })
+
+
+
+router.get("/:groupId/venues", requireAuth, grabCurrentUser, async (req, res, next) => {
+    let id = req.currentUser.data.id
+    const groupId = req.params.groupId
+
+
+
+
+    const groupInfo = await Group.findByPk(groupId, {
+        include: [
+            { model: Venue },
+
+        ]
+    });
+    if (!groupInfo) {
+        const err = new Error()
+        err.message = "Group couldn't be found"
+        err.title = "Resource Not Found"
+        err.status = 404
+        next(err)
+    }
+    const trimmedGI = groupInfo.toJSON()
+
+    const cohost = await Membership.findOne(
+        {
+            where: {
+                [Op.and]: [{ userId: id }, { status: "co-host" }, { groupId: groupId }]
+            }
+        }
+
+    )
+
+    console.log(cohost)
+
+    if ((trimmedGI.organizerId === id) || cohost) {
+        let returnObj = {}
+        returnObj.Venues = groupInfo.Venues
+        res.json(returnObj)
+
+    } else {
+        const err = new Error()
+        err.status = 403
+        err.message = "Forbidden"
+        return next(err)
+    }
+
+
+})
+
 
 
 
