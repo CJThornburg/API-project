@@ -1,5 +1,5 @@
 const express = require('express');
-const { Group, GroupImage, Membership, Venue, User } = require('../../db/models');
+const { Group, GroupImage, Membership, Venue, User, Event, Attendance, EventImage } = require('../../db/models');
 const router = express.Router();
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -427,7 +427,7 @@ router.post("/:groupId/venues", requireAuth, grabCurrentUser, validateVenue, asy
         err.message = "Group couldn't be found"
         err.title = "Resource Not Found"
         err.status = 404
-        next(err)
+        return next(err)
     }
 
 
@@ -474,6 +474,67 @@ router.post("/:groupId/venues", requireAuth, grabCurrentUser, validateVenue, asy
 
 
 
+})
+
+
+router.get("/:groupId/events", async (req, res, next) => {
+    const { groupId } = req.params;
+
+    const group = await Group.findByPk(groupId);
+    if (!group) {
+        const err = new Error()
+        err.message = "Group couldn't be found"
+        err.title = "Resource Not Found"
+        err.status = 404
+        return next(err)
+    }
+
+    const events = await Event.findAll(
+        {
+            where: { groupId: groupId },
+            include: [
+                {
+                    model: Group,
+                    attributes: ["id", "name", "city", "state"]
+                },
+                { model: Attendance },
+                {
+                    model: EventImage,
+                    where: { preview: true },
+                },
+                {
+                    model: Venue,
+                    attributes: ["id", "city", "state"]
+                }
+            ],
+            attributes: { exclude: ["createdAt", "updatedAt", "capacity", "price", "description"] }
+
+        })
+
+
+
+
+
+    for (let i = 0; i < events.length; i++) {
+        let event = events[i].toJSON()
+        let count = event.Attendances.length
+        events[i].dataValues.numAttending = count
+        delete events[i].dataValues.Attendances
+
+        if (event.EventImages[0].url) {
+
+            let url = event.EventImages[0].url
+            events[i].dataValues.previewImage = url
+        }
+        else { events[i].dataValues.previewImage = null }
+        delete events[i].dataValues.EventImages
+    }
+
+
+    let returnObj = {}
+    returnObj.Events = events
+
+    res.json(returnObj)
 })
 
 
