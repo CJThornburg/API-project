@@ -29,7 +29,7 @@ module.exports = {
       {
         userId: 3,
         groupId: 1,
-        status: "cohost"
+        status: "co-host"
       },
       {
         userId: 2,

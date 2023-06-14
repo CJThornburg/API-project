@@ -435,13 +435,13 @@ router.get("/:groupId/venues", requireAuth, grabCurrentUser, async (req, res, ne
     const cohost = await Membership.findOne(
         {
             where: {
-                [Op.and]: [{ userId: id }, { status: "cohost" }, { groupId: groupId }]
+                [Op.and]: [{ userId: id }, { status: "co-host" }, { groupId: groupId }]
             }
         }
 
     )
 
-  
+
 
     if ((trimmedGI.organizerId === id) || cohost) {
         let returnObj = {}
@@ -481,7 +481,7 @@ router.post("/:groupId/venues", requireAuth, grabCurrentUser, validateVenue, asy
     const cohost = await Membership.findOne(
         {
             where: {
-                [Op.and]: [{ userId: id }, { status: "cohost" }, { groupId: groupId }]
+                [Op.and]: [{ userId: id }, { status: "co-host" }, { groupId: groupId }]
             }
         }
 
@@ -607,7 +607,7 @@ router.post("/:groupId/events", requireAuth, grabCurrentUser, validateEvent, asy
     const cohost = await Membership.findOne(
         {
             where: {
-                [Op.and]: [{ userId: id }, { status: "cohost" }, { groupId: groupId }]
+                [Op.and]: [{ userId: id }, { status: "co-host" }, { groupId: groupId }]
             }
         }
 
