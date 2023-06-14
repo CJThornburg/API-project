@@ -43,7 +43,19 @@ module.exports = {
         "description": "come make blankets for the homeless",
         "startDate": "2023-12-19 03:00:00",
         "endDate": "2023-12-19 08:00:00",
+      },
+      {
+        "groupId": 3,
+        "venueId": 3,
+        "name": "knit4lyfe2",
+        "type": "In person",
+        "capacity": 50,
+        "price": 1.50,
+        "description": "come make blankets for the homeless",
+        "startDate": "2024-12-19 03:00:00",
+        "endDate": "2024-12-19 08:00:00",
       }
+
 
 
     ], {});

@@ -26,6 +26,16 @@ module.exports = {
         userId: 1,
         status: "pending"
       },
+      {
+        eventId: 4,
+        userId: 1,
+        status: "co-host"
+      },
+      {
+        eventId: 2,
+        userId: 1,
+        status: "host"
+      }
 
     ], {});
   },
