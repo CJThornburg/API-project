@@ -538,4 +538,85 @@ router.get("/:groupId/events", async (req, res, next) => {
 })
 
 
+
+router.post("/:groupId/events", requireAuth, grabCurrentUser, async (req, res) => {
+    let id = req.currentUser.data.id
+    const groupId = req.params.groupId
+    const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body
+
+    const groupInfo = await Group.findByPk(groupId);
+
+    if (!groupInfo) {
+        const err = new Error()
+        err.message = "Group couldn't be found"
+        err.title = "Resource Not Found"
+        err.status = 404
+        return next(err)
+    }
+
+
+    trimmedGI = groupInfo.toJSON()
+
+
+
+
+    const cohost = await Membership.findOne(
+        {
+            where: {
+                [Op.and]: [{ userId: id }, { status: "co-host" }, { groupId: groupId }]
+            }
+        }
+
+    )
+
+
+
+    //do the thing
+
+    if ((trimmedGI.organizerId === id) || cohost) {
+
+
+        newEvent = Event.build({
+            venueId,
+            name,
+            type,
+            capacity,
+            price,
+            description,
+            startDate,
+            endDate,
+            groupId: parseInt(groupId)
+        })
+
+
+        await newEvent.save()
+
+        let dec = newEvent.dataValues.price.toString().split(".")
+        //dont think I need to do this, seems like it is something postman is doing
+        if (dec[1]) {
+            if (dec[1].length === 1) {
+                dec[1] += "0"
+                console.log(dec)
+                const decF = dec.join(".")
+                console.log(decF)
+                newEvent.dataValues.price = Number(decF)
+            }
+        }
+
+
+
+        res.json(newEvent)
+
+    } else {
+        const err = new Error()
+        err.status = 403
+        err.message = "Forbidden"
+        return next(err)
+    }
+
+
+
+
+})
+
 module.exports = router;
