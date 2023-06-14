@@ -74,7 +74,7 @@ router.put("/:venueId", requireAuth, grabCurrentUser, validateVenue, async (req,
 
     let owner = trimmedVI.Group.organizerId
     let cohost = trimmedVI.Group.Memberships[0].status
-    if (cohost === "co-host" || owner === id) {
+    if (cohost === "cohost" || owner === id) {
         venueInfo.address = address,
             venueInfo.city = city,
             venueInfo.state = state,
