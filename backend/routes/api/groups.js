@@ -441,7 +441,7 @@ router.get("/:groupId/venues", requireAuth, grabCurrentUser, async (req, res, ne
 
     )
 
-    console.log(cohost)
+  
 
     if ((trimmedGI.organizerId === id) || cohost) {
         let returnObj = {}
