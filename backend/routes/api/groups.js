@@ -544,11 +544,12 @@ router.get("/:groupId/events", async (req, res, next) => {
                 },
                 { model: Attendance },
 
-                // {
-                // currently breaks code by making whole query return []
-                //     model: EventImage,
-                //     where: { preview: true },
-                // },
+                {
+                    // currently breaks code by making whole query return []
+                    model: EventImage,
+                    where: { preview: true },
+                    required: false
+                },
                 {
                     model: Venue,
                     attributes: ["id", "city", "state"]
@@ -569,19 +570,16 @@ router.get("/:groupId/events", async (req, res, next) => {
         events[i].dataValues.numAttending = count
         delete events[i].dataValues.Attendances
 
-        const eventImg = await EventImage.findOne({
-            where: {
-                preview: true,
-                eventId: event.id
-            },
-        })
-        if (eventImg) {
-            let url = eventImg.url
+  
+        if (event.EventImages[0]) {
+            let url = event.EventImages[0].url
             events[i].dataValues.preImage = url
         } else {
             events[i].dataValues.previewImage = null
         }
 
+
+        delete events[i].dataValues.EventImages
 
     }
 
