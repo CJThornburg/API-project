@@ -9,7 +9,7 @@
     "start": "per-env",
     "start:development": "nodemon ./bin/www",
     "start:production": "node ./bin/www",
-    "build": " npx sequelize-cli db:seed:undo:all && npx sequelize-cli db:migrate && node psql-setup-script.js",
+    "build": " npx sequelize-cli db:migrate:undo:all && node psql-setup-script.js",
     "dbreset": "npx dotenv sequelize db:seed:undo:all && npx dotenv sequelize db:migrate:undo:all && npx dotenv sequelize db:migrate && npx dotenv sequelize db:seed:all",
     "dbclear": "clear && npx dotenv sequelize db:seed:undo:all && npx dotenv sequelize db:migrate:undo:all"
   },
