@@ -5,7 +5,8 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { requireAuth, grabCurrentUser } = require('../../utils/auth');
 const group = require('../../db/models/group');
-const { Op } = require('sequelize')
+const { Op } = require('sequelize');
+const e = require('express');
 
 
 
@@ -17,6 +18,13 @@ const validateNewGroup = [
         .withMessage('Name must be 60 characters or less')
         .isLength({ min: 2 })
         .withMessage('Name must be at least 2 characters or less')
+        .custom(async (value, { req }) => {
+            const group = await Group.findOne({ where: { name: req.body.name } })
+
+            if (group) {
+                throw new Error('Group already exist');
+            }
+        })
     ,
     check('about')
         .exists({ checkFalsy: true })
@@ -137,12 +145,6 @@ router.get("/", async (req, res) => {
         }
 
     }
-
-
-
-
-
-
 
 
     return res.json({
@@ -661,8 +663,98 @@ router.post("/:groupId/events", requireAuth, grabCurrentUser, validateEvent, asy
     }
 
 
-
-
 })
+
+
+router.get("/:groupId/members", grabCurrentUser, async (req, res, next) => {
+    const { groupId } = req.params;
+    let id
+    if (req.currentUser.data.id) {
+        id = req.currentUser.data.id
+    }
+
+
+    let group = await Group.findByPk(groupId)
+
+    if (!group) {
+        const err = new Error()
+        err.message = "Group couldn't be found"
+        err.status = 404
+        next(err)
+    }
+    let groupOwner = group.organizerId
+
+    let roster
+    // ig owner
+    if (groupOwner === id && id) {
+
+        roster = await Group.findByPk(groupId, {
+            include: [
+                {
+                    model: Membership,
+                    attributes: ["status", "userId"]
+
+
+
+                }],
+            attributes: []
+        })
+
+    } else {
+        // if any other user
+        roster = await Group.findByPk(groupId, {
+            include: [
+                {
+                    model: Membership,
+                    where: { [Op.or]: [{ status: "member" }, { status: "co-host" }] },
+                    attributes: ["status", "userId"]
+
+
+
+                }],
+            attributes: []
+        })
+
+    }
+
+
+
+    let trimmedRoster = roster.toJSON()
+    let members = trimmedRoster.Memberships
+    trimmedRoster.Members = members
+    delete trimmedRoster.Memberships
+
+
+
+    // if owner
+
+
+    for (let i = 0; i < trimmedRoster.Members.length; i++) {
+        trimmedRoster.Members[i].Membership = { status: trimmedRoster.Members[i].status }
+        delete trimmedRoster.Members[i].status
+        let userId = trimmedRoster.Members[i].userId
+        const user = await User.findByPk(userId);
+        let trimmedUser = user.toJSON()
+        console.log(trimmedRoster)
+        trimmedRoster.Members[i].id = trimmedUser.id
+        trimmedRoster.Members[i].firstName = trimmedUser.firstName
+        trimmedRoster.Members[i].lastName = trimmedUser.lastName
+        delete trimmedRoster.Members[i].userId
+    }
+
+
+    res.json(trimmedRoster)
+})
+
+
+
+
+
+
+
+
+
+
+
 
 module.exports = router;
