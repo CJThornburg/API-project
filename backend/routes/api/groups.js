@@ -291,7 +291,7 @@ router.get("/:groupId", async (req, res, next) => {
     const err = new Error()
     err.message = "Group couldn't be found"
     err.status = 404
-    next(err)
+    return next(err)
 
 })
 
@@ -749,6 +749,76 @@ router.get("/:groupId/members", grabCurrentUser, async (req, res, next) => {
 
 
 
+
+router.post("/:groupId/membership", requireAuth, grabCurrentUser, async (req, res, next) => {
+
+    id = req.currentUser.data.id
+    const { groupId } = req.params
+    // const groupIdp = parseInt(groupId)
+    console.log(groupId)
+
+
+    const groupCheck = await Group.findByPk(groupId)
+    if (!groupCheck) {
+        const err = new Error()
+        err.message = "Group couldn't be found"
+        err.status = 404
+        return next(err)
+    }
+    const memCheck = await Membership.findOne({ where: { userId: id, groupId: groupId } })
+
+
+    if (memCheck) {
+      
+        if (memCheck.status === "pending") {
+            const err = new Error()
+            err.message = "Membership has already been requested"
+            err.status = 400
+            return next(err)
+        }
+        if (memCheck.status === "member") {
+            const err = new Error()
+            err.message = "User is already a member of the group"
+            err.status = 400
+            return next(err)
+        }
+        if (memCheck.status === "host") {
+            const err = new Error()
+            err.message = "User is already a host of the group"
+            err.status = 400
+            return next(err)
+        }
+        if (memCheck.status === "co-host") {
+            const err = new Error()
+            err.message = "User is already a co-host of the group"
+            err.status = 400
+            return next(err)
+        }
+
+    }
+
+    newMember = Membership.build({
+        userId: id,
+        groupId,
+        status: "pending"
+    })
+
+    await newMember.save()
+    let trimmedMember = newMember.toJSON()
+
+
+
+
+    const returnObj =
+    {
+        memberId: trimmedMember.id,
+        status: trimmedMember.status
+    }
+
+    res.json(
+        returnObj
+    )
+})
 
 
 
