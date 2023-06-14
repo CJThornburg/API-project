@@ -386,7 +386,7 @@ router.delete("/:groupId", requireAuth, grabCurrentUser, async (req, res, next) 
         err.message = "Group couldn't be found"
         err.title = "Resource Not Found"
         err.status = 404
-        next(err)
+       return next(err)
     }
     const trimmedGI = groupInfo.toJSON()
 
