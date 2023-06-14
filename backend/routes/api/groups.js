@@ -65,6 +65,50 @@ const validateVenue = [
     handleValidationErrors
 ];
 
+const validateEvent = [
+    check('venueId')
+        .exists({ checkFalsy: true })
+        .withMessage('VenueId is required')
+        .custom((value, { req }) => {
+            let venue = Venue.findByPk(parseInt(value))
+            if (venue) return true
+            else return false
+        })
+        .withMessage('Venue does not exist'),
+    check('name')
+        .exists({ checkFalsy: true })
+        .withMessage('Name is required')
+        .isLength({ min: 5 })
+        .withMessage('Name must be at least 5 characters')
+    ,
+    check('type')
+        .exists({ checkFalsy: true })
+        .withMessage('State is required')
+        .custom((value, { req }) => {
+            return value === "Online" || value === "In person"
+        })
+        .withMessage("Type must be 'Online' or 'In person'"),
+    check('capacity')
+        .isInt()
+        .withMessage("Capacity must be an integer"),
+    check('price')
+        .isDecimal([{ decimal_digits: '2' }])
+        .withMessage("Price is invalid"),
+    check('description')
+        .exists({ checkFalsy: true })
+        .withMessage("Description is required"),
+    check('startDate')
+        .isAfter()
+        .withMessage("Start date must be in the future"),
+    check('endDate')
+        .isAfter()
+        .custom((value, { req }) => {
+            return value > req.body.startDate
+        })
+        .withMessage('End date is less than start date'),
+
+    handleValidationErrors
+];
 
 
 
@@ -539,7 +583,7 @@ router.get("/:groupId/events", async (req, res, next) => {
 
 
 
-router.post("/:groupId/events", requireAuth, grabCurrentUser, async (req, res) => {
+router.post("/:groupId/events", requireAuth, grabCurrentUser, validateEvent, async (req, res, next) => {
     let id = req.currentUser.data.id
     const groupId = req.params.groupId
     const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body
