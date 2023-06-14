@@ -4,7 +4,7 @@ const router = express.Router();
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { requireAuth, grabCurrentUser } = require('../../utils/auth');
-
+const { Op } = require('sequelize')
 
 
 
@@ -23,11 +23,13 @@ const validateVenue = [
         .custom((value, { req }) => {
             return value >= -90 && value <= 90
         })
+        .isDecimal()
         .withMessage("Latitude is not valid"),
     check('lng')
         .custom((value, { req }) => {
             return value >= -180 && value <= 180
         })
+        .isDecimal()
         .withMessage("Longitude is not valid"),
     handleValidationErrors
 ];
@@ -43,15 +45,15 @@ router.put("/:venueId", requireAuth, grabCurrentUser, validateVenue, async (req,
         include: [
             {
                 model: Group,
-                include: [{
-                    model: Membership,
-                    where: {
+                // include: [{
+                //     model: Membership,
+                //     // where: {
 
-                        userId: id,
+                //     //     userId: id,
 
-                    }
+                //     // }
 
-                }]
+                // }]
 
             }
 
@@ -60,7 +62,6 @@ router.put("/:venueId", requireAuth, grabCurrentUser, validateVenue, async (req,
         ]
     }
     )
-
 
 
     if (!venueInfo) {
@@ -72,8 +73,23 @@ router.put("/:venueId", requireAuth, grabCurrentUser, validateVenue, async (req,
     }
     let trimmedVI = venueInfo.toJSON()
 
+    const cohost = await Membership.findOne(
+        {
+            where: {
+                [Op.and]: [{ userId: id }, { status: "co-host" },
+                { groupId: venueInfo.toJSON().Group.id }
+                ]
+            }
+        }
+
+    )
+
+
+    // console.log(venueInfo.toJSON().Group)
     let owner = trimmedVI.Group.organizerId
-    let cohost = trimmedVI.Group.Memberships[0].status
+    // let cohost = trimmedVI.Group.Memberships[0].status
+
+
     if (cohost === "co-host" || owner === id) {
         venueInfo.address = address,
             venueInfo.city = city,

@@ -525,6 +525,7 @@ router.get("/:groupId/events", async (req, res, next) => {
     const { groupId } = req.params;
 
     const group = await Group.findByPk(groupId);
+    console.log(group)
     if (!group) {
         const err = new Error()
         err.message = "Group couldn't be found"
@@ -542,10 +543,12 @@ router.get("/:groupId/events", async (req, res, next) => {
                     attributes: ["id", "name", "city", "state"]
                 },
                 { model: Attendance },
-                {
-                    model: EventImage,
-                    where: { preview: true },
-                },
+
+                // {
+                // currently breaks code by making whole query return []
+                //     model: EventImage,
+                //     where: { preview: true },
+                // },
                 {
                     model: Venue,
                     attributes: ["id", "city", "state"]
@@ -555,6 +558,7 @@ router.get("/:groupId/events", async (req, res, next) => {
 
         })
 
+    // console.log(events)
 
 
 
@@ -565,13 +569,20 @@ router.get("/:groupId/events", async (req, res, next) => {
         events[i].dataValues.numAttending = count
         delete events[i].dataValues.Attendances
 
-        if (event.EventImages[0].url) {
-
-            let url = event.EventImages[0].url
-            events[i].dataValues.previewImage = url
+        const eventImg = await EventImage.findOne({
+            where: {
+                preview: true,
+                eventId: event.id
+            },
+        })
+        if (eventImg) {
+            let url = eventImg.url
+            events[i].dataValues.preImage = url
+        } else {
+            events[i].dataValues.previewImage = null
         }
-        else { events[i].dataValues.previewImage = null }
-        delete events[i].dataValues.EventImages
+
+
     }
 
 
