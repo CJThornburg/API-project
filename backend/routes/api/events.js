@@ -14,8 +14,9 @@ const validateEvent = [
         .custom(async (value, { req }) => {
             const venue = await Venue.findByPk(parseInt(req.body.venueId))
 
-            if (!venue){ throw new Error('Venue does not exist');
-        }
+            if (!venue) {
+                throw new Error('Venue does not exist');
+            }
         })
         .withMessage('Venue does not exist'),
     check('name')
@@ -264,59 +265,55 @@ router.put("/:eventId", requireAuth, grabCurrentUser, validateEvent, async (req,
 
 
 
-    // const groupInfo = await Group.findByPk(groupId);
-
-    // if (!groupInfo) {
-    //     const err = new Error()
-    //     err.message = "Group couldn't be found"
-    //     err.title = "Resource Not Found"
-    //     err.status = 404
-    //     return next(err)
-    // }
-
-
-    // trimmedGI = groupInfo.toJSON()
-
-
-
-
-    // const cohost = await Membership.findOne(
-    //     {
-    //         where: {
-    //             [Op.and]: [{ userId: id }, { status: "co-host" }, { groupId: groupId }]
-    //         }
-    //     }
-
-    // )
-
-
-
-    // //do the thing
-
-    // if ((trimmedGI.organizerId === id) || cohost) {
-
-
-    //     newEvent = Event.build({
-    //         venueId,
-    //         name,
-    //         type,
-    //         capacity,
-    //         price,
-    //         description,
-    //         startDate,
-    //         endDate,
-    //         groupId: parseInt(groupId)
-    //     })
-
-
-    //     await newEvent.save()
-
-
 })
 
 
 
+router.delete("/:eventId", requireAuth, grabCurrentUser, async (req, res, next) => {
+    let id = req.currentUser.data.id
+    let eventId = req.params.eventId
 
+    const event = await Event.findByPk(eventId, {
+        include: [{
+            model: Group,
+            include: {
+                model: Membership,
+                where: {
+                    status: "co-host",
+                    userId: id
+                },
+                required: false
+            }
+        }],
+    })
+
+    if (!event) {
+        const err = new Error()
+        err.message = "Event couldn't be found"
+        err.title = "Resource Not Found"
+        err.status = 404
+        return next(err)
+    }
+
+    let oI = event.toJSON().Group.organizerId
+
+    if (event.toJSON().Group.Memberships[0] || oI === id) {
+        delete event.dataValues.Group
+        await event.destroy()
+        return res.json({
+            "message": "Successfully deleted"
+        })
+
+    } else {
+        const err = new Error()
+        err.status = 403
+        err.message = "Forbidden"
+        return next(err)
+
+
+    }
+
+})
 
 
 

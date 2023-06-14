@@ -69,10 +69,12 @@ const validateEvent = [
     check('venueId')
         .exists({ checkFalsy: true })
         .withMessage('VenueId is required')
-        .custom((value, { req }) => {
-            let venue = Venue.findByPk(parseInt(value))
-            if (venue) return true
-            else return false
+        .custom(async (value, { req }) => {
+            const venue = await Venue.findByPk(parseInt(req.body.venueId))
+
+            if (!venue) {
+                throw new Error('Venue does not exist');
+            }
         })
         .withMessage('Venue does not exist'),
     check('name')
@@ -386,14 +388,14 @@ router.delete("/:groupId", requireAuth, grabCurrentUser, async (req, res, next) 
         err.message = "Group couldn't be found"
         err.title = "Resource Not Found"
         err.status = 404
-       return next(err)
+        return next(err)
     }
     const trimmedGI = groupInfo.toJSON()
 
     if (trimmedGI.organizerId === id) {
 
-        const hi = await groupInfo.destroy()
-        console.log(hi)
+        await groupInfo.destroy()
+
 
         res.json({
             "message": "Successfully deleted"
