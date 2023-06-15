@@ -55,6 +55,22 @@ const validateEvent = [
 ];
 
 
+const validateAttenUpdate = [
+    check('userId')
+        .exists({ checkFalsy: true })
+        .withMessage("userId is required"),
+    check('status')
+        .exists({ checkFalsy: true })
+        .withMessage("status is required"),
+        check('status')
+        .custom((value, { req }) => {
+           
+            return value !== "pending"
+        })
+        .withMessage("Cannot change an attendance status to pending"),
+    handleValidationErrors
+];
+
 
 router.get("/", async (req, res) => {
     const events = await Event.findAll({
@@ -435,7 +451,7 @@ router.post("/:eventId/attendance", grabCurrentUser, async (req, res, next) => {
     const statusCheck = await Attendance.findOne({ where: { eventId: eventId, userId: id } })
     if (statusCheck) {
 
-       
+
         if (statusCheck.dataValues.status === "pending") {
             const err = new Error()
             err.message = "Attendance has already been requested"
@@ -470,8 +486,77 @@ router.post("/:eventId/attendance", grabCurrentUser, async (req, res, next) => {
 
 
 
+router.put("/:eventId/attendance", requireAuth, grabCurrentUser, validateAttenUpdate, async (req, res, next) => {
+    let id = req.currentUser.data.id
+    let eventId = req.params.eventId
+    const { userId, status } = req.body
+
+    if (status === "pending") {
+        const err = new Error()
+        err.message = "Cannot change an attendance status to pending"
+        err.status = 400
+        return next(err)
+    }
 
 
+    const eventCheck = await Event.findByPk(eventId);
+    if (!eventCheck) {
+        const err = new Error()
+        err.message = "Group couldn't be found"
+        err.status = 404
+        return next(err)
+    }
+
+    const groupId = eventCheck.dataValues.groupId
+
+
+    console.log(groupId)
+
+    const attendance = await Attendance.findOne({ where: { eventId: eventId, userId: userId } })
+    if (!attendance) {
+        const err = new Error()
+        err.message = "Attendance between the user and the event does not exist"
+        err.status = 404
+        return next(err)
+    }
+
+
+
+    const groupCheck = await Group.findByPk(groupId)
+    if (!groupCheck) {
+        const err = new Error()
+        err.message = "Group couldn't be found"
+        err.status = 404
+        return next(err)
+    }
+
+
+
+
+    let owner = groupCheck.toJSON().organizerId === id
+
+    const coHost = await Membership.findOne({ where: { userId: id, groupId: groupId } })
+
+    let coHostCheck = false;
+    if (coHost) {
+        coHostCheck = coHost.toJSON().status === "co-host"
+    }
+
+    if (!owner && !coHostCheck) {
+        const err = new Error()
+        err.status = 403
+        err.message = "Forbidden"
+        return next(err)
+    }
+
+    attendance.dataValues.status = "attending"
+
+    await attendance.save()
+
+    delete attendance.dataValues.createdAt
+    delete attendance.dataValues.updatedAt
+    res.json(attendance)
+})
 
 
 
