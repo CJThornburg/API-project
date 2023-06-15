@@ -1,5 +1,5 @@
 const express = require('express');
-const { Event, Group, Venue, EventImage, Attendance, Membership } = require('../../db/models');
+const { Event, Group, Venue, EventImage, Attendance, Membership, User } = require('../../db/models');
 const router = express.Router();
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -316,7 +316,161 @@ router.delete("/:eventId", requireAuth, grabCurrentUser, async (req, res, next) 
 })
 
 
+router.get("/:eventId/attendees", grabCurrentUser, async (req, res) => {
+    let id = req.currentUser.data.id
+    let eventId = req.params.eventId
 
+    const event = await Event.findByPk(eventId)
+
+
+
+
+
+    const group = await Group.findByPk(event.dataValues.groupId)
+    const groupOwner = group.dataValues.organizerId
+    const ownerCheck = id === groupOwner
+
+    // groupOwner  or host
+    let aten
+
+    if (ownerCheck || ownerCheck) {// change second conditional to check if current user is a co-host of the group
+        aten = await Attendance.findAll({
+            where: { eventId: eventId },
+            attributes: ["status"],
+            include: [{
+                model: User,
+                attributes: ["id", "firstName", "lastName"]
+            }],
+
+        })
+    } else {
+        aten = await Attendance.findAll({
+            where: {
+                eventId: eventId,
+                [Op.or]: [{ status: "attending" }, { status: "waitlist" }]
+            },
+            attributes: ["status"],
+            include: [{
+                model: User,
+                attributes: ["id", "firstName", "lastName"]
+            }],
+
+        })
+
+    }
+
+
+
+    for (let i = 0; i < aten.length; i++) {
+
+        console.log("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii", aten[i].toJSON(), "byeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", aten[i].dataValues.User.dataValues.firstName)
+
+        aten[i].dataValues.firstName = aten[i].toJSON().User.firstName
+        aten[i].dataValues.lastName = aten[i].toJSON().User.lastName
+        aten[i].dataValues.id = aten[i].toJSON().User.id
+        delete aten[i].dataValues.User
+        aten[i].dataValues.Attendance = { status: aten[i].dataValues.status }
+        delete aten[i].dataValues.status
+        console.log(aten[i].toJSON())
+
+    }
+
+    const returnObj = { Attendees: aten }
+
+
+    res.json(returnObj)
+
+
+
+
+    //     // if owner
+
+
+    //  const { groupId } = req.params;
+    //     let id
+    //     if (req.currentUser.data.id) {
+    //         id = req.currentUser.data.id
+    //     }
+
+
+    //     let group = await Group.findByPk(groupId)
+
+    //     if (!group) {
+    //         const err = new Error()
+    //         err.message = "Group couldn't be found"
+    //         err.status = 404
+    //         next(err)
+    //     }
+    //     let groupOwner = group.organizerId
+
+    //     let roster
+    //     // ig owner
+    //     if (groupOwner === id && id) {
+
+    //         roster = await Group.findByPk(groupId, {
+    //             include: [
+    //                 {
+    //                     model: Membership,
+    //                     attributes: ["status", "userId"]
+
+
+
+    //                 }],
+    //             attributes: []
+    //         })
+
+    //     } else {
+    //         // if any other user
+    //         roster = await Group.findByPk(groupId, {
+    //             include: [
+    //                 {
+    //                     model: Membership,
+    //                     where: { [Op.or]: [{ status: "member" }, { status: "co-host" }] },
+    //                     attributes: ["status", "userId"]
+
+
+
+    //                 }],
+    //             attributes: []
+    //         })
+
+    //     }
+
+
+
+    //     let trimmedRoster = roster.toJSON()
+    //     let members = trimmedRoster.Memberships
+    //     trimmedRoster.Members = members
+    //     delete trimmedRoster.Memberships
+
+
+
+    //     // if owner
+
+
+    //     for (let i = 0; i < trimmedRoster.Members.length; i++) {
+    //         trimmedRoster.Members[i].Membership = { status: trimmedRoster.Members[i].status }
+    //         delete trimmedRoster.Members[i].status
+    //         let userId = trimmedRoster.Members[i].userId
+    //         const user = await User.findByPk(userId);
+    //         let trimmedUser = user.toJSON()
+    //         console.log(trimmedRoster)
+    //         trimmedRoster.Members[i].id = trimmedUser.id
+    //         trimmedRoster.Members[i].firstName = trimmedUser.firstName
+    //         trimmedRoster.Members[i].lastName = trimmedUser.lastName
+    //         delete trimmedRoster.Members[i].userId
+    //     }
+
+
+    //     res.json(trimmedRoster)
+    // })
+
+
+
+
+
+
+})
 
 
 
