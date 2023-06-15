@@ -121,6 +121,31 @@ const validateEvent = [
 ];
 
 
+const validateMemberUpdate = [
+    check('memberId')
+        .exists({ checkFalsy: true })
+        .withMessage('memberId is required')
+        .custom(async (value, { req }) => {
+            const userCheck = await User.findByPk(req.body.memberId)
+
+            if (!userCheck) {
+                throw new Error("User couldn't be found");
+            }
+        }),
+    check('status')
+        .exists({ checkFalsy: true })
+        .custom(async (value, { req }) => {
+            if (req.body.status === "pending") {
+                throw new Error("Cannot change a membership status to pending");
+            }
+
+        })
+        .withMessage('Cannot change a membership status to pending')
+    ,
+    handleValidationErrors
+];
+
+
 
 router.get("/", async (req, res) => {
 
@@ -754,8 +779,8 @@ router.post("/:groupId/membership", requireAuth, grabCurrentUser, async (req, re
 
     id = req.currentUser.data.id
     const { groupId } = req.params
-    // const groupIdp = parseInt(groupId)
-    console.log(groupId)
+
+
 
 
     const groupCheck = await Group.findByPk(groupId)
@@ -769,7 +794,7 @@ router.post("/:groupId/membership", requireAuth, grabCurrentUser, async (req, re
 
 
     if (memCheck) {
-      
+
         if (memCheck.status === "pending") {
             const err = new Error()
             err.message = "Membership has already been requested"
@@ -822,7 +847,95 @@ router.post("/:groupId/membership", requireAuth, grabCurrentUser, async (req, re
 
 
 
+router.put("/:groupId/membership", requireAuth, grabCurrentUser, validateMemberUpdate, async (req, res, next) => {
 
+    id = req.currentUser.data.id
+    const { groupId } = req.params
+
+    const { memberId, status } = req.body
+
+    const memberCheck = await Membership.findOne({ where: { userId: memberId, groupId: groupId } })
+    if (!memberCheck) {
+        const err = new Error()
+        err.message = "Membership between the user and the group does not exist"
+        err.status = 404
+        return next(err)
+    }
+
+    const groupCheck = await Group.findByPk(groupId)
+    if (!groupCheck) {
+        const err = new Error()
+        err.message = "Group couldn't be found"
+        err.status = 404
+        return next(err)
+    }
+
+    // group if owner
+    // grab if co-host
+    // let organizerId = groupCheck.toJSON().organizerId
+    let owner = groupCheck.toJSON().organizerId === id
+
+    const coHost = await Membership.findOne({ where: { userId: id, groupId: groupId } })
+
+    let coHostCheck = false;
+    if (coHost) {
+        coHostCheck = coHost.toJSON().status === "co-host"
+    }
+
+    if (!owner && !coHostCheck) {
+        const err = new Error()
+        err.status = 403
+        err.message = "Forbidden"
+        return next(err)
+    }
+
+    let memberCheckTrimmed = memberCheck.toJSON()
+
+    if (status === "co-host") {
+        if (owner) {
+            memberCheck.status = "co-host"
+
+            await memberCheck.save()
+
+            memberCheck.dataValues.memberId = memberId
+            delete memberCheck.dataValues.userId
+
+
+            return res.json(memberCheck)
+        } else {
+            const err = new Error()
+            err.status = 403
+            err.message = "Forbidden"
+            return next(err)
+        }
+
+    }
+
+    if (status === "member") {
+        if (owner || coHostCheck) {
+            memberCheck.status = "member"
+
+            await memberCheck.save()
+
+            memberCheck.dataValues.memberId = memberId
+            delete memberCheck.dataValues.userId
+
+            return res.json(memberCheck)
+        } else {
+            const err = new Error()
+            err.status = 403
+            err.message = "Forbidden"
+            return next(err)
+        }
+
+    }
+
+
+
+
+
+
+})
 
 
 
