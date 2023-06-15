@@ -316,12 +316,19 @@ router.delete("/:eventId", requireAuth, grabCurrentUser, async (req, res, next) 
 })
 
 
-router.get("/:eventId/attendees", grabCurrentUser, async (req, res) => {
+router.get("/:eventId/attendees", grabCurrentUser, async (req, res, next) => {
     let id = req.currentUser.data.id
     let eventId = req.params.eventId
 
     const event = await Event.findByPk(eventId)
 
+    if (!event) {
+        const err = new Error()
+        err.message = "Event couldn't be found"
+        err.title = "Resource Not Found"
+        err.status = 404
+        return next(err)
+    }
 
 
 
@@ -334,11 +341,19 @@ router.get("/:eventId/attendees", grabCurrentUser, async (req, res) => {
     let memberCheck = false;
     memberStatus = await Membership.findOne({ where: { userId: id, groupId: group.dataValues.id, status: "co-host" } })
 
-    if (memberStatus) { memberCheck = true }
+    if (memberStatus) {
+        memberCheck = true
+    }
     // groupOwner  or host
 
 
+    atenTest = await Attendance.findAll({
+        where: { eventId: 22 },
 
+
+    })
+
+    console.log(atenTest)
     console.log(ownerCheck)
     if (ownerCheck || memberCheck) {
         aten = await Attendance.findAll({
