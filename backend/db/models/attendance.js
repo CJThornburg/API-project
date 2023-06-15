@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     eventId: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
     status: {
-      type: DataTypes.ENUM("pending", "waitlist", "attending"),
+      type: DataTypes.ENUM("pending", "waitlist", "attending", "co-host", "host"),
       allowNull: false
     }
   }, {
