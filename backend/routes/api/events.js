@@ -329,17 +329,25 @@ router.get("/:eventId/attendees", grabCurrentUser, async (req, res) => {
     const group = await Group.findByPk(event.dataValues.groupId)
     const groupOwner = group.dataValues.organizerId
     const ownerCheck = id === groupOwner
+    // console.log("id:", group.dataValues.id)
 
+    let memberCheck = false;
+    memberStatus = await Membership.findOne({ where: { userId: id, groupId: group.dataValues.id, status: "co-host" } })
+
+    if (memberStatus) { memberCheck = true }
     // groupOwner  or host
-    let aten
 
-    if (ownerCheck || ownerCheck) {// change second conditional to check if current user is a co-host of the group
+
+
+    console.log(ownerCheck)
+    if (ownerCheck || memberCheck) {
         aten = await Attendance.findAll({
             where: { eventId: eventId },
             attributes: ["status"],
             include: [{
                 model: User,
-                attributes: ["id", "firstName", "lastName"]
+                attributes: ["id", "firstName", "lastName"],
+                required: false
             }],
 
         })
@@ -347,7 +355,7 @@ router.get("/:eventId/attendees", grabCurrentUser, async (req, res) => {
         aten = await Attendance.findAll({
             where: {
                 eventId: eventId,
-                [Op.or]: [{ status: "attending" }, { status: "waitlist" }]
+                [Op.or]: [{ status: "attending" }, { status: "waitlist" }, { status: "host" }, { status: "co-host" },]
             },
             attributes: ["status"],
             include: [{
