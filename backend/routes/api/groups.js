@@ -613,7 +613,7 @@ router.get("/:groupId/events", async (req, res, next) => {
         events[i].dataValues.numAttending = count
         delete events[i].dataValues.Attendances
 
-  
+
         if (event.EventImages[0]) {
             let url = event.EventImages[0].url
             events[i].dataValues.preImage = url
@@ -922,7 +922,8 @@ router.put("/:groupId/membership", requireAuth, grabCurrentUser, validateMemberU
 
             memberCheck.dataValues.memberId = memberId
             delete memberCheck.dataValues.userId
-
+            delete memberCheck.dataValues.createdAt
+            delete memberCheck.dataValues.updatedAt
 
             return res.json(memberCheck)
         } else {
@@ -942,6 +943,8 @@ router.put("/:groupId/membership", requireAuth, grabCurrentUser, validateMemberU
 
             memberCheck.dataValues.memberId = memberId
             delete memberCheck.dataValues.userId
+            delete memberCheck.dataValues.createdAt
+            delete memberCheck.dataValues.updatedAt
 
             return res.json(memberCheck)
         } else {
