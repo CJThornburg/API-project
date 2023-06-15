@@ -62,9 +62,9 @@ const validateAttenUpdate = [
     check('status')
         .exists({ checkFalsy: true })
         .withMessage("status is required"),
-        check('status')
+    check('status')
         .custom((value, { req }) => {
-           
+
             return value !== "pending"
         })
         .withMessage("Cannot change an attendance status to pending"),
@@ -502,7 +502,7 @@ router.put("/:eventId/attendance", requireAuth, grabCurrentUser, validateAttenUp
     const eventCheck = await Event.findByPk(eventId);
     if (!eventCheck) {
         const err = new Error()
-        err.message = "Group couldn't be found"
+        err.message = "Event couldn't be found"
         err.status = 404
         return next(err)
     }
@@ -560,5 +560,60 @@ router.put("/:eventId/attendance", requireAuth, grabCurrentUser, validateAttenUp
 
 
 
+router.delete("/:eventId/attendance", requireAuth, grabCurrentUser, async (req, res, next) => {
+    let id = req.currentUser.data.id
+    let eventId = req.params.eventId
+    const  userId  = req.body.userId
 
+
+    const eventCheck = await Event.findByPk(eventId);
+    if (!eventCheck) {
+        const err = new Error()
+        err.message = "Event couldn't be found"
+        err.status = 404
+        return next(err)
+    }
+
+
+    const groupId = eventCheck.dataValues.groupId
+
+
+
+
+    const attendance = await Attendance.findOne({ where: { eventId: eventId, userId: userId } })
+    if (!attendance) {
+        const err = new Error()
+        err.message = "Attendance does not exist for this User"
+        err.status = 404
+        return next(err)
+    }
+
+
+
+    const groupCheck = await Group.findByPk(groupId)
+    if (!groupCheck) {
+        const err = new Error()
+        err.message = "Group couldn't be found"
+        err.status = 404
+        return next(err)
+    }
+
+
+    let owner = groupCheck.toJSON().organizerId === id
+    let currentUser = userId === id
+
+    if (!owner && !currentUser) {
+        const err = new Error()
+        err.status = 403
+        err.message = "Only the User or organizer may delete an Attendance"
+        return next(err)
+    }
+
+    await attendance.destroy()
+
+    return res.json({
+        "message": "Successfully deleted attendance from event"
+    })
+
+})
 module.exports = router;
