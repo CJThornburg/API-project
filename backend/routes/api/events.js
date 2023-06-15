@@ -330,4 +330,7 @@ router.delete("/:eventId", requireAuth, grabCurrentUser, async (req, res, next) 
 
 
 
+
+
+
 module.exports = router;

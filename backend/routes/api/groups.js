@@ -145,6 +145,20 @@ const validateMemberUpdate = [
     handleValidationErrors
 ];
 
+const validateMemberDelete = [
+    check('memberId')
+        .exists({ checkFalsy: true })
+        .withMessage('memberId is required')
+        .custom(async (value, { req }) => {
+            const userCheck = await User.findByPk(req.body.memberId)
+
+            if (!userCheck) {
+                throw new Error("User couldn't be found");
+            }
+        }),
+    handleValidationErrors
+];
+
 
 
 router.get("/", async (req, res) => {
@@ -937,7 +951,48 @@ router.put("/:groupId/membership", requireAuth, grabCurrentUser, validateMemberU
 
 })
 
+router.delete("/:groupId/membership", requireAuth, grabCurrentUser, validateMemberDelete, async (req, res, next) => {
 
+    id = req.currentUser.data.id
+    const { groupId } = req.params
+
+    const { memberId } = req.body
+
+    const groupCheck = await Group.findByPk(groupId)
+    if (!groupCheck) {
+        const err = new Error()
+        err.message = "Group couldn't be found"
+        err.status = 404
+        return next(err)
+    }
+
+    let owner = groupCheck.toJSON().organizerId === id
+
+
+    const memberCheck = await Membership.findOne({ where: { userId: memberId, groupId: groupId } })
+    if (!memberCheck) {
+        const err = new Error()
+        err.message = "Membership does not exist for this User"
+        err.status = 404
+        return next(err)
+    }
+    let member = memberCheck.toJSON().userId === id
+
+
+    if (owner || member) {
+        await memberCheck.destroy();
+
+        res.json({
+            "message": "Successfully deleted membership from group"
+        })
+
+    } else {
+        const err = new Error()
+        err.status = 403
+        err.message = "Forbidden"
+        return next(err)
+    }
+})
 
 
 module.exports = router;
