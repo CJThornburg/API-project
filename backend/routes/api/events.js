@@ -353,7 +353,7 @@ router.get("/:eventId/attendees", grabCurrentUser, async (req, res, next) => {
 
     })
 
-  
+
     if (ownerCheck || memberCheck) {
         aten = await Attendance.findAll({
             where: { eventId: eventId },
@@ -385,7 +385,7 @@ router.get("/:eventId/attendees", grabCurrentUser, async (req, res, next) => {
 
     for (let i = 0; i < aten.length; i++) {
 
-        console.log("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii", aten[i].toJSON(), "byeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", aten[i].dataValues.User.dataValues.firstName)
+       
 
         aten[i].dataValues.firstName = aten[i].toJSON().User.firstName
         aten[i].dataValues.lastName = aten[i].toJSON().User.lastName
