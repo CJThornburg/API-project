@@ -435,7 +435,7 @@ router.post("/:eventId/attendance", grabCurrentUser, async (req, res, next) => {
     const statusCheck = await Attendance.findOne({ where: { eventId: eventId, userId: id } })
     if (statusCheck) {
 
-        console.log(statusCheck.dataValues)
+       
         if (statusCheck.dataValues.status === "pending") {
             const err = new Error()
             err.message = "Attendance has already been requested"
