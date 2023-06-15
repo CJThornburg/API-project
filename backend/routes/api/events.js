@@ -146,7 +146,7 @@ router.post("/:eventId/images", requireAuth, grabCurrentUser, async (req, res, n
     if (!event) {
         const err = new Error()
         err.message = "Event couldn't be found"
-        err.title = "Resource Not Found"
+        err.title = "Resource Not Found!!!!"
         err.status = 404
         return next(err)
     }
