@@ -353,8 +353,7 @@ router.get("/:eventId/attendees", grabCurrentUser, async (req, res, next) => {
 
     })
 
-    console.log(atenTest)
-    console.log(ownerCheck)
+  
     if (ownerCheck || memberCheck) {
         aten = await Attendance.findAll({
             where: { eventId: eventId },
