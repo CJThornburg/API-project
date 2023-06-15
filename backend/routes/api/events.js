@@ -418,7 +418,55 @@ router.get("/:eventId/attendees", grabCurrentUser, async (req, res, next) => {
 
 
 
+router.post("/:eventId/attendance", grabCurrentUser, async (req, res, next) => {
+    let id = req.currentUser.data.id
+    const { eventId } = req.params
 
+
+    const eventCheck = await Event.findByPk(eventId)
+    if (!eventCheck) {
+        const err = new Error()
+        err.message = "Event couldn't be found"
+        err.status = 404
+        return next(err)
+    }
+
+
+    const statusCheck = await Attendance.findOne({ where: { eventId: eventId, userId: id } })
+    if (statusCheck) {
+
+        console.log(statusCheck.dataValues)
+        if (statusCheck.dataValues.status === "pending") {
+            const err = new Error()
+            err.message = "Attendance has already been requested"
+            err.status = 400
+            return next(err)
+        }
+
+        if (statusCheck.dataValues.status === "attending" || statusCheck.dataValues.status === "co-host" || statusCheck.dataValues.status === "host") {
+            const err = new Error()
+            err.message = "User is already an attendee of the event"
+            err.status = 400
+            return next(err)
+        }
+
+    }
+
+
+    const newAtten = await Attendance.build({
+        userId: id,
+        eventId,
+        status: "pending"
+    })
+
+    await newAtten.save()
+
+    delete newAtten.dataValues.updatedAt
+    delete newAtten.dataValues.createdAt
+    delete newAtten.dataValues.id
+    delete newAtten.dataValues.eventId
+    res.json(newAtten)
+})
 
 
 
