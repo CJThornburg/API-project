@@ -51,7 +51,7 @@ module.exports = {
         allowNull: false
       },
       startNum: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.BIGINT,
         allowNull: false
       },
       endDate: {
@@ -59,7 +59,7 @@ module.exports = {
         allowNull: false
       },
       endNum: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.BIGINT,
         allowNull: false
       },
       createdAt: {
