@@ -202,10 +202,13 @@ router.get("/", validateQuery, async (req, res) => {
     if (startDate) {
         const dateObj = new Date(startDate)
         console.log(startDate)
-        let date = dateObj.toDateString()
-        let time = dateObj.getTime()
-        console.log("date:", date, "time:", time)
-        where.startDate = startDate
+        // let date = dateObj.toDateString()
+        // let time = dateObj.getTime()
+        // console.log("date:", date, "time:", time)
+        const iso = dateObj.toISOString()
+        const time = dateObj.getTime()
+        console.log(iso, time)
+        where.startDate = iso
     }
     console.log("where:", where);
 
