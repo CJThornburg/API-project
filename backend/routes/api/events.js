@@ -367,7 +367,7 @@ router.post("/:eventId/images", requireAuth, grabCurrentUser, validateNewEventIm
     })
 
     const group = event.dataValues.groupId
-    const groupOwner =await Group.findOne({ where: { id: group, organizerId: id } })
+    const groupOwner = await Group.findOne({ where: { id: group, organizerId: id } })
     console.log(event.toJSON())
     console.log(groupOwner)
     if (permissionCheck || groupOwner) {
@@ -451,6 +451,7 @@ router.put("/:eventId", requireAuth, grabCurrentUser, validateEvent, async (req,
     let oI = event.toJSON().Group.organizerId
 
     if (event.toJSON().Group.Memberships[0] || oI === id) {
+
         event.venueId = venueId,
             event.name = name,
             event.type = type,
@@ -542,6 +543,9 @@ router.delete("/:eventId", requireAuth, grabCurrentUser, async (req, res, next) 
 })
 
 
+
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 router.get("/:eventId/attendees", grabCurrentUser, async (req, res, next) => {
     let id = req.currentUser.data.id
     let eventId = req.params.eventId
@@ -604,6 +608,7 @@ router.get("/:eventId/attendees", grabCurrentUser, async (req, res, next) => {
 
 
 
+
     for (let i = 0; i < aten.length; i++) {
 
 
@@ -613,8 +618,9 @@ router.get("/:eventId/attendees", grabCurrentUser, async (req, res, next) => {
         aten[i].dataValues.id = aten[i].toJSON().User.id
         delete aten[i].dataValues.User
         aten[i].dataValues.Attendance = { status: aten[i].dataValues.status }
+        console.log(aten[i].dataValues.status)
         delete aten[i].dataValues.status
-        console.log(aten[i].toJSON())
+
 
     }
 
@@ -719,9 +725,6 @@ router.put("/:eventId/attendance", requireAuth, grabCurrentUser, validateAttenUp
 
     const groupId = eventCheck.dataValues.groupId
 
-
-    console.log(groupId)
-
     const attendance = await Attendance.findOne({ where: { eventId: eventId, userId: userId } })
     if (!attendance) {
         const err = new Error()
@@ -731,7 +734,7 @@ router.put("/:eventId/attendance", requireAuth, grabCurrentUser, validateAttenUp
         return next(err)
     }
 
-
+    console.log("hiiiiiii attendance querey:", attendance)
 
     const groupCheck = await Group.findByPk(groupId)
     if (!groupCheck) {
@@ -741,8 +744,6 @@ router.put("/:eventId/attendance", requireAuth, grabCurrentUser, validateAttenUp
         err.status = 404
         return next(err)
     }
-
-
 
 
     let owner = groupCheck.toJSON().organizerId === id
@@ -762,9 +763,14 @@ router.put("/:eventId/attendance", requireAuth, grabCurrentUser, validateAttenUp
         return next(err)
     }
 
-    attendance.dataValues.status = "attending"
+    // attendance.dataValues.status = "attending"
+    // await attendance.save()
 
-    await attendance.save()
+    attendance.set({
+        status: "attending"
+    })
+    attendance.save();
+    console.log("hi")
 
     delete attendance.dataValues.createdAt
     delete attendance.dataValues.updatedAt

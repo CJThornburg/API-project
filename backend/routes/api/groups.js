@@ -370,7 +370,7 @@ router.post("/", requireAuth, grabCurrentUser, validateNewGroup, async (req, res
 
     const exist = await Group.findOne({ where: { name: name } })
 
-    let newGroup
+
     if (!exist) {
         let newGroup = Group.build({
             name,
