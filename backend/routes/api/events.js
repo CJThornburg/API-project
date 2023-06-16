@@ -381,6 +381,7 @@ router.post("/:eventId/images", requireAuth, grabCurrentUser, validateNewEventIm
     } else {
         const err = new Error()
         err.status = 403
+        err.title = "Forbidden"
         err.message = "Forbidden"
         return next(err)
     }
@@ -461,10 +462,12 @@ router.put("/:eventId", requireAuth, grabCurrentUser, validateEvent, async (req,
 
         await event.save();
 
-        console.log("hiiiiiiiiiiiiiiiii", event)
+
         event.dataValues.price = priceF(price)
         delete event.dataValues.endNum
         delete event.dataValues.startNum
+        delete event.dataValues.updatedAt
+        delete event.dataValues.createdAt
         event.dataValues.startDate = dateF(event.dataValues.startDate)
         event.dataValues.endDate = dateF(event.dataValues.endDate)
 
@@ -476,6 +479,7 @@ router.put("/:eventId", requireAuth, grabCurrentUser, validateEvent, async (req,
     } else {
         const err = new Error()
         err.status = 403
+        err.title = "Forbidden"
         err.message = "Forbidden"
         return next(err)
     }
@@ -524,6 +528,7 @@ router.delete("/:eventId", requireAuth, grabCurrentUser, async (req, res, next) 
     } else {
         const err = new Error()
         err.status = 403
+        err.title = "Forbidden"
         err.message = "Forbidden"
         return next(err)
 
@@ -639,6 +644,7 @@ router.post("/:eventId/attendance", grabCurrentUser, async (req, res, next) => {
     if (!eventCheck) {
         const err = new Error()
         err.message = "Event couldn't be found"
+        err.title = "Resource could not be found"
         err.status = 404
         return next(err)
     }
@@ -652,6 +658,7 @@ router.post("/:eventId/attendance", grabCurrentUser, async (req, res, next) => {
             const err = new Error()
             err.message = "Attendance has already been requested"
             err.status = 400
+            err.title = "Bad Request"
             return next(err)
         }
 
@@ -659,6 +666,7 @@ router.post("/:eventId/attendance", grabCurrentUser, async (req, res, next) => {
             const err = new Error()
             err.message = "User is already an attendee of the event"
             err.status = 400
+            err.title = "Bad request"
             return next(err)
         }
 
@@ -691,6 +699,7 @@ router.put("/:eventId/attendance", requireAuth, grabCurrentUser, validateAttenUp
         const err = new Error()
         err.message = "Cannot change an attendance status to pending"
         err.status = 400
+        err.title = "Bad request"
         return next(err)
     }
 
@@ -699,6 +708,7 @@ router.put("/:eventId/attendance", requireAuth, grabCurrentUser, validateAttenUp
     if (!eventCheck) {
         const err = new Error()
         err.message = "Event couldn't be found"
+        err.title = "Resource could not be found"
         err.status = 404
         return next(err)
     }
@@ -711,6 +721,7 @@ router.put("/:eventId/attendance", requireAuth, grabCurrentUser, validateAttenUp
     const attendance = await Attendance.findOne({ where: { eventId: eventId, userId: userId } })
     if (!attendance) {
         const err = new Error()
+        err.title = "Resource could not be found"
         err.message = "Attendance between the user and the event does not exist"
         err.status = 404
         return next(err)
@@ -721,6 +732,7 @@ router.put("/:eventId/attendance", requireAuth, grabCurrentUser, validateAttenUp
     const groupCheck = await Group.findByPk(groupId)
     if (!groupCheck) {
         const err = new Error()
+        err.title = "Resource could not be found"
         err.message = "Group couldn't be found"
         err.status = 404
         return next(err)
@@ -741,6 +753,7 @@ router.put("/:eventId/attendance", requireAuth, grabCurrentUser, validateAttenUp
     if (!owner && !coHostCheck) {
         const err = new Error()
         err.status = 403
+        err.title = "Auth"
         err.message = "Forbidden"
         return next(err)
     }
@@ -766,6 +779,7 @@ router.delete("/:eventId/attendance", requireAuth, grabCurrentUser, async (req, 
     if (!eventCheck) {
         const err = new Error()
         err.message = "Event couldn't be found"
+        err.title = "Resource could not be found"
         err.status = 404
         return next(err)
     }
@@ -780,6 +794,7 @@ router.delete("/:eventId/attendance", requireAuth, grabCurrentUser, async (req, 
     if (!attendance) {
         const err = new Error()
         err.message = "Attendance does not exist for this User"
+        err.tittle = "Not found"
         err.status = 404
         return next(err)
     }
@@ -790,6 +805,7 @@ router.delete("/:eventId/attendance", requireAuth, grabCurrentUser, async (req, 
     if (!groupCheck) {
         const err = new Error()
         err.message = "Group couldn't be found"
+        err.title = "Resource could not be found"
         err.status = 404
         return next(err)
     }
@@ -801,6 +817,7 @@ router.delete("/:eventId/attendance", requireAuth, grabCurrentUser, async (req, 
     if (!owner && !currentUser) {
         const err = new Error()
         err.status = 403
+        err.title = "Auth"
         err.message = "Only the User or organizer may delete an Attendance"
         return next(err)
     }
