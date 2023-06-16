@@ -14,7 +14,7 @@ const dateF = (date) => {
     let d = new Date(date),
         dateFormatted = [(d.getMonth() + 1).padLeft(),
         d.getDate().padLeft(),
-        d.getFullYear()].join('/') +
+        d.getFullYear()].join('-') +
             ' ' +
             [d.getHours().padLeft(),
             d.getMinutes().padLeft(),
@@ -22,7 +22,24 @@ const dateF = (date) => {
     return dateFormatted
 }
 
+// price formatter
+const priceF = (price) => {
+    let dec = price.toString().split(".")
+
+    if (dec[1]) {
+        if (dec[1].length === 1) {
+            dec[1] += "0"
+
+            let decF = dec.join(".")
+
+            return decF
+        }
+    }
+}
+
+
+
 
 module.exports = {
-    dateF
+    dateF, priceF
 };

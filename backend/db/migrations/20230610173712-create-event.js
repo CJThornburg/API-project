@@ -50,8 +50,16 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false
       },
+      startNum: {
+        type: Sequelize.NUMBER,
+        allowNull: false
+      },
       endDate: {
         type: Sequelize.DATE,
+        allowNull: false
+      },
+      endNum: {
+        type: Sequelize.NUMBER,
         allowNull: false
       },
       createdAt: {

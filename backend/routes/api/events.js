@@ -5,7 +5,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { requireAuth, grabCurrentUser } = require('../../utils/auth');
 const { Op } = require('sequelize')
-
+const { dateF, priceF } = require('../../utils/date')
 
 const validateEvent = [
     check('venueId')
@@ -38,7 +38,7 @@ const validateEvent = [
     check('price')
         .custom(async (price, { req }) => {
             price = price.toString().split('.');
-            if (price[1].length > 2 || Number(value[0]) < 0)
+            if (price[1].length > 2 || Number(price[0]) < 0)
                 throw new Error('Please provide a valid price')
         }),
     check('description')
@@ -185,7 +185,7 @@ router.get("/", validateQuery, async (req, res) => {
     pagination.limit = size;
     pagination.offset = size * (page - 1);
 
-    console.log("page:", page, "size:", size, "offset:", pagination.offset)
+
 
 
     const where = {};
@@ -200,17 +200,20 @@ router.get("/", validateQuery, async (req, res) => {
     }
 
     if (startDate) {
-        const dateObj = new Date(startDate)
+        // const dateObj = new Date(startDate)
         console.log(startDate)
-        // let date = dateObj.toDateString()
-        // let time = dateObj.getTime()
-        // console.log("date:", date, "time:", time)
-        const iso = dateObj.toISOString()
-        const time = dateObj.getTime()
-        console.log(iso, time)
-        where.startDate = iso
+        const timeMs = new Date(startDate).getTime()
+        // dateIso = date.toISOString()
+        console.log("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii", "hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+
+        // 86,400,000
+        let min = (timeMs - 86400000)
+        let max = (timeMs + 86400000)
+
+
+        where.startNum = { [Op.between]: [min, max] }
     }
-    console.log("where:", where);
+
 
 
     const events = await Event.findAll({
@@ -227,12 +230,37 @@ router.get("/", validateQuery, async (req, res) => {
                 attributes: ["id", "city", "state"]
             }
         ],
+        attributes: ["id",
+            "groupId",
+            "venueId",
+            "name",
+            "type",
+            "startDate",
+            "endDate"],
         where,
         ...pagination
     })
 
+
+    for (let i = 0; i < events.length; i++) {
+        events[i].dataValues.startDate = dateF(events[i].dataValues.startDate)
+        events[i].dataValues.endDate = dateF(events[i].dataValues.endDate)
+
+
+
+        const eventPre = await EventImage.findOne({ where: { preview: true, eventId: events[i].dataValues.id } })
+        if (eventPre) {
+            events[i].dataValues.previewImage = eventPre.dataValues.url
+        } else {
+            events[i].dataValues.previewImage = null
+        }
+    }
+
+
+
     const returnObj = {}
     returnObj.Events = events
+
     return res.json(returnObj)
 })
 
@@ -268,7 +296,7 @@ router.get("/:eventId", async (req, res, next) => {
             { model: Attendance }
         ],
         attributes: {
-            exclude: ["createdAt", "updatedAt"]
+            exclude: ["createdAt", "updatedAt", "startNum", "endNum"]
         }
     });
 
@@ -285,6 +313,24 @@ router.get("/:eventId", async (req, res, next) => {
         event.dataValues.numAttending = null
     }
     delete event.dataValues.Attendances
+    event.dataValues.startDate = dateF(event.dataValues.startDate)
+    event.dataValues.endDate = dateF(event.dataValues.endDate)
+
+
+
+
+
+
+
+    event.dataValues.price = priceF(event.dataValues.price)
+
+
+
+
+
+
+
+
 
 
 
@@ -329,6 +375,7 @@ router.post("/:eventId/images", requireAuth, grabCurrentUser, validateNewEventIm
 
         })
         await newEventImage.save()
+        delete newEventImage.dataValues.eventId
         delete newEventImage.dataValues.updatedAt
         delete newEventImage.dataValues.createdAt
         return res.json(newEventImage)
@@ -350,6 +397,7 @@ router.post("/:eventId/images", requireAuth, grabCurrentUser, validateNewEventIm
 
 
 router.put("/:eventId", requireAuth, grabCurrentUser, validateEvent, async (req, res, next) => {
+
     let id = req.currentUser.data.id
     let eventId = req.params.eventId
     const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
@@ -407,13 +455,23 @@ router.put("/:eventId", requireAuth, grabCurrentUser, validateEvent, async (req,
             event.description = description,
             event.startDate = startDate,
             event.endDate = endDate
-
+        event.startNum = new Date(startDate).getTime()
+        event.endNum = new Date(endDate).getTime()
 
         delete event.dataValues.Group
 
         await event.save();
 
+        console.log("hiiiiiiiiiiiiiiiii", event)
+        event.dataValues.price = priceF(price)
+        delete event.dataValues.endNum
+        delete event.dataValues.startNum
+        event.dataValues.startDate = dateF(event.dataValues.startDate)
+        event.dataValues.endDate = dateF(event.dataValues.endDate)
+
+
         res.json(event)
+
 
 
     } else {
@@ -507,11 +565,6 @@ router.get("/:eventId/attendees", grabCurrentUser, async (req, res, next) => {
     // groupOwner  or host
 
 
-    atenTest = await Attendance.findAll({
-        where: { eventId: 22 },
-
-
-    })
 
 
     if (ownerCheck || memberCheck) {
