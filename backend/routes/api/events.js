@@ -187,6 +187,7 @@ router.get("/", validateQuery, async (req, res) => {
 
 
 
+
     const where = {};
 
 
@@ -199,12 +200,17 @@ router.get("/", validateQuery, async (req, res) => {
     }
 
     if (startDate) {
-        const dateObj = new Date(startDate)
-        console.log(startDate)
-        let date = dateObj.toDateString()
-        let time = dateObj.getTime()
-        console.log("date:", date, "time:", time)
-        where.startDate = startDate
+        // const dateObj = new Date(startDate)
+
+        const timeMs = new Date(startDate).getTime()
+        // dateIso = date.toISOString()
+
+        // 86,400,000
+        let min = (timeMs - 86400000)
+        let max = (timeMs + 86400000)
+
+
+        where.startNum = { [Op.between]: [min, max] }
     }
 
 
@@ -343,7 +349,7 @@ router.post("/:eventId/images", requireAuth, grabCurrentUser, validateNewEventIm
     if (!event) {
         const err = new Error()
         err.message = "Event couldn't be found"
-        err.title = "Resource Not Found!!!!"
+        err.title = "Resource Not Found"
         err.status = 404
         return next(err)
     }
@@ -547,7 +553,7 @@ router.get("/:eventId/attendees", grabCurrentUser, async (req, res, next) => {
     const group = await Group.findByPk(event.dataValues.groupId)
     const groupOwner = group.dataValues.organizerId
     const ownerCheck = id === groupOwner
-
+    // console.log("id:", group.dataValues.id)
 
     let memberCheck = false;
     memberStatus = await Membership.findOne({ where: { userId: id, groupId: group.dataValues.id, status: "co-host" } })
@@ -599,7 +605,7 @@ router.get("/:eventId/attendees", grabCurrentUser, async (req, res, next) => {
         delete aten[i].dataValues.User
         aten[i].dataValues.Attendance = { status: aten[i].dataValues.status }
         delete aten[i].dataValues.status
-
+        console.log(aten[i].toJSON())
 
     }
 
@@ -700,7 +706,7 @@ router.put("/:eventId/attendance", requireAuth, grabCurrentUser, validateAttenUp
     const groupId = eventCheck.dataValues.groupId
 
 
-
+    console.log(groupId)
 
     const attendance = await Attendance.findOne({ where: { eventId: eventId, userId: userId } })
     if (!attendance) {
