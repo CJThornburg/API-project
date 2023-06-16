@@ -83,7 +83,130 @@ const validateNewEventImage = [
     handleValidationErrors
 ];
 
-router.get("/", async (req, res) => {
+
+
+
+const validateQuery = [
+    check('page')
+        .custom(async (value, { req }) => {
+            let { page } = req.query
+
+            if (page) {
+                if (parseInt(page) < 1) {
+                    throw new Error("Page must be greater than or equal to 1")
+                }
+            }
+        }),
+    check('size')
+        .custom(async (value, { req }) => {
+            let { size } = req.query
+
+            if (size) {
+                if (parseInt(size) < 1) {
+                    throw new Error("Size must be greater than or equal to 1")
+                }
+            }
+        }),
+    check('name')
+        .custom(async (value, { req }) => {
+            let { name } = req.query
+
+            if (name) {
+                if (typeof name !== "string") {
+                    throw new Error("name must be a string")
+                }
+            }
+        }),
+
+    check('type')
+        .custom((value, { req }) => {
+            let { type } = req.query
+            if (!type) return true
+            if (type) {
+                return type === "Online" || type === "In person"
+            }
+        })
+        .withMessage("Type must be 'Online' or 'In person'"),
+    check('startDate')
+        .custom(async (value, { req }) => {
+            let { startDate } = req.query
+
+
+            if (startDate) {
+
+
+                const date = new Date(startDate)
+
+
+
+
+
+                if (date.toDateString() === "Invalid Date") {
+                    throw new Error("must be a valid datetime")
+                }
+            }
+        }),
+
+
+
+
+
+    handleValidationErrors
+];
+
+router.get("/", validateQuery, async (req, res) => {
+
+    let { page, size, name, type, startDate } = req.query
+
+    page = parseInt(page)
+    size = parseInt(size)
+
+    let defaultPage = 1;
+    let defaultSize = 20;
+
+
+    if (page <= 0 || isNaN(page)) {
+        page = defaultPage
+    }
+
+    if (page > 10) {
+        page = defaultPage
+    }
+
+    if (isNaN(size) || size <= 0) {
+        size = defaultSize
+    }
+    //if there is a size limit:
+    if (size > 20) size = defaultSize
+    const pagination = {};
+    pagination.limit = size;
+    pagination.offset = size * (page - 1);
+
+    console.log("page:", page, "size:", size, "offset:", pagination.offset)
+
+
+    const where = {};
+
+
+    if (name && typeof name === "string") {
+        where.name = name
+    }
+
+    if (type && (type === "Online" || type === "In person")) {
+        where.type = type;
+    }
+
+    if (startDate) {
+        const dateObj = new Date(startDate)
+        console.log(startDate)
+        let date = dateObj.toDateString()
+        let time = dateObj.getTime()
+        console.log("date:", date, "time:", time)
+        where.startDate = startDate
+    }
+    console.log("where:", where);
+
+
     const events = await Event.findAll({
 
 
@@ -97,7 +220,9 @@ router.get("/", async (req, res) => {
                 model: Venue,
                 attributes: ["id", "city", "state"]
             }
-        ]
+        ],
+        where,
+        ...pagination
     })
 
     const returnObj = {}
@@ -226,8 +351,8 @@ router.put("/:eventId", requireAuth, grabCurrentUser, validateEvent, async (req,
 
     let venue = await Venue.findByPk(parseInt(venueId))
 
-    if (venue) { console.log(true) }
-    else {
+    if (!venue) {
+
         const err = new Error()
         err.message = "Venue couldn't be found"
         err.title = "Resource Not Found"
