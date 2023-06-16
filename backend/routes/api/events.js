@@ -185,7 +185,6 @@ router.get("/", validateQuery, async (req, res) => {
     pagination.limit = size;
     pagination.offset = size * (page - 1);
 
-    console.log("page:", page, "size:", size, "offset:", pagination.offset)
 
 
     const where = {};
@@ -201,13 +200,13 @@ router.get("/", validateQuery, async (req, res) => {
 
     if (startDate) {
         const dateObj = new Date(startDate)
-        console.log(startDate)
+
         let date = dateObj.toDateString()
         let time = dateObj.getTime()
-        console.log("date:", date, "time:", time)
+
         where.startDate = startDate
     }
-    console.log("where:", where);
+
 
 
     const events = await Event.findAll({
@@ -493,7 +492,7 @@ router.get("/:eventId/attendees", grabCurrentUser, async (req, res, next) => {
     const group = await Group.findByPk(event.dataValues.groupId)
     const groupOwner = group.dataValues.organizerId
     const ownerCheck = id === groupOwner
-    // console.log("id:", group.dataValues.id)
+
 
     let memberCheck = false;
     memberStatus = await Membership.findOne({ where: { userId: id, groupId: group.dataValues.id, status: "co-host" } })
@@ -550,7 +549,7 @@ router.get("/:eventId/attendees", grabCurrentUser, async (req, res, next) => {
         delete aten[i].dataValues.User
         aten[i].dataValues.Attendance = { status: aten[i].dataValues.status }
         delete aten[i].dataValues.status
-        console.log(aten[i].toJSON())
+
 
     }
 
@@ -651,7 +650,7 @@ router.put("/:eventId/attendance", requireAuth, grabCurrentUser, validateAttenUp
     const groupId = eventCheck.dataValues.groupId
 
 
-    console.log(groupId)
+
 
     const attendance = await Attendance.findOne({ where: { eventId: eventId, userId: userId } })
     if (!attendance) {

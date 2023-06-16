@@ -10,7 +10,7 @@ const { requireAuth, grabCurrentUser } = require('../../utils/auth');
 router.delete("/:imageId", requireAuth, grabCurrentUser, async (req, res, next) => {
     const { imageId } = req.params
     let id = req.currentUser.data.id
-    
+
 
     // grab image
     const delImage = await EventImage.findByPk(imageId)
@@ -28,18 +28,16 @@ router.delete("/:imageId", requireAuth, grabCurrentUser, async (req, res, next) 
 
 
     let groupId = event.dataValues.groupId
-    console.log(groupId)
-    console.log("id:", id)
+
     // grab group id
     // q group
     const group = await Group.findByPk(groupId)
 
-    console.log(group,
-        group.dataValues.organizerId)
+
     // check if
     const ownerCheck = id === group.dataValues.organizerId
 
-    console.log("ownerCheck:", ownerCheck)
+  
     //q membership based on current user
     //grab if co-host
     const coHost = await Membership.findOne({ where: { groupId: groupId, userId: id, status: "co-host" } })

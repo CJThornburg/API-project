@@ -82,7 +82,6 @@ const requireAuth = function (req, _res, next) {
 
 
 const grabCurrentUser = function (req, _res, next) {
-    // console.log(req.cookies)
 
 
     if (req.cookies.token) {

@@ -582,7 +582,7 @@ router.get("/:groupId/events", async (req, res, next) => {
     const { groupId } = req.params;
 
     const group = await Group.findByPk(groupId);
-    console.log(group)
+
     if (!group) {
         const err = new Error()
         err.message = "Group couldn't be found"
@@ -616,7 +616,7 @@ router.get("/:groupId/events", async (req, res, next) => {
 
         })
 
-    // console.log(events)
+
 
 
 
@@ -706,9 +706,9 @@ router.post("/:groupId/events", requireAuth, grabCurrentUser, validateEvent, asy
         if (dec[1]) {
             if (dec[1].length === 1) {
                 dec[1] += "0"
-                console.log(dec)
+
                 const decF = dec.join(".")
-                console.log(decF)
+
                 newEvent.dataValues.price = Number(decF)
             }
         }
@@ -797,7 +797,7 @@ router.get("/:groupId/members", grabCurrentUser, async (req, res, next) => {
         let userId = trimmedRoster.Members[i].userId
         const user = await User.findByPk(userId);
         let trimmedUser = user.toJSON()
-        console.log(trimmedRoster)
+
         trimmedRoster.Members[i].id = trimmedUser.id
         trimmedRoster.Members[i].firstName = trimmedUser.firstName
         trimmedRoster.Members[i].lastName = trimmedUser.lastName

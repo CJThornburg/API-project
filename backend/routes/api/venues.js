@@ -85,7 +85,7 @@ router.put("/:venueId", requireAuth, grabCurrentUser, validateVenue, async (req,
     )
 
 
-    // console.log(venueInfo.toJSON().Group)
+
     let owner = trimmedVI.Group.organizerId
     // let cohost = trimmedVI.Group.Memberships[0].status
 
