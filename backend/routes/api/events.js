@@ -71,6 +71,17 @@ const validateAttenUpdate = [
     handleValidationErrors
 ];
 
+const validateNewEventImage = [
+    check('url')
+        .exists({ checkFalsy: true })
+        .withMessage('url is required'),
+    check('preview')
+        .isBoolean()
+        .withMessage('preview must be "true" or "false')
+        .exists()
+        .withMessage('preview is required'),
+    handleValidationErrors
+];
 
 router.get("/", async (req, res) => {
     const events = await Event.findAll({
@@ -153,7 +164,7 @@ router.get("/:eventId", async (req, res, next) => {
 
 
 
-router.post("/:eventId/images", requireAuth, grabCurrentUser, async (req, res, next) => {
+router.post("/:eventId/images", requireAuth, grabCurrentUser, validateNewEventImage, async (req, res, next) => {
     const { url, preview } = req.body
     let id = req.currentUser.data.id
     let eventId = req.params.eventId
@@ -187,6 +198,8 @@ router.post("/:eventId/images", requireAuth, grabCurrentUser, async (req, res, n
 
         })
         await newEventImage.save()
+        delete newEventImage.dataValues.updatedAt
+        delete newEventImage.dataValues.createdAt
         return res.json(newEventImage)
     } else {
         const err = new Error()
@@ -563,7 +576,7 @@ router.put("/:eventId/attendance", requireAuth, grabCurrentUser, validateAttenUp
 router.delete("/:eventId/attendance", requireAuth, grabCurrentUser, async (req, res, next) => {
     let id = req.currentUser.data.id
     let eventId = req.params.eventId
-    const  userId  = req.body.userId
+    const userId = req.body.userId
 
 
     const eventCheck = await Event.findByPk(eventId);

@@ -158,6 +158,18 @@ const validateMemberDelete = [
     handleValidationErrors
 ];
 
+const validateNewGroupImage = [
+    check('url')
+        .exists({ checkFalsy: true })
+        .withMessage('url is required'),
+    check('preview')
+        .isBoolean()
+        .withMessage('preview must be "true" or "false')
+        .exists()
+        .withMessage('preview is required'),
+    handleValidationErrors
+];
+
 
 
 router.get("/", async (req, res) => {
@@ -992,6 +1004,61 @@ router.delete("/:groupId/membership", requireAuth, grabCurrentUser, validateMemb
         return next(err)
     }
 })
+
+
+
+router.post("/:groupId/images", requireAuth, grabCurrentUser, validateNewGroupImage, async (req, res, next) => {
+    const { url, preview } = req.body
+    let id = req.currentUser.data.id
+    let groupId = req.params.groupId
+
+
+
+    const group = await Group.findByPk(groupId)
+    if (!group) {
+        const err = new Error()
+        err.message = "Group couldn't be found"
+        err.title = "Resource Not Found"
+        err.status = 404
+        return next(err)
+    }
+
+    const ownerCheck = id === group.dataValues.organizerId
+
+    // attendy, host, co-host of the event so essentialy have to have attended lol
+
+
+    if (ownerCheck) {
+        let newGroupImage = GroupImage.build({
+            url,
+            preview,
+            groupId: parseInt(groupId)
+
+        })
+        await newGroupImage.save()
+        delete newGroupImage.dataValues.updatedAt
+        delete newGroupImage.dataValues.createdAt
+        return res.json(newGroupImage)
+    } else {
+        const err = new Error()
+        err.status = 403
+        err.message = "Forbidden"
+        return next(err)
+    }
+
+
+})
+
+
+
+
+
+
+
+
+
+
+
 
 
 module.exports = router;
