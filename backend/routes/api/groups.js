@@ -5,7 +5,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { requireAuth, grabCurrentUser } = require('../../utils/auth');
 const { Op } = require('sequelize');
-
+const { dateF } = require('../../utils/date')
 
 
 
@@ -103,7 +103,7 @@ const validateEvent = [
     check('price')
         .custom(async (price, { req }) => {
             price = price.toString().split('.');
-            if (price[1].length > 2 || Number(value[0]) < 0)
+            if (price[1].length > 2 || Number(price[0]) < 0)
                 throw new Error('Please provide a valid price')
         }),
     check('description')
@@ -199,9 +199,9 @@ router.get("/", async (req, res) => {
 
     }
 
-
+    let Groups = groups
     return res.json({
-        groups
+        Groups
     })
 })
 
@@ -256,10 +256,11 @@ router.get("/current", requireAuth, grabCurrentUser, async (req, res) => {
         const count = member.length
 
 
+        console.log(groups[i])
 
         groups[i].dataValues.numMembers = count
         addGroups.add(groups[i].dataValues.id)
-        const preImage = await GroupImage.findOne({ where: { id: groups[i].dataValues.id, preview: true } })
+        const preImage = await GroupImage.findOne({ where: { id: groups[i].toJSON().id, preview: true } })
         if (preImage) {
             let trimmed = preImage.toJSON()
             groups[i].dataValues.previewImage = trimmed.url
@@ -269,6 +270,7 @@ router.get("/current", requireAuth, grabCurrentUser, async (req, res) => {
 
     }
 
+
     for (let i = 0; i < memberOf.length; i++) {
 
         if (!addGroups.has(memberOf[i].groupId)) {
@@ -276,7 +278,7 @@ router.get("/current", requireAuth, grabCurrentUser, async (req, res) => {
             const member = await group.getMemberships()
             const count = member.length
             group.dataValues.numMembers = count
-            const preImage = await GroupImage.findOne({ where: { id: groups[i].dataValues.id, preview: true } })
+            const preImage = await GroupImage.findOne({ where: { id: memberOf[i].toJSON().id, preview: true } })
             if (preImage) {
                 let trimmed = preImage.toJSON()
                 group.dataValues.previewImage = trimmed.url
@@ -293,8 +295,10 @@ router.get("/current", requireAuth, grabCurrentUser, async (req, res) => {
 
 
 
+
+    let Groups = groups
     return res.json({
-        groups,
+        Groups,
 
     })
 })
@@ -602,17 +606,11 @@ router.get("/:groupId/events", async (req, res, next) => {
                 { model: Attendance },
 
                 {
-                    // currently breaks code by making whole query return []
-                    model: EventImage,
-                    where: { preview: true },
-                    required: false
-                },
-                {
                     model: Venue,
                     attributes: ["id", "city", "state"]
                 }
             ],
-            attributes: { exclude: ["createdAt", "updatedAt", "capacity", "price", "description"] }
+            attributes: { exclude: ["createdAt", "updatedAt", "capacity", "price", "description", "startNum", "endNum"] }
 
         })
 
@@ -626,18 +624,16 @@ router.get("/:groupId/events", async (req, res, next) => {
         let count = event.Attendances.length
         events[i].dataValues.numAttending = count
         delete events[i].dataValues.Attendances
+        events[i].dataValues.startDate = dateF(events[i].dataValues.startDate)
+        events[i].dataValues.endDate = dateF(events[i].dataValues.endDate)
 
+        if (event.EventImages[0].url) {
 
-        if (event.EventImages[0]) {
             let url = event.EventImages[0].url
-            events[i].dataValues.preImage = url
-        } else {
-            events[i].dataValues.previewImage = null
+            events[i].dataValues.previewImage = url
         }
-
-
+        else { events[i].dataValues.previewImage = null }
         delete events[i].dataValues.EventImages
-
     }
 
 
@@ -695,6 +691,8 @@ router.post("/:groupId/events", requireAuth, grabCurrentUser, validateEvent, asy
             description,
             startDate,
             endDate,
+            startNum: new Date(startDate).getTime(),
+            endNum: new Date(endDate).getTime(),
             groupId: parseInt(groupId)
         })
 
@@ -702,19 +700,32 @@ router.post("/:groupId/events", requireAuth, grabCurrentUser, validateEvent, asy
         await newEvent.save()
 
         let dec = newEvent.dataValues.price.toString().split(".")
-        //dont think I need to do this, seems like it is something postman is doing
+
         if (dec[1]) {
             if (dec[1].length === 1) {
                 dec[1] += "0"
 
                 const decF = dec.join(".")
-
+                console.log(decF)
                 newEvent.dataValues.price = Number(decF)
             }
         }
 
 
 
+
+
+        delete newEvent.dataValues.startNum
+        delete newEvent.dataValues.endNum
+        delete newEvent.dataValues.updatedAt
+        delete newEvent.dataValues.createdAt
+        delete newEvent.dataValues.groupId
+        delete newEvent.dataValues.id
+
+
+
+        newEvent.dataValues.startDate = dateF(newEvent.dataValues.startDate)
+        newEvent.dataValues.endDate = dateF(newEvent.dataValues.endDate)
         res.json(newEvent)
 
     } else {
@@ -959,6 +970,10 @@ router.put("/:groupId/membership", requireAuth, grabCurrentUser, validateMemberU
             delete memberCheck.dataValues.userId
             delete memberCheck.dataValues.createdAt
             delete memberCheck.dataValues.updatedAt
+
+            delete memberCheck.dataValues.updatedAt
+
+            delete memberCheck.dataValues.createdAt
 
             return res.json(memberCheck)
         } else {

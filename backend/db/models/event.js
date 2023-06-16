@@ -65,9 +65,17 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false
     },
+    startNum: {
+      type: DataTypes.NUMBER,
+      allowNull: false
+    },
     endDate: {
       type: DataTypes.DATE
-    }
+    },
+    endNum: {
+      type: DataTypes.NUMBER,
+      allowNull: false
+    },
   }, {
     sequelize,
     modelName: 'Event',

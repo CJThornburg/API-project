@@ -20,6 +20,8 @@ module.exports = {
         "price": 18.50,
         "description": "The first meet and greet for our group! Come say hello!",
         "startDate": "2021-11-19 20:00:00",
+        "startNum": new Date("2021-11-19 20:00:00").getTime(),
+        "endNum": new Date("2021-11-19 22:00:00").getTime(),
         "endDate": "2021-11-19 22:00:00",
       },
       {
@@ -31,7 +33,9 @@ module.exports = {
         "price": .50,
         "description": "come compete for for a spot on the three man",
         "startDate": "2023-11-19 03:00:00",
-        "endDate": "2023-11-23 03:00:00",
+        "endDate": "2023-11-19 03:00:00",
+        "startNum": new Date("2023-11-19 03:00:00").getTime(),
+        "endNum": new Date("2023-11-19 03:00:00").getTime(),
       },
       {
         "groupId": 3,
@@ -43,6 +47,8 @@ module.exports = {
         "description": "come make blankets for the homeless",
         "startDate": "2023-12-19 03:00:00",
         "endDate": "2023-12-19 08:00:00",
+        "startNum": new Date("2023-12-19 03:00:00").getTime(),
+        "endNum": new Date("2023-12-19 08:00:00").getTime(),
       },
       {
         "groupId": 3,
@@ -54,6 +60,8 @@ module.exports = {
         "description": "come make blankets for the homeless",
         "startDate": "2024-12-19 03:00:00",
         "endDate": "2024-12-19 08:00:00",
+        "startNum": new Date("2024-12-19 03:00:00").getTime(),
+        "endNum": new Date("2024-12-19 08:00:00").getTime(),
       }
 
 
