@@ -49,6 +49,9 @@ const validateNewGroup = [
     handleValidationErrors
 ];
 
+
+
+
 const validateVenue = [
     check('address')
         .exists({ checkFalsy: true })
@@ -185,7 +188,8 @@ router.get("/", async (req, res) => {
 
         const member = await groups[i].getMemberships()
         const count = member.length
-
+        groups[i].dataValues.createdAt = dateF(groups[i].dataValues.createdAt)
+        groups[i].dataValues.updatedAt = dateF(groups[i].dataValues.updatedAt)
 
 
         groups[i].dataValues.numMembers = count
@@ -257,7 +261,8 @@ router.get("/current", requireAuth, grabCurrentUser, async (req, res) => {
 
 
         console.log(groups[i])
-
+        groups[i].dataValues.createdAt = dateF(groups[i].dataValues.createdAt)
+        groups[i].dataValues.updatedAt = dateF(groups[i].dataValues.updatedAt)
         groups[i].dataValues.numMembers = count
         addGroups.add(groups[i].dataValues.id)
         const preImage = await GroupImage.findOne({ where: { id: groups[i].toJSON().id, preview: true } })
@@ -387,6 +392,8 @@ router.post("/", requireAuth, grabCurrentUser, validateNewGroup, async (req, res
     }
 
 
+    newGroup.dataValues.createdAt = dateF(newGroup.dataValues.createdAt)
+    newGroup.dataValues.updatedAt = dateF(newGroup.dataValues.updatedAt)
     return res.json(
         newGroup
     )
@@ -422,6 +429,8 @@ router.put("/:groupId", requireAuth, grabCurrentUser, validateNewGroup, async (r
 
         await groupInfo.save();
         const updatedGroupInfo = await Group.findByPk(groupId);
+        updatedGroupInfo.dataValues.createdAt = dateF(updatedGroupInfo.dataValues.createdAt)
+        updatedGroupInfo.dataValues.updatedAt = dateF(updatedGroupInfo.dataValues.updatedAt)
         return res.json(updatedGroupInfo)
     } else {
         const err = new Error()
@@ -627,9 +636,12 @@ router.get("/:groupId/events", async (req, res, next) => {
         events[i].dataValues.startDate = dateF(events[i].dataValues.startDate)
         events[i].dataValues.endDate = dateF(events[i].dataValues.endDate)
 
-        if (event.EventImages[0].url) {
+        const previewI = await EventImage.findOne({ where: { eventId: event.id, preview: true } })
 
-            let url = event.EventImages[0].url
+        if (previewI) {
+        
+            let url = previewI.dataValues.url
+
             events[i].dataValues.previewImage = url
         }
         else { events[i].dataValues.previewImage = null }
