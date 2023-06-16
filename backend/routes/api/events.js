@@ -36,8 +36,11 @@ const validateEvent = [
         .isInt()
         .withMessage("Capacity must be an integer"),
     check('price')
-        .isDecimal([{ decimal_digits: '2' }])
-        .withMessage("Price is invalid"),
+        .custom(async (price, { req }) => {
+            price = price.toString().split('.');
+            if (price[1].length > 2 || Number(value[0]) < 0)
+                throw new Error('Please provide a valid price')
+        }),
     check('description')
         .exists({ checkFalsy: true })
         .withMessage("Description is required"),
