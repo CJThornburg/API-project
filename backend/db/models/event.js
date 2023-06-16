@@ -66,14 +66,14 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     startNum: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     endDate: {
       type: DataTypes.DATE
     },
     endNum: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false
     },
   }, {
