@@ -451,17 +451,29 @@ router.put("/:eventId", requireAuth, grabCurrentUser, validateEvent, async (req,
     let oI = event.toJSON().Group.organizerId
 
     if (event.toJSON().Group.Memberships[0] || oI === id) {
+        let startNum = new Date(event.startDate).getTime()
+        let endNum = new Date(event.endDate).getTime()
+        event.set({
+            venueId,
+            name,
+            type,
+            capacity,
+            price,
+            description,
+            startDate,
+            endDate,
+            startNum,
+            endNum
+        })
+        // event.venueId = venueId,
+        //     event.name = name,
+        //     event.type = type,
+        //     event.capacity = capacity,
+        //     event.price = price,
+        //     event.description = description,
+        //     event.startDate = startDate,
+        //     event.endDate = endDate
 
-        event.venueId = venueId,
-            event.name = name,
-            event.type = type,
-            event.capacity = capacity,
-            event.price = price,
-            event.description = description,
-            event.startDate = startDate,
-            event.endDate = endDate
-        event.startNum = new Date(startDate).getTime()
-        event.endNum = new Date(endDate).getTime()
 
         delete event.dataValues.Group
 
