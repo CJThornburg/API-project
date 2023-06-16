@@ -366,7 +366,11 @@ router.post("/:eventId/images", requireAuth, grabCurrentUser, validateNewEventIm
         }
     })
 
-    if (permissionCheck) {
+    const group = event.dataValues.groupId
+    const groupOwner =await Group.findOne({ where: { id: group, organizerId: id } })
+    console.log(event.toJSON())
+    console.log(groupOwner)
+    if (permissionCheck || groupOwner) {
         let newEventImage = EventImage.build({
             url,
             preview,

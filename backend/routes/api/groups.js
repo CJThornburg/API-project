@@ -372,7 +372,7 @@ router.post("/", requireAuth, grabCurrentUser, validateNewGroup, async (req, res
 
     let newGroup
     if (!exist) {
-        newGroup = Group.build({
+        let newGroup = Group.build({
             name,
             about,
             type,
@@ -384,19 +384,30 @@ router.post("/", requireAuth, grabCurrentUser, validateNewGroup, async (req, res
 
         await newGroup.save()
 
+        let grabNewGroup = await Group.findOne({ where: { name: name } })
+
+        let newMember = await Membership.build({
+            userId: id,
+            groupId: grabNewGroup.dataValues.id,
+            status: "co-host"
+        })
+
+        await newMember.save()
+        newGroup.dataValues.createdAt = dateF(newGroup.dataValues.createdAt)
+        newGroup.dataValues.updatedAt = dateF(newGroup.dataValues.updatedAt)
+        return res.json(
+            newGroup
+        )
+
+
     } else {
         const err = new Error()
         err.message = "This group already exists :("
         err.status = 400
-        next(err)
+        return next(err)
     }
 
 
-    newGroup.dataValues.createdAt = dateF(newGroup.dataValues.createdAt)
-    newGroup.dataValues.updatedAt = dateF(newGroup.dataValues.updatedAt)
-    return res.json(
-        newGroup
-    )
 
 })
 
@@ -639,7 +650,7 @@ router.get("/:groupId/events", async (req, res, next) => {
         const previewI = await EventImage.findOne({ where: { eventId: event.id, preview: true } })
 
         if (previewI) {
-        
+
             let url = previewI.dataValues.url
 
             events[i].dataValues.previewImage = url
@@ -694,7 +705,7 @@ router.post("/:groupId/events", requireAuth, grabCurrentUser, validateEvent, asy
     if ((trimmedGI.organizerId === id) || cohost) {
 
 
-        newEvent = Event.build({
+        let newEvent = Event.build({
             venueId,
             name,
             type,
@@ -724,15 +735,22 @@ router.post("/:groupId/events", requireAuth, grabCurrentUser, validateEvent, asy
         }
 
 
+        let newAttendance = await Attendance.build({
+            eventId: newEvent.dataValues.id,
+            userId: id,
+            status: "host"
 
+        })
+
+        await newAttendance.save()
 
 
         delete newEvent.dataValues.startNum
         delete newEvent.dataValues.endNum
         delete newEvent.dataValues.updatedAt
         delete newEvent.dataValues.createdAt
-        delete newEvent.dataValues.groupId
-        delete newEvent.dataValues.id
+
+
 
 
 
@@ -1090,17 +1108,6 @@ router.post("/:groupId/images", requireAuth, grabCurrentUser, validateNewGroupIm
 
 
 })
-
-
-
-
-
-
-
-
-
-
-
 
 
 module.exports = router;
