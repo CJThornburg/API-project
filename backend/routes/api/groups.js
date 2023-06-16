@@ -49,6 +49,40 @@ const validateNewGroup = [
     handleValidationErrors
 ];
 
+const validateUpdateGroup = [
+    check('name')
+        .exists({ checkFalsy: true })
+        .withMessage('Name must be provided')
+        .isLength({ max: 60 })
+        .withMessage('Name must be 60 characters or less')
+        .isLength({ min: 2 })
+        .withMessage('Name must be at least 2 characters or less')
+
+    ,
+    check('about')
+        .exists({ checkFalsy: true })
+        .withMessage('About must be provided')
+        .isLength({ min: 50 })
+        .withMessage('About must be 50 characters or more'),
+    check('type')
+        .custom((value, { req }) => {
+            return value === "Online" || value === "In person"
+        })
+        .withMessage("Type must be 'Online' or 'In person'"),
+    check('private')
+        .exists({ checkFalsy: true })
+        .withMessage("private option must be selected")
+        .isBoolean()
+        .withMessage('Private must be a boolean'),
+    check('city')
+        .exists({ checkFalsy: true })
+        .withMessage('City is Required'),
+    check('state')
+        .exists({ checkFalsy: true })
+        .withMessage('state is Required'),
+    handleValidationErrors
+];
+
 
 
 
@@ -130,13 +164,14 @@ const validateMemberUpdate = [
     check('memberId')
         .exists({ checkFalsy: true })
         .withMessage('memberId is required')
-        .custom(async (value, { req }) => {
-            const userCheck = await User.findByPk(req.body.memberId)
+    // .custom(async (value, { req }) => {
+    //     const userCheck = await User.findByPk(req.body.memberId)
 
-            if (!userCheck) {
-                throw new Error("User couldn't be found");
-            }
-        }),
+    //     if (!userCheck) {
+    //         throw new Error("User couldn't be found");
+    //     }
+    // })
+    ,
     check('status')
         .exists({ checkFalsy: true })
         .custom(async (value, { req }) => {
@@ -415,7 +450,7 @@ router.post("/", requireAuth, grabCurrentUser, validateNewGroup, async (req, res
 
 
 
-router.put("/:groupId", requireAuth, grabCurrentUser, validateNewGroup, async (req, res, next) => {
+router.put("/:groupId", requireAuth, grabCurrentUser, validateUpdateGroup, async (req, res, next) => {
     const { name, about, type, private, city, state } = req.body
     let id = req.currentUser.data.id
     const groupId = req.params.groupId
@@ -932,18 +967,18 @@ router.put("/:groupId/membership", requireAuth, grabCurrentUser, validateMemberU
 
     const { memberId, status } = req.body
 
-    const memberCheck = await Membership.findOne({ where: { userId: memberId, groupId: groupId } })
-    if (!memberCheck) {
-        const err = new Error()
-        err.message = "Membership between the user and the group does not exist"
-        err.status = 404
-        return next(err)
-    }
 
     const groupCheck = await Group.findByPk(groupId)
     if (!groupCheck) {
         const err = new Error()
         err.message = "Group couldn't be found"
+        err.status = 404
+        return next(err)
+    }
+    const memberCheck = await Membership.findOne({ where: { userId: memberId, groupId: groupId } })
+    if (!memberCheck) {
+        const err = new Error()
+        err.message = "Membership between the user and the group does not exist"
         err.status = 404
         return next(err)
     }
