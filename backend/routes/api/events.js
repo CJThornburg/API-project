@@ -368,8 +368,9 @@ router.post("/:eventId/images", requireAuth, grabCurrentUser, validateNewEventIm
 
     const group = event.dataValues.groupId
     const groupOwner = await Group.findOne({ where: { id: group, organizerId: id } })
-    console.log(event.toJSON())
+    console.log("event:", event.toJSON())
     console.log(groupOwner)
+
     if (permissionCheck || groupOwner) {
         let newEventImage = EventImage.build({
             url,
@@ -760,9 +761,10 @@ router.put("/:eventId/attendance", requireAuth, grabCurrentUser, validateAttenUp
 
     let owner = groupCheck.toJSON().organizerId === id
 
+    console.log("OWNER!!!!!!!", owner)
     const coHost = await Membership.findOne({ where: { userId: id, groupId: groupId } })
 
-    let coHostCheck = false;
+    let coHostCheck = groupCheck.toJSON().organizerId;
     if (coHost) {
         coHostCheck = coHost.toJSON().status === "co-host"
     }

@@ -27,6 +27,11 @@ module.exports = {
         "eventId": 3,
         "preview": false
       },
+      {
+        "url": "https://www.cdc.gov/healthypets/images/pets/cute-dog-headshot.jpg?_=42445",
+        "eventId":5,
+        "preview": false
+      },
 
     ], {});
   },
@@ -35,7 +40,7 @@ module.exports = {
     options.tableName = 'EventImages';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      id: { [Op.in]: [1, 2, 3] }
+      id: { [Op.in]: [1, 2, 3, 4] }
     }, {});
   }
 };

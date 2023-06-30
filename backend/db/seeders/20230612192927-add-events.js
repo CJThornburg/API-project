@@ -62,6 +62,19 @@ module.exports = {
         "endDate": "2024-12-19 08:00:00",
         "startNum": new Date("2024-12-19 03:00:00").getTime(),
         "endNum": new Date("2024-12-19 08:00:00").getTime(),
+      },
+      {
+        "groupId": 4,
+        "venueId": 3,
+        "name": "photos4lyfe2",
+        "type": "In person",
+        "capacity": 50,
+        "price": 1.50,
+        "description": "come make blankets for the homeless",
+        "startDate": "2024-12-19 03:00:00",
+        "endDate": "2024-12-19 08:00:00",
+        "startNum": new Date("2024-12-19 03:00:00").getTime(),
+        "endNum": new Date("2024-12-19 08:00:00").getTime(),
       }
 
 
@@ -73,7 +86,7 @@ module.exports = {
     options.tableName = 'Events';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      id: { [Op.in]: [1, 2, 3] }
+      id: { [Op.in]: [1, 2, 3, 4, 5] }
     }, {});
   }
 };

@@ -41,6 +41,15 @@ module.exports = {
         city: "Fairy",
         state: "virginia"
       },
+      {
+        organizerId: 4,
+        name: "img fanclub",
+        about: "group that love photos",
+        type: "Hybrid",
+        private: false,
+        city: "Fairy",
+        state: "virginia"
+      }
 
 
     ], {});
@@ -50,7 +59,7 @@ module.exports = {
     options.tableName = 'Groups';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      name: { [Op.in]: ['Extreme Living', 'pex legends fanclub', 'knitting fanclub'] }
+      name: { [Op.in]: ['Extreme Living', 'pex legends fanclub', 'knitting fanclub', "img fanclub"] }
     }, {});
   }
 };
