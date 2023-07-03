@@ -88,6 +88,22 @@ h1.website-title {
 
 .lP-card {
     display: inline;
+
+}
+
+
+.lP-card:hover {
+    cursor: pointer;
+
+    .lP-link {
+        text-decoration: underline;
+        color: teal
+    }
+}
+
+.lP-link {
+    text-decoration: none;
+    color: black
 }
 
 
@@ -109,10 +125,11 @@ h1.website-title {
 
 
 
-
-
-
-
-
 /* ================SECTION 4=============== */
+.section4 {
+    display: flex;
+    justify-content: center;
+}
+
+
 /* ======================End of section 4 ======*/
