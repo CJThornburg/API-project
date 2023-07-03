@@ -41,8 +41,8 @@ function LandingPage() {
 
                     <div className="lP-card">
                         <img className="lP-card-img" src="https://cdn-icons-png.flaticon.com/512/5363/5363451.png"></img>
-                        {/* to="See all groups" */}
-                        <Link className="lP-link" >
+                      
+                        <Link className="lP-link" to="/groups">
                             <h3 >See fellow Groups</h3>
                         </Link>
                         <p>dsfds sdfldsjf sdfldsj sdflkdsj sfdlskjf sdfkdslj </p>

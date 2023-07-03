@@ -1,0 +1,26 @@
+.GL-group {
+    display: flex;
+    align-items: center;
+    border-top: 2px solid grey;
+}
+
+
+.GL-group:hover {
+    cursor: pointer;
+}
+
+.GL-photo {
+    min-width: 400px;
+    height: 250px;
+}
+
+
+.GL-dets {
+    margin-left: 3%;
+}
+
+.GL-mini-dets {
+    display: flex;
+    gap: 10px 3%;
+    align-items: center;
+}

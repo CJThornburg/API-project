@@ -1,0 +1,17 @@
+.header-active {
+    text-decoration: underline;
+    color: teal
+}
+
+
+.header-un-active {
+    color: gray;
+    text-decoration: none;
+}
+
+
+.header-links {
+    display: flex;
+    gap: 10px 3%;
+    justify-content: flex-start;
+}
