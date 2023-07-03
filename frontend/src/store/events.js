@@ -16,6 +16,7 @@ export const thunkGetEventsByGroup = (id) => async (dispatch) => {
 
     const response = await csrfFetch(`/api/groups/${id}/events`);
     const data = await response.json();
+    console.log(data)
     dispatch(getGroupEvents(data.Events));
     return response;
 };
@@ -31,25 +32,30 @@ export const thunkGetEventsByGroup = (id) => async (dispatch) => {
 const GET_GROUP_EVENTS = "EVENTS/GetGroupEvents";
 
 //actins
-const getGroupEvents = (Events) => {
+const getGroupEvents = (eventsData) => {
     return {
         type: GET_GROUP_EVENTS,
-        payload: Events,
+        eventsData,
     };
 };
 
 
-const eventsReducer = (state = {}, action) => {
+const initialState = {
+    eventsGroup: {},
+
+}
+
+const eventsReducer = (state = initialState, action) => {
     let newEvents;
     switch (action.type) {
         case GET_GROUP_EVENTS:
-            events = Object.assign({}, state);
-            
-            action.payload.forEach((events) => {
+        // newEvents = Object.assign({}, state);
 
-            })
-            events.group = action.payload;
-            return events;
+        // action.payload.forEach((eventsData) => {
+
+        // })
+        // events.group = action.payload;
+        // return eventsData;
 
         default:
             return state;

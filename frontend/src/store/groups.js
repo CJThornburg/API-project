@@ -17,7 +17,7 @@ export const thunkGetGroups = () => async (dispatch) => {
     const data = await response.json();
     dispatch(setGroups(data.Groups));
     return response;
-  };
+};
 
 
 
@@ -29,19 +29,33 @@ export const thunkGetGroups = () => async (dispatch) => {
 const SET_GROUPS = "Groups/setGroups";
 
 //actins
-const setGroups = (Groups) => {
+const setGroups = (groupData) => {
     return {
         type: SET_GROUPS,
-        payload: Groups,
+        groupData,
     };
 };
-const groupsReducer = (state = [], action) => {
-    let groups;
+
+
+const initialState = {
+    allGroups: {},
+    singleGroup: {},
+    eventsByGroup:{}
+}
+
+// state will be saved to state.groups
+const groupsReducer = (state = initialState, action) => {
+
     switch (action.type) {
         case SET_GROUPS:
+            let newState = Object.assign({}, state)
 
-           let groups= action.payload;
-            return groups;
+            action.groupData.forEach((group) => {
+
+                newState.allGroups[group.id] = group
+            });
+
+            return newState;
 
         default:
             return state;

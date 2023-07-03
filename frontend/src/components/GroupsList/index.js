@@ -4,22 +4,23 @@ import EventNumber from "./EventNumber";
 import './GroupsList.css'
 import { useDispatch, useSelector } from "react-redux";
 import * as groupsActions from '../../store/groups'
+import * as eventsActions from '../../store/events'
 
 
 
 
 function GroupsList() {
     const dispatch = useDispatch()
-    const groups = useSelector(state => state.groups);
+    // turns stat.groups.allGroups into an array
+    const groups = useSelector(state => Object.values(state.groups.allGroups));
 
     useEffect(() => {
 
         // declare the data fetching function
         dispatch(groupsActions.thunkGetGroups())
 
-        // dispatch(eventsActions.thunkGetEventsByGroup(groupId))
+        
 
-        console.log("hiiiiiiiiii")
     }, [])
 
 
