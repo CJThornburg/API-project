@@ -20,14 +20,29 @@ export const thunkGetGroups = () => async (dispatch) => {
 };
 
 
+export const thunkGetEventsByGroup = (id) => async (dispatch) => {
 
+    const response = await csrfFetch(`/api/groups/${id}/events`);
+    let data = await response.json();
+    console.log("hiiiiiiii", id)
+    // let eventsObj
+    // if (id) {
+    //     eventsObj['id'] = id
+    // }
+
+    // // eventsObj['id'] = id
+    // console.log("hiiiiiiiiiiiiiiiiiiiiiiiiiiiii", eventsObj)
+    // eventsObj['data'] = data
+    dispatch(getGroupEvents({ ...data, id: id }));
+    return response;
+};
 
 
 
 
 // types
 const SET_GROUPS = "Groups/setGroups";
-
+const GET_GROUP_EVENTS = "EVENTS/GetGroupEvents";
 //actins
 const setGroups = (groupData) => {
     return {
@@ -37,10 +52,19 @@ const setGroups = (groupData) => {
 };
 
 
+const getGroupEvents = (eventsData) => {
+    return {
+        type: GET_GROUP_EVENTS,
+        eventsData,
+    };
+};
+
+
+
 const initialState = {
     allGroups: {},
     singleGroup: {},
-    eventsByGroup:{}
+    eventsByGroup: {}
 }
 
 // state will be saved to state.groups
@@ -56,6 +80,15 @@ const groupsReducer = (state = initialState, action) => {
             });
 
             return newState;
+
+        case GET_GROUP_EVENTS:
+            let newStateEvents = Object.assign({}, state)
+            console.log("hi in get group", action.eventsData.id)
+
+            let currentId = action.eventsData.id
+            newStateEvents.allGroups[currentId][`events`] = action.eventsData.Events
+
+            return newStateEvents
 
         default:
             return state;

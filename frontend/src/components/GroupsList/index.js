@@ -4,7 +4,7 @@ import EventNumber from "./EventNumber";
 import './GroupsList.css'
 import { useDispatch, useSelector } from "react-redux";
 import * as groupsActions from '../../store/groups'
-import * as eventsActions from '../../store/events'
+// import * as eventsActions from '../../store/events'
 
 
 
@@ -19,7 +19,7 @@ function GroupsList() {
         // declare the data fetching function
         dispatch(groupsActions.thunkGetGroups())
 
-        
+
 
     }, [])
 
