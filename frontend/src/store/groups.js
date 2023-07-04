@@ -88,6 +88,11 @@ const groupsReducer = (state = initialState, action) => {
             let currentId = action.eventsData.id
             newStateEvents.allGroups[currentId][`events`] = action.eventsData.Events
 
+            // action.payload.forEach((eventsData) => {
+
+            // })
+            // events.group = action.payload;
+            // return eventsData;
             return newStateEvents
 
         default:

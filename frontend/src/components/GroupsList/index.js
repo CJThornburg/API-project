@@ -42,7 +42,6 @@ function GroupsList() {
                         <p className="Groups-desc">{group.about}  </p>
                         <div className="GL-mini-dets">
                             <EventNumber key={group.id} gid={group} ></EventNumber>
-                            <p># "#" events </p>
                             <p className="dot">·</p>
                             <p>{group.private ? "Private" : "Public"}</p>
                         </div>
