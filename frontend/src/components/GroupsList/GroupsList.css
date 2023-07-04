@@ -24,3 +24,9 @@
     gap: 10px 3%;
     align-items: center;
 }
+
+
+.GL-link {
+    text-decoration: none;
+    color: black
+}

@@ -4,6 +4,7 @@ import EventNumber from "./EventNumber";
 import './GroupsList.css'
 import { useDispatch, useSelector } from "react-redux";
 import * as groupsActions from '../../store/groups'
+import {Link} from "react-router-dom";
 // import * as eventsActions from '../../store/events'
 
 
@@ -31,7 +32,7 @@ function GroupsList() {
 
 
             {groups.map((group) => (
-
+                <Link className="GL-link" to={`/groups/${group.id}`}>
                 <div key={group.id} className='GL-group'>
                     <img src={group.previewImage} alt="puppy" className='GL-photo'></img>
                     <div className='GL-dets'>
@@ -47,6 +48,7 @@ function GroupsList() {
                         </div>
                     </div>
                 </div>
+                </Link>
             ))}
 
 
