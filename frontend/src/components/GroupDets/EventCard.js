@@ -10,8 +10,7 @@ import * as groupsActions from '../../store/groups'
 
 
 function EventCard({ event }) {
-    console.log("hii", event)
-
+  
 
 
 

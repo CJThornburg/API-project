@@ -16,7 +16,7 @@ export const thunkGetEventsByGroup = (id) => async (dispatch) => {
 
     const response = await csrfFetch(`/api/groups/${id}/events`);
     const data = await response.json();
-    console.log(data)
+
     dispatch(getGroupEvents(data.Events));
     return response;
 };

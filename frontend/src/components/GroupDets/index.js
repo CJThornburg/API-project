@@ -3,14 +3,12 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import EventCard from "./EventCard";
 
-// import * as sessionActions from "./store/session";
-// import Navigation from "./components/Navigation";
-// import LandingPage from "./components/LandingPage";
-// import GroupsList from "./components/GroupsList";
+
 import { useParams } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 import * as groupsActions from '../../store/groups'
+import * as userActions from '../../store/users'
 
 function GroupDets() {
     const { id } = useParams()
@@ -19,45 +17,60 @@ function GroupDets() {
     const dispatch = useDispatch()
     const group = useSelector(state => state.groups.allGroups[id]);
     const events = useSelector(state => state.groups.allGroups[id]?.events)
+    const groupOwnerID = useSelector(state => state.groups.allGroups[id]?.organizerId)
+    // const owner = useSelector(state => state.groups.allGroups[id])
+
+    const owners = useSelector(state => Object.values(state.users));
+
+    if (owners) console.log(owners)
+    const ownerInfo = owners.find(user => user.id === groupOwnerID)
+
+
+    if (ownerInfo) console.log(ownerInfo.firstName)
+
+    if (group) console.log("group", groupOwnerID)
+
+
     useEffect(() => {
 
-        const groupDet = async () => {
 
-            console.log("GID", id)
-            await dispatch(groupsActions.thunkGetGroups())
-            await dispatch(groupsActions.thunkGetEventsByGroup(id))
+
+            dispatch(groupsActions.thunkGetGroups())
+            dispatch(userActions.thunkGetUser(groupOwnerID))
+            dispatch(groupsActions.thunkGetEventsByGroup(id))
+
+
 
 
             // if (group) { events = group.events }
 
-        }
-        groupDet()
 
-    }, [id])
 
-// date and time manipulation
+    }, [dispatch])
+
+
+    // useEffect (() => {
+    //     dispatch(groupsActions.thunkGetGroups()).then(dispatch(userActions.thunkGetUser(groupOwnerID)))
+    // }, [])
+
+    // date and time manipulation
     function padTo2Digits(num) {
         return num.toString().padStart(2, '0');
-      }
+    }
     function formatDate(date) {
         return [
-          date.getFullYear(),
-          padTo2Digits(date.getMonth() + 1),
-          padTo2Digits(date.getDate()),
+            date.getFullYear(),
+            padTo2Digits(date.getMonth() + 1),
+            padTo2Digits(date.getDate()),
         ].join('-');
-      }
+    }
 
 
-    let noEvents = false
+
     let upEvents = []
     let pastEvents = []
     if (events) {
         let currentDate = new Date().getTime()
-        console.log(currentDate)
-        if (events.length === 0) {
-            noEvents = true
-        }
-
 
 
 
@@ -69,7 +82,7 @@ function GroupDets() {
             let min = new Date(events[i].startDate).getMinutes()
             events[i].time = `${hour}:${min}`
 
-            events[i].justDate =formatDate( new Date(events[i].startDate))
+            events[i].justDate = formatDate(new Date(events[i].startDate))
 
             if (start > currentDate) { upEvents.push(events[i]) } else { pastEvents.push(events[i]) }
             // compart start to current time and then push to corresponding array
@@ -89,17 +102,17 @@ function GroupDets() {
                     <p>{lessThan} <Link to="/groups" className="Gd-breadcrumb"> Groups
                     </Link> </p>
                 </div>
-                <image src="groups preview image" alt="group preview image"> </image>
+                <img src="groups preview image" alt="group preview image"></img>
 
                 <div className="Gd-header-details">
-                    <h3>"Group name"</h3>
+                    <h3>{group?.name}</h3>
                     <div className="Gd-mini-dets">
-                        {/* <EventNumber key={group.id} gid={group} ></EventNumber> */}
+                        {`${group?.city}, ${group?.state}`}
+
                         <p className="dot">·</p>
-                        <p>{
-                            {/* group.private */ }
-                                ? "Private" : "Public"}</p>
-                        <p>Organized by "firstname" "last name"</p>
+                        <p>{group?.private ? "Private" : "Public"}</p>
+                        <p>Organized by {ownerInfo?.firstName} {ownerInfo?.lastName}
+                        </p>
                     </div>
                 </div>
                 <button className="Gd-join-btn">Join this group</button>
@@ -107,11 +120,13 @@ function GroupDets() {
             <div>
                 <div className="Gd-details-Organizer-div">
                     <h3>Organizer</h3>
-                    <p>"firstName" "lastname"</p>
+                    <p>
+                        {ownerInfo?.firstName} {ownerInfo?.lastName}
+                    </p>
                 </div>
                 <div className="Gd-details-about-div">
                     <h3>What we're about</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque efficitur erat eu ligula venenatis, non dignissim nulla efficitur. Vivamus laoreet sit amet diam vel fringilla. Ut eget leo rhoncus ex fermentum laoreet. Nunc aliquam quam odio, id venenatis augue placerat ut. Fusce condimentum est diam, ac vestibulum lorem varius et. Duis placerat ac nisl in porta. Aliquam maximus ipsum leo, nec condimentum erat consequat vel. Vivamus libero leo, pharetra imperdiet nulla quis, imperdiet lobortis arcu. Praesent et tristique mauris, eget feugiat dui.</p>
+                    <p>{group?.about}</p>
                 </div>
                 <div className="Gd-details-Events-div">
 

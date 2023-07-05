@@ -10,14 +10,14 @@ function EventNumber({ gid }) {
     let id = gid
     const dispatch = useDispatch()
     const group = useSelector(state => state.groups.allGroups[gid.id]);
-    // console.log("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii", group)
+
 
 
     useEffect(() => {
 
 
 
-        console.log("GID", id)
+      
         dispatch(groupsActions.thunkGetEventsByGroup(gid.id))
 
     }, [group])

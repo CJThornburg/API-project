@@ -295,7 +295,7 @@ router.get("/current", requireAuth, grabCurrentUser, async (req, res) => {
         const count = member.length
 
 
-        console.log(groups[i])
+
         groups[i].dataValues.createdAt = dateF(groups[i].dataValues.createdAt)
         groups[i].dataValues.updatedAt = dateF(groups[i].dataValues.updatedAt)
         groups[i].dataValues.numMembers = count
@@ -764,7 +764,7 @@ router.post("/:groupId/events", requireAuth, grabCurrentUser, validateEvent, asy
                 dec[1] += "0"
 
                 const decF = dec.join(".")
-                console.log(decF)
+             
                 newEvent.dataValues.price = Number(decF)
             }
         }

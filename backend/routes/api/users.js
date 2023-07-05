@@ -35,6 +35,16 @@ const validateSignup = [
 ];
 
 
+
+router.get("/:id", async (req, res) => {
+ console.log(req.params)
+  const id = 1
+
+   const user = await User.findByPk(id)
+
+   return res.json(user)
+})
+
 // create user account
 router.post('/', validateSignup, async (req, res) => {
   const { email, password, username, firstName, lastName } = req.body;

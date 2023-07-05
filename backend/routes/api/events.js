@@ -368,8 +368,7 @@ router.post("/:eventId/images", requireAuth, grabCurrentUser, validateNewEventIm
 
     const group = event.dataValues.groupId
     const groupOwner = await Group.findOne({ where: { id: group, organizerId: id } })
-    console.log("event:", event.toJSON())
-    console.log(groupOwner)
+
 
     if (permissionCheck || groupOwner) {
         let newEventImage = EventImage.build({
@@ -579,7 +578,7 @@ router.get("/:eventId/attendees", grabCurrentUser, async (req, res, next) => {
     const group = await Group.findByPk(event.dataValues.groupId)
     const groupOwner = group.dataValues.organizerId
     const ownerCheck = id === groupOwner
-    // console.log("id:", group.dataValues.id)
+
 
     let memberCheck = false;
     memberStatus = await Membership.findOne({ where: { userId: id, groupId: group.dataValues.id, status: "co-host" } })
@@ -631,7 +630,7 @@ router.get("/:eventId/attendees", grabCurrentUser, async (req, res, next) => {
         aten[i].dataValues.id = aten[i].toJSON().User.id
         delete aten[i].dataValues.User
         aten[i].dataValues.Attendance = { status: aten[i].dataValues.status }
-        console.log(aten[i].dataValues.status)
+
         delete aten[i].dataValues.status
 
 
@@ -747,7 +746,7 @@ router.put("/:eventId/attendance", requireAuth, grabCurrentUser, validateAttenUp
         return next(err)
     }
 
-    // console.log("hiiiiiii attendance querey:", attendance)
+
 
     const groupCheck = await Group.findByPk(groupId)
     if (!groupCheck) {
@@ -761,7 +760,7 @@ router.put("/:eventId/attendance", requireAuth, grabCurrentUser, validateAttenUp
 
     let owner = groupCheck.toJSON().organizerId === id
 
-    console.log("OWNER!!!!!!!", owner)
+   
     const coHost = await Membership.findOne({ where: { userId: id, groupId: groupId } })
 
     let coHostCheck = groupCheck.toJSON().organizerId;
@@ -784,7 +783,7 @@ router.put("/:eventId/attendance", requireAuth, grabCurrentUser, validateAttenUp
         status: "attending"
     })
     attendance.save();
-    console.log("hi")
+
 
     delete attendance.dataValues.createdAt
     delete attendance.dataValues.updatedAt
