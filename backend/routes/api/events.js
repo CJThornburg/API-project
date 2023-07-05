@@ -747,7 +747,7 @@ router.put("/:eventId/attendance", requireAuth, grabCurrentUser, validateAttenUp
         return next(err)
     }
 
-    console.log("hiiiiiii attendance querey:", attendance)
+    // console.log("hiiiiiii attendance querey:", attendance)
 
     const groupCheck = await Group.findByPk(groupId)
     if (!groupCheck) {

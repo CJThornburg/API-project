@@ -24,7 +24,7 @@ export const thunkGetEventsByGroup = (id) => async (dispatch) => {
 
     const response = await csrfFetch(`/api/groups/${id}/events`);
     let data = await response.json();
-    console.log("hiiiiiiii", id)
+    // console.log("hiiiiiiii", id)
     // let eventsObj
     // if (id) {
     //     eventsObj['id'] = id
@@ -83,11 +83,14 @@ const groupsReducer = (state = initialState, action) => {
 
         case GET_GROUP_EVENTS:
             let newStateEvents = Object.assign({}, state)
+
+            console.log("action", action.eventsData.Events)
             console.log("hi in get group", action.eventsData.id)
-
+            console.log("THIIIIIIIIIIIIIIIIIIIIIIIS", newStateEvents)
             let currentId = action.eventsData.id
-            newStateEvents.allGroups[currentId][`events`] = action.eventsData.Events
+            console.log(action.eventsData.Events)
 
+            newStateEvents.allGroups[currentId][`events`] = action.eventsData.Events
             // action.payload.forEach((eventsData) => {
 
             // })

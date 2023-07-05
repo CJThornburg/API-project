@@ -5,6 +5,7 @@ import * as sessionActions from "./store/session";
 import Navigation from "./components/Navigation";
 import LandingPage from "./components/LandingPage";
 import GroupsList from "./components/GroupsList";
+import GroupDets from "./components/GroupDets/index";
 
 function App() {
   const dispatch = useDispatch();
@@ -24,7 +25,7 @@ function App() {
           <GroupsList></GroupsList>
         </Route>
         <Route path='/groups/:id'>
-          <h1> hi :3</h1>
+          <GroupDets></GroupDets>
         </Route>
       </Switch>}
     </>
