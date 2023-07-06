@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 import * as groupsActions from '../../store/groups'
-import * as userActions from '../../store/users'
+
 
 function GroupDets() {
     const { id } = useParams()
@@ -17,6 +17,7 @@ function GroupDets() {
     // let events
     const dispatch = useDispatch()
     const group = useSelector(state => state.groups.singleGroup);
+    const currentUser = useSelector(state => state.session )
 
     if (group) console.log("group", group)
 
@@ -31,13 +32,41 @@ function GroupDets() {
     useEffect(() => {
         dispatch(groupsActions.thunkGetGroup(id))
 
-
-
     }, [dispatch, id])
 
+    let ownerCheck = false
+    let render= true
+    // useEffect(() => {
+
+    //     if (currentUser.user) {
+    //         render = currentUser.user.id !==group.Organizer.id
+    //     }
 
 
 
+    //     if (currentUser.user.id) {
+    //         ownerCheck = currentUser.user.id ===group.Organizer.id
+    //     }
+
+
+
+
+    //     if (currentUser.user === null) {
+    //         render = false
+    //      }
+
+
+
+    // }, [])
+
+
+    // let render= true
+
+
+
+
+
+    console.log(render)
     // date and time manipulation
     function padTo2Digits(num) {
         return num.toString().padStart(2, '0');
@@ -103,7 +132,15 @@ function GroupDets() {
                         </p>
                     </div>
                 </div>
-                <button className="Gd-join-btn">Join this group</button>
+               {render &&   <button onClick={()=> {alert("coming soon")}} className="Gd-join-btn">Join this group</button>}
+               {ownerCheck &&
+               <>
+                <button  className="Gd-action-btn">Create event</button>
+                <button  className="Gd-action-btn">update</button>
+                <button  className="Gd-action-btn">Delete</button>
+                </>
+                }
+
             </div>
             <div>
                 <div className="Gd-details-Organizer-div">
