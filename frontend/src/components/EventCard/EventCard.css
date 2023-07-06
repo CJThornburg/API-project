@@ -1,0 +1,8 @@
+.Ec-outer-Card {
+    background-color: rgb(141, 140, 140);
+}
+
+.Ec-photo {
+    min-width: 400px;
+    height: 250px;
+}

@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 
 
-import './GroupDets.css'
+// import './GroupDets.css'
 
 
 

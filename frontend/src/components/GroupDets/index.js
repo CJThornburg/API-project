@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 // import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import EventCard from "./EventCard";
+import EventCard from "../EventCard";
 
 
 import { useParams } from "react-router-dom";
@@ -17,7 +17,7 @@ function GroupDets() {
     // let events
     const dispatch = useDispatch()
     const group = useSelector(state => state.groups.singleGroup);
-    const currentUser = useSelector(state => state.session )
+    const currentUser = useSelector(state => state.session)
 
     if (group) console.log("group", group)
 
@@ -35,32 +35,28 @@ function GroupDets() {
     }, [dispatch, id])
 
     let ownerCheck = false
-    let render= true
+    let render = true
     // useEffect(() => {
 
-    //     if (currentUser.user) {
-    //         render = currentUser.user.id !==group.Organizer.id
-    //     }
+    if (currentUser.user) {
+        render = currentUser.user.id !== group.Organizer.id
+    }
 
 
 
-    //     if (currentUser.user.id) {
-    //         ownerCheck = currentUser.user.id ===group.Organizer.id
-    //     }
+    if (currentUser.user) {
+        ownerCheck = currentUser.user.id === group.Organizer.id
+    }
 
 
 
 
-    //     if (currentUser.user === null) {
-    //         render = false
-    //      }
+    if (currentUser.user === null) {
+        render = false
+    }
 
 
 
-    // }, [])
-
-
-    // let render= true
 
 
 
@@ -71,6 +67,7 @@ function GroupDets() {
     function padTo2Digits(num) {
         return num.toString().padStart(2, '0');
     }
+
     function formatDate(date) {
         return [
             date.getFullYear(),
@@ -132,13 +129,13 @@ function GroupDets() {
                         </p>
                     </div>
                 </div>
-               {render &&   <button onClick={()=> {alert("coming soon")}} className="Gd-join-btn">Join this group</button>}
-               {ownerCheck &&
-               <>
-                <button  className="Gd-action-btn">Create event</button>
-                <button  className="Gd-action-btn">update</button>
-                <button  className="Gd-action-btn">Delete</button>
-                </>
+                {render && <button onClick={() => { alert("coming soon") }} className="Gd-join-btn">Join this group</button>}
+                {ownerCheck &&
+                    <>
+                        <button className="Gd-action-btn">Create event</button>
+                        <button className="Gd-action-btn">update</button>
+                        <button className="Gd-action-btn">Delete</button>
+                    </>
                 }
 
             </div>
