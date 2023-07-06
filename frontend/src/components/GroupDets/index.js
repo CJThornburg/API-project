@@ -36,16 +36,21 @@ function GroupDets() {
 
     let ownerCheck = false
     let render = true
-    // useEffect(() => {
 
-    if (currentUser.user) {
-        render = currentUser.user.id !== group.Organizer.id
+
+
+    if (currentUser?.user && currentUser.user?.id) {
+
+        if (currentUser.user?.id !== null && group) {
+            render = currentUser.user?.id !== group.Organizer?.id
+        }
+
     }
 
 
 
-    if (currentUser.user) {
-        ownerCheck = currentUser.user.id === group.Organizer.id
+    if (currentUser?.user) {
+        ownerCheck = currentUser.user?.id === group.Organizer?.id
     }
 
 
@@ -104,7 +109,7 @@ function GroupDets() {
         upEvents.sort((a, b) => a.start - b.start)
         pastEvents.sort((a, b) => a.start - b.start)
 
-        
+
 
     }
 

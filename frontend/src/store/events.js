@@ -49,7 +49,7 @@ export const thunkGetEvent = (id) => async (dispatch) => {
     const response2 = await csrfFetch(`/api/events/${id}/attendees/`);
 
     const attendance = await response2.json();
-    data.attendance = attendance
+    data.attendance = attendance.Attendees
     console.log("after second fetch", data)
 
 

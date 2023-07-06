@@ -8,6 +8,7 @@ import GroupsList from "./components/GroupsList";
 import GroupDets from "./components/GroupDets/index";
 import EventsList from "./components/EventsList";
 import EventDets from './components/EventDets';
+import GroupCreate from './components/GroupCreate'
 
 function App() {
   const dispatch = useDispatch();
@@ -23,8 +24,12 @@ function App() {
         <Route exact path="/">
           <LandingPage></LandingPage>
         </Route>
+        <Route exact path="/groups/new">
+          <GroupCreate></GroupCreate>
+        </Route>
         <Route exact path="/groups">
           <GroupsList></GroupsList>
+          {/* <h1>HEEELLLLLLLLLLLLLLLLLOOOOOOO</h1> */}
         </Route>
         <Route path='/groups/:id'>
           <GroupDets></GroupDets>

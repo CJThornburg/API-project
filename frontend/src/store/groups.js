@@ -27,7 +27,7 @@ export const thunkGetGroup = (id) => async (dispatch) => {
     const data = await response.json();
 
     const response2 = await csrfFetch(`/api/groups/${data.id}/events`);
- 
+
     const events = await response2.json();
 
     data.events = events.Events
@@ -47,6 +47,29 @@ export const thunkGetEventsByGroup = (id) => async (dispatch) => {
     dispatch(getGroupEvents({ ...data, id: id }));
     return response;
 };
+
+
+
+// create group
+export const thunkCreateGroup = (formData) => async (dispatch) => {
+    const { name, about, type,city, state } = formData;
+    const response = await csrfFetch("/api/session", {
+        method: "POST",
+        body: JSON.stringify({
+           name, about ,type, city, state, private : formData.private
+        }),
+    });
+    const data = await response.json();
+    // dispatch(setUser(data.user));
+    return response;
+};
+
+
+
+
+
+
+
 
 
 

@@ -6,12 +6,6 @@ import * as eventsActions from '../../store/events'
 import * as groupsActions from '../../store/groups'
 
 
-/*
-signle event pull
-eventid/attendance  find attending marked as host
-*/
-
-
 
 
 function EventDets() {
@@ -21,8 +15,17 @@ function EventDets() {
     const dispatch = useDispatch()
     const event = useSelector(state => state.events.singleEvent);
     const groupS = useSelector(state => state.groups.singleGroup);
-    // const currentUser = useSelector(state => state.session)
+    const currentUser = useSelector(state => state.session)
+    // .user becuse the inital state is {user: null}
 
+    useEffect(() => {
+        dispatch(eventsActions.thunkGetEvent(id))
+        dispatch(groupsActions.thunkGetGroup(id))
+
+    }, [dispatch, id])
+
+    //! short circuit to confirm state is full, used to confirm state is loaded before loading full jsx, and used to make loading animation
+    if (!(Object.keys(event).length && Object.keys(groupS).length)) return null
 
     let group
     if (event?.Group) {
@@ -39,6 +42,21 @@ function EventDets() {
     if (event.EventImages?.length > 0) {
         let previewImgObj = (event.EventImages.find(image => image.preview === true))
         previewImg = previewImgObj.url
+    }
+
+    let host
+    if (event.attendance?.length > 0) {
+        host = (event.attendance.find(atten => atten.Attendance.status === "host")
+        )
+    }
+
+    let hostCheck = false
+
+    if (currentUser.user.id !== null && host) {
+        if (currentUser.user.id === host.id) {
+            hostCheck = true
+        }
+
     }
 
 
@@ -64,7 +82,7 @@ function EventDets() {
 
         let hourEnd = new Date(event.endDate).getHours()
         let minEnd = new Date(event.endDate).getMinutes()
-        event.timeEnd = `${hour}:${min}`
+        event.timeEnd = `${hourEnd}:${minEnd}`
         event.justDateEnd = formatDate(new Date(event.endDate))
     }
 
@@ -75,11 +93,6 @@ function EventDets() {
 
 
 
-    useEffect(() => {
-        dispatch(eventsActions.thunkGetEvent(id))
-        dispatch(groupsActions.thunkGetGroup(id))
-
-    }, [dispatch, id])
 
 
 
@@ -92,7 +105,8 @@ function EventDets() {
                 </div>
                 <div className="Ed-title-div">
                     <h3>{event?.name}</h3>
-                    <h5>Hosted by  {groupS.Organizer?.firstName} {groupS.Organizer?.lastName} </h5>
+                    <h5>Hosted by  {host?.firstName} {host?.lastName} </h5>
+                    {hostCheck && <><button>update</button> <button>Delete</button></>}
                 </div>
             </div>
             <div className="Ed-main">
@@ -120,7 +134,7 @@ function EventDets() {
                         </div>
                         <div className="Ed-price">
                             <p>icon</p>
-                            <p>{event?.Venue === null ? "online" : event.Venue}</p>
+                            <p>{event?.Venue === null ? "online" : "in person"}</p>
                         </div>
                     </div>
                 </div>
