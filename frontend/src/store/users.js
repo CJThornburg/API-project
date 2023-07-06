@@ -2,11 +2,11 @@ import { csrfFetch } from "./csrf";
 
 
 export const thunkGetUser = (id) => async (dispatch) => {
-    console.log(id)
+
     const response = await csrfFetch(`/api/users/${id}`)
 
     let data = await response.json()
-    console.log("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH", data)
+
     dispatch(getUser(data))
 
     return response
@@ -34,12 +34,11 @@ const userReducer = (state = initialState, action) => {
     switch (action.type) {
         case GET_USER:
             let newState = { ...state }
-            console.log("!!!!!!!!!!!!!!!!", action.userData)
+          ("!!!!!!!!!!!!!!!!", action.userData)
             const id = action.userData.id
             const prop = `user${action.userData.id}`
             newState[prop] = action.userData
-            console.log("new state", newState)
-            console.log("check", newState['user1'].firstName)
+           
             return newState
             break;
 

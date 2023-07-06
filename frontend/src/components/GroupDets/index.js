@@ -12,14 +12,14 @@ import * as groupsActions from '../../store/groups'
 
 function GroupDets() {
     const { id } = useParams()
-    console.log(id)
+
     let lessThan = "<"
     // let events
     const dispatch = useDispatch()
     const group = useSelector(state => state.groups.singleGroup);
     const currentUser = useSelector(state => state.session)
 
-    if (group) console.log("group", group)
+
 
 
 
@@ -62,7 +62,7 @@ function GroupDets() {
 
 
 
-    console.log(render)
+
     // date and time manipulation
     function padTo2Digits(num) {
         return num.toString().padStart(2, '0');
@@ -86,9 +86,9 @@ function GroupDets() {
 
 
         // check if any upcoming
-        console.log("length", group.events.length)
+
         for (let i = 0; i < group.events.length; i++) {
-            console.log("hi")
+
             let start = new Date(group.events[i].startDate).getTime()
             group.events[i].start = start
             let hour = new Date(group.events[i].startDate).getHours()
@@ -104,7 +104,7 @@ function GroupDets() {
         upEvents.sort((a, b) => a.start - b.start)
         pastEvents.sort((a, b) => a.start - b.start)
 
-        console.log(upEvents)
+        
 
     }
 

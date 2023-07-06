@@ -37,7 +37,7 @@ const validateSignup = [
 
 
 router.get("/:id", async (req, res) => {
- console.log(req.params)
+
   const id = 1
 
    const user = await User.findByPk(id)

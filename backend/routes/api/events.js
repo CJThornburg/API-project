@@ -559,8 +559,12 @@ router.delete("/:eventId", requireAuth, grabCurrentUser, async (req, res, next) 
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 router.get("/:eventId/attendees", grabCurrentUser, async (req, res, next) => {
-    let id = req.currentUser.data.id
+    let id = -1
+    if (req.currentUser){
+        id = req.currentUser.data.id
+    }
     let eventId = req.params.eventId
+    console.log("!!!!!!!!!!!!!hi i am in the /api/events/eventid/attendees get route", "my event id is ", eventId)
 
     const event = await Event.findByPk(eventId)
 
@@ -642,14 +646,6 @@ router.get("/:eventId/attendees", grabCurrentUser, async (req, res, next) => {
     res.json(returnObj)
 
 
-
-
-
-
-
-
-
-
 })
 
 
@@ -658,7 +654,10 @@ router.get("/:eventId/attendees", grabCurrentUser, async (req, res, next) => {
 
 
 router.post("/:eventId/attendance", grabCurrentUser, async (req, res, next) => {
-    let id = req.currentUser.data.id
+    let id = -1
+    if (req.currentUser){
+        id = req.currentUser.data.id
+    }
     const { eventId } = req.params
 
 
@@ -760,7 +759,7 @@ router.put("/:eventId/attendance", requireAuth, grabCurrentUser, validateAttenUp
 
     let owner = groupCheck.toJSON().organizerId === id
 
-   
+
     const coHost = await Membership.findOne({ where: { userId: id, groupId: groupId } })
 
     let coHostCheck = groupCheck.toJSON().organizerId;

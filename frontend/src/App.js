@@ -7,6 +7,7 @@ import LandingPage from "./components/LandingPage";
 import GroupsList from "./components/GroupsList";
 import GroupDets from "./components/GroupDets/index";
 import EventsList from "./components/EventsList";
+import EventDets from './components/EventDets';
 
 function App() {
   const dispatch = useDispatch();
@@ -30,6 +31,9 @@ function App() {
         </Route>
         <Route exact path='/events'>
           <EventsList></EventsList>
+        </Route>
+        <Route exact path='/events/:id'>
+          <EventDets></EventDets>
         </Route>
       </Switch>}
     </>

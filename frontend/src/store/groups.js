@@ -27,11 +27,11 @@ export const thunkGetGroup = (id) => async (dispatch) => {
     const data = await response.json();
 
     const response2 = await csrfFetch(`/api/groups/${data.id}/events`);
-    // console.log(await response2.json())
+ 
     const events = await response2.json();
 
     data.events = events.Events
-   
+
 
 
     dispatch(getGroup(data));

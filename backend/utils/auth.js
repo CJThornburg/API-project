@@ -90,6 +90,11 @@ const grabCurrentUser = function (req, _res, next) {
 
         return next();
     }
+
+    if (!req.cookies.token) {
+        req.currentUser = null
+        return next()
+    }
 }
 
 
