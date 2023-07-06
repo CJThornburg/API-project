@@ -12,46 +12,31 @@ import * as userActions from '../../store/users'
 
 function GroupDets() {
     const { id } = useParams()
+    console.log(id)
     let lessThan = "<"
     // let events
     const dispatch = useDispatch()
-    const group = useSelector(state => state.groups.allGroups[id]);
-    const events = useSelector(state => state.groups.allGroups[id]?.events)
-    const groupOwnerID = useSelector(state => state.groups.allGroups[id]?.organizerId)
-    // const owner = useSelector(state => state.groups.allGroups[id])
+    const group = useSelector(state => state.groups.singleGroup);
 
-    const owners = useSelector(state => Object.values(state.users));
-
-    if (owners) console.log(owners)
-    const ownerInfo = owners.find(user => user.id === groupOwnerID)
+    if (group) console.log("group", group)
 
 
-    if (ownerInfo) console.log(ownerInfo.firstName)
-
-    if (group) console.log("group", groupOwnerID)
 
 
+
+
+
+
+    // one thunk that does two fetches
     useEffect(() => {
+        dispatch(groupsActions.thunkGetGroup(id))
 
 
 
-            dispatch(groupsActions.thunkGetGroups())
-            dispatch(userActions.thunkGetUser(groupOwnerID))
-            dispatch(groupsActions.thunkGetEventsByGroup(id))
+    }, [dispatch, id])
 
 
 
-
-            // if (group) { events = group.events }
-
-
-
-    }, [dispatch])
-
-
-    // useEffect (() => {
-    //     dispatch(groupsActions.thunkGetGroups()).then(dispatch(userActions.thunkGetUser(groupOwnerID)))
-    // }, [])
 
     // date and time manipulation
     function padTo2Digits(num) {
@@ -69,29 +54,31 @@ function GroupDets() {
 
     let upEvents = []
     let pastEvents = []
-    if (events) {
+    if (group.events) {
         let currentDate = new Date().getTime()
 
 
 
         // check if any upcoming
-        for (let i = 0; i < events.length; i++) {
-            let start = new Date(events[i].startDate).getTime()
-            events[i].start = start
-            let hour = new Date(events[i].startDate).getHours()
-            let min = new Date(events[i].startDate).getMinutes()
-            events[i].time = `${hour}:${min}`
+        console.log("length", group.events.length)
+        for (let i = 0; i < group.events.length; i++) {
+            console.log("hi")
+            let start = new Date(group.events[i].startDate).getTime()
+            group.events[i].start = start
+            let hour = new Date(group.events[i].startDate).getHours()
+            let min = new Date(group.events[i].startDate).getMinutes()
+            group.events[i].time = `${hour}:${min}`
 
-            events[i].justDate = formatDate(new Date(events[i].startDate))
+            group.events[i].justDate = formatDate(new Date(group.events[i].startDate))
 
-            if (start > currentDate) { upEvents.push(events[i]) } else { pastEvents.push(events[i]) }
+            if (start > currentDate) { upEvents.push(group.events[i]) } else { pastEvents.push(group.events[i]) }
             // compart start to current time and then push to corresponding array
 
         }
         upEvents.sort((a, b) => a.start - b.start)
         pastEvents.sort((a, b) => a.start - b.start)
 
-
+        console.log(upEvents)
 
     }
 
@@ -111,7 +98,8 @@ function GroupDets() {
 
                         <p className="dot">·</p>
                         <p>{group?.private ? "Private" : "Public"}</p>
-                        <p>Organized by {ownerInfo?.firstName} {ownerInfo?.lastName}
+                        <p>
+                            Organized by {group.Organizer?.firstName} {group.Organizer?.lastName}
                         </p>
                     </div>
                 </div>
@@ -121,7 +109,7 @@ function GroupDets() {
                 <div className="Gd-details-Organizer-div">
                     <h3>Organizer</h3>
                     <p>
-                        {ownerInfo?.firstName} {ownerInfo?.lastName}
+                        {group.Organizer?.firstName} {group.Organizer?.lastName}
                     </p>
                 </div>
                 <div className="Gd-details-about-div">

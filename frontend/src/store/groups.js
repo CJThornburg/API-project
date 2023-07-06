@@ -15,7 +15,26 @@ import { csrfFetch } from "./csrf";
 export const thunkGetGroups = () => async (dispatch) => {
     const response = await csrfFetch("/api/groups");
     const data = await response.json();
-    dispatch(setGroups(data.Groups));
+    dispatch(getGroups(data.Groups));
+    return response;
+};
+
+
+export const thunkGetGroup = (id) => async (dispatch) => {
+
+    const response = await csrfFetch(`/api/groups/${id}`);
+
+    const data = await response.json();
+
+    const response2 = await csrfFetch(`/api/groups/${data.id}/events`);
+    // console.log(await response2.json())
+    const events = await response2.json();
+
+    data.events = events.Events
+   
+
+
+    dispatch(getGroup(data));
     return response;
 };
 
@@ -33,15 +52,25 @@ export const thunkGetEventsByGroup = (id) => async (dispatch) => {
 
 
 // types
-const SET_GROUPS = "Groups/setGroups";
+const GET_GROUPS = "Groups/getGroups";
+const GET_GROUP = "Groups/getGroup";
 const GET_GROUP_EVENTS = "EVENTS/GetGroupEvents";
 //actins
-const setGroups = (groupData) => {
+const getGroups = (groupsData) => {
     return {
-        type: SET_GROUPS,
+        type: GET_GROUPS,
+        groupsData,
+    };
+};
+
+
+const getGroup = (groupData) => {
+    return {
+        type: GET_GROUP,
         groupData,
     };
 };
+
 
 
 const getGroupEvents = (eventsData) => {
@@ -56,22 +85,31 @@ const getGroupEvents = (eventsData) => {
 const initialState = {
     allGroups: {},
     singleGroup: {},
-    eventsByGroup: {}
+
 }
 
 // state will be saved to state.groups
 const groupsReducer = (state = initialState, action) => {
 
     switch (action.type) {
-        case SET_GROUPS:
-            let newState = Object.assign({}, state)
+        case GET_GROUPS:
+            let newGroupsState = Object.assign({}, state)
 
-            action.groupData.forEach((group) => {
+            action.groupsData.forEach((group) => {
 
-                newState.allGroups[group.id] = group
+                newGroupsState.allGroups[group.id] = group
             });
 
-            return newState;
+            return newGroupsState;
+
+        case GET_GROUP:
+
+            let stateReset = Object.assign({}, state)
+            stateReset.singleGroup = action.groupData
+
+
+
+            return stateReset
 
         case GET_GROUP_EVENTS:
             let newStateEvents = Object.assign({}, state)
@@ -80,8 +118,8 @@ const groupsReducer = (state = initialState, action) => {
             let currentId = action.eventsData.id
 
 
-            newStateEvents.allGroups[currentId][`events`] = action.eventsData.Events
-          
+            newStateEvents.allGroups[currentId][`events`] = action.eventsData
+
             return newStateEvents
 
         default:
