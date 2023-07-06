@@ -4,7 +4,8 @@ import { useDispatch } from 'react-redux';
 
 function GroupCreate() {
     //   const sessionUser = useSelector(state => state.session.user);
-    const [location, setLocation] = useState("");
+    const [city, setCity] = useState("");
+    const [state, setState] = useState('')
     const [name, setName] = useState("");
     const [about, setAbout] = useState("");
     const [type, setType] = useState("")
@@ -22,13 +23,10 @@ function GroupCreate() {
         } else { privateVar = false }
 
         let pin
-        if (type === "In person") {
-            pin = location.split(',')
 
-        }
         const newGroup = {
             name, about, type, private: privateVar,
-            city: pin[0], state: pin[1]
+            city, state
         }
         console.log(pin)
         console.log(newGroup)
@@ -39,15 +37,18 @@ function GroupCreate() {
     useEffect(() => {
         const err = {}
         if (about.length < 30) err["About"] = "Description needs 30 or more characters"
-        if (type === "In person" && location === "") err["Location"] = "If group type is In person, location is required"
-        
-        if ((!location.includes(",") && type === "In person") || location.length < 3) err["Location2"] = "If group type is In person Location must include a comma splitting city and state, and input for both city and state"
+        if (type === "In person" && state === "") err["State3"] = "If group type is In person, State is required"
+        if (type === "In person" && state === "") err["City2"] = "If group type is In person, State is required"
+
+
         if (name === "") err['Name'] = "Name is required"
         if (img === "") err["Img"] = "img url is required"
-
+        if (city === "") err["City"] = "City is required"
+        if (state === "") err["State"] = "State is required"
+        if (!state.length === 2) err["State2"] = "State must be state abbreviation"
 
         setVaErrors(err)
-    }, [about, name, location, type, img])
+    }, [about, name, state, city, type, img])
 
 
     return (
@@ -64,18 +65,30 @@ function GroupCreate() {
                     <p>
                         OrganizeDown groups meet locally, in person, and online. We'll connect you with people in your area.
                     </p>
-                    <label htmlFor="location"></label>
+                    <label htmlFor="city"></label>
                     <input
                         type="text"
-                        id="location"
+                        id="city"
                         onChange={(e) => {
-                            setLocation(e.target.value)
+                            setCity(e.target.value)
                         }}
-                        placeholder="City, STATE"
-                        value={location}
+                        placeholder="City"
+                        value={city}
                     />
-                    {vaErrors.Location && `* ${vaErrors.Location}`}
-                    {vaErrors.Location2 && `* ${vaErrors.Location2}`}
+                    {vaErrors.City && `* ${vaErrors.City}`}
+                    <label htmlFor="state"></label>
+                    {/* if time make this a select */}
+                    <input
+                        type="text"
+                        id="state"
+                        onChange={(e) => {
+                            setState(e.target.value)
+                        }}
+                        placeholder="STATE abbreviation"
+                        value={state}
+                    />
+                    {vaErrors.State && `* ${vaErrors.State}`}
+                    {vaErrors.State2 && `* ${vaErrors.State2}`}
                 </div>
                 <div className="Gc-div">
                     <h5>What will your group's name be?</h5>
@@ -165,7 +178,7 @@ function GroupCreate() {
                 </div>
                 <div className='Gc-footer Gc-div'>
                     <button className='red-but'
-                        disabled={vaErrors["Name"] || vaErrors["About"] || vaErrors["Location2"] || vaErrors["Location"] || vaErrors["Img"] ? true : false}
+                        disabled={vaErrors["Name"] || vaErrors["About"] || vaErrors["State"] || vaErrors["State2"] ||vaErrors["City"] || vaErrors["Img"] ? true : false}
                     >Create group</button>
                 </div>
             </form>
