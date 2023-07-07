@@ -16,7 +16,7 @@ export const thunkGetGroups = () => async (dispatch) => {
     const response = await csrfFetch("/api/groups");
     const data = await response.json();
     dispatch(getGroups(data.Groups));
-    return response;
+    return data;
 };
 
 
@@ -35,7 +35,8 @@ export const thunkGetGroup = (id) => async (dispatch) => {
 
 
     dispatch(getGroup(data));
-    return response;
+
+    return data;
 };
 
 
@@ -53,7 +54,6 @@ export const thunkGetEventsByGroup = (id) => async (dispatch) => {
 // create group
 export const thunkCreateGroup = (formData) => async (dispatch) => {
     const { name, about, type, city, state, img } = formData;
-    console.log( "START OF CREATE GROUP THUNK => is the passed in object deconstructed", "name", name, "about", about, "type", type, "city", city, "state", "private", formData.private,)
 
     let newGroup = await csrfFetch("/api/groups", {
 
@@ -193,12 +193,12 @@ const groupsReducer = (state = initialState, action) => {
     switch (action.type) {
         case GET_GROUPS:
             let newGroupsState = Object.assign({}, state)
-
+            console.log("action", action)
             action.groupsData.forEach((group) => {
 
                 newGroupsState.allGroups[group.id] = group
             });
-            console.log(action.groupData, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
 
             return newGroupsState;
 
@@ -245,7 +245,7 @@ const groupsReducer = (state = initialState, action) => {
 
         case UPDATE_GROUP:
             let updateState = Object.assign({}, state)
-        
+
             updateState.allGroups[action.editGroup.id] = action.editGroup
 
             return updateState

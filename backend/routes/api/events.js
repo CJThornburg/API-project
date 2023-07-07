@@ -36,7 +36,11 @@ const validateEvent = [
         .isInt()
         .withMessage("Capacity must be an integer"),
     check('price')
+        .exists({ checkFalsy: true })
+        .isDecimal()
+        .withMessage('Price must be decimal')
         .custom(async (price, { req }) => {
+
             price = price.toString().split('.');
             if (price[1].length > 2 || Number(price[0]) < 0)
                 throw new Error('Please provide a valid price')
@@ -560,7 +564,7 @@ router.delete("/:eventId", requireAuth, grabCurrentUser, async (req, res, next) 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 router.get("/:eventId/attendees", grabCurrentUser, async (req, res, next) => {
     let id = -1
-    if (req.currentUser){
+    if (req.currentUser) {
         id = req.currentUser.data.id
     }
     let eventId = req.params.eventId
@@ -655,7 +659,7 @@ router.get("/:eventId/attendees", grabCurrentUser, async (req, res, next) => {
 
 router.post("/:eventId/attendance", grabCurrentUser, async (req, res, next) => {
     let id = -1
-    if (req.currentUser){
+    if (req.currentUser) {
         id = req.currentUser.data.id
     }
     const { eventId } = req.params

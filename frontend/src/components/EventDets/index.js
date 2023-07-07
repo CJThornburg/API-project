@@ -32,16 +32,24 @@ function EventDets() {
         group = event.Group
     }
 
-    let groupPI
-    if (groupS?.GroupImages) {
+    let groupPI = "https://t4.ftcdn.net/jpg/04/70/29/97/240_F_470299797_UD0eoVMMSUbHCcNJCdv2t8B2g1GVqYgs.jpg"
+    if (groupS.GroupImages > 0) {
         let groupPreviewImgObj = (groupS.GroupImages.find(image => image.preview === true))
-        groupPI = groupPreviewImgObj.url
+        if (groupPreviewImgObj) {
+            groupPI = groupPreviewImgObj?.url
+        }
     }
 
-    let previewImg
+
+
+    let previewImg = "https://t4.ftcdn.net/jpg/04/70/29/97/240_F_470299797_UD0eoVMMSUbHCcNJCdv2t8B2g1GVqYgs.jpg"
     if (event.EventImages?.length > 0) {
+
         let previewImgObj = (event.EventImages.find(image => image.preview === true))
-        previewImg = previewImgObj.url
+
+        if (previewImgObj) {
+            previewImg = previewImgObj.url
+        }
     }
 
     let host
@@ -113,7 +121,7 @@ function EventDets() {
                 <div className="Ed-image-cards-div">
                     <img className="Ed-event-img" src={previewImg && previewImg}></img>
                     <div className="Ed-cards-div">
-                        <img className="Ed-group-img" src={groupPI && groupPI}></img>
+                        <img className="Ed-group-img" src={groupPI}></img>
                         <div className="Ed-group-card-text">
                             <h6> {group?.name}</h6>
                             <p>{group?.private ? "Private" : "Public"}</p>

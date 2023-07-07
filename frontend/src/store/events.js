@@ -31,6 +31,35 @@ export const thunkGetEvents = () => async (dispatch) => {
 }
 
 
+export const thunkCreateEvent = (formData) => async (dispatch) => {
+    const { name, about, type, price, startTime, endTime, privacy, img, id } = formData;
+
+    console.log(price, startTime, endTime)
+    let capacity = 100;
+
+    let newEvent = await csrfFetch(`/api/groups/${id}/events`, {
+
+        method: "POST",
+        body: JSON.stringify({
+            name, about, type, capacity, private: formData.private, price, startDate: startTime, endDate: endTime, description: about, capacity: 100, venueId: 1
+        }),
+    });
+    newEvent = await newEvent.json()
+    console.log("NEW EVENT!", newEvent)
+    let imgRes = await csrfFetch(`/api/events/${newEvent.id}/images`, {
+        method: "POST",
+        body: JSON.stringify({
+            preview: true, url: img
+        }),
+    })
+
+    imgRes = imgRes.json()
+
+    newEvent.EventImages = [imgRes]
+    dispatch(createEvent(newEvent));
+    return newEvent
+}
+
 /*
 signle event pull
 eventid/attendance  find attending marked as host
@@ -63,7 +92,16 @@ export const thunkGetEvent = (id) => async (dispatch) => {
 const GET_GROUP_EVENTS = "EVENTS/GetGroupEvents";
 const GET_ALL_EVENTS = 'EVENTS/getAllEvents'
 const GET_EVENT = 'EVENTS/getEvent'
+const CREATE_EVENT = 'EVENT/create'
 //actins
+const createEvent = (newEvent) => {
+    return {
+        type: CREATE_EVENT,
+        newEvent
+    }
+}
+
+
 const getGroupEvents = (eventsData) => {
     return {
         type: GET_GROUP_EVENTS,
@@ -114,6 +152,14 @@ const eventsReducer = (state = initialState, action) => {
 
             console.log("right before setting state in reducer")
             return stateReset
+
+
+        case CREATE_EVENT:
+            let createState = Object.assign({}, state)
+
+            createState.allEvents[action.newEvent.id] = action.newEvent
+
+            return createState
         default:
             return state;
     }

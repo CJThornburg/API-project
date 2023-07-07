@@ -138,7 +138,11 @@ const validateEvent = [
         .isInt()
         .withMessage("Capacity must be an integer"),
     check('price')
+        .exists({ checkFalsy: true })
+        .isDecimal()
+        .withMessage('Price must be decimal')
         .custom(async (price, { req }) => {
+            price = price.toString()
             price = price.toString().split('.');
             if (price[1].length > 2 || Number(price[0]) < 0)
                 throw new Error('Please provide a valid price')
@@ -228,9 +232,12 @@ router.get("/", async (req, res) => {
 
 
         groups[i].dataValues.numMembers = count
-        const preImage = await GroupImage.findOne({ where: { id: groups[i].dataValues.id, preview: true } })
+
+
+        const preImage = await GroupImage.findOne({ where: { groupId: groups[i].dataValues.id, preview: true } })
         if (preImage) {
             let trimmed = preImage.toJSON()
+            console.log("!!!!!!!!!!!!!!!!!!!!!.", trimmed)
             groups[i].dataValues.previewImage = trimmed.url
         } else {
             groups[i].dataValues.previewImage = null

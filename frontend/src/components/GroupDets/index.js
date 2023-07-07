@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 // import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import EventCard from "../EventCard";
@@ -12,6 +12,7 @@ import OpenModalButton from '../OpenModalButton';
 import DeleteGroupModal from "./DeleteGroupModal";
 import './GroupDets.css'
 
+
 function GroupDets() {
     const { id } = useParams()
 
@@ -20,7 +21,11 @@ function GroupDets() {
     const dispatch = useDispatch()
     const group = useSelector(state => state.groups.singleGroup);
 
+
     const currentUser = useSelector(state => state.session)
+    let [groups, setGroups] = useState({})
+    let [img, setImg] = useState("https://t4.ftcdn.net/jpg/04/70/29/97/240_F_470299797_UD0eoVMMSUbHCcNJCdv2t8B2g1GVqYgs.jpg")
+
 
 
 
@@ -37,8 +42,32 @@ function GroupDets() {
 
     }, [dispatch, id])
 
+    // useEffect(() => {
+    //     async function loadGroups() {
+    //         let groups = await dispatch(groupsActions.thunkGetGroups());
+    //         console.log("groups in groups", groups)
+    //        await setGroups(groups)
+    //      console.log("in use effect", groups.Groups)
+    //         let groupsArr = Object.values(groups)
+    //         console.log("groups array", groupsArr)
+    //         console.log(id)
+    //         let curGroup = groupsArr[0][id].previewImage
 
-    if (!Object.keys(group).length) return null
+    //                     console.log("cur group", curGroup)
+    //      setImg("https://t4.ftcdn.net/jpg/04/70/29/97/240_F_470299797_UD0eoVMMSUbHCcNJCdv2t8B2g1GVqYgs.jpg")
+    //     }
+    //         loadGroups()
+    // }, [dispatch])
+
+
+
+
+
+
+    if (!Object.keys(group).length ) return null
+
+    console.log("groups", groups)
+
     console.log( "single group state after state is not empty", group )
     let ownerCheck = false
     let render = true
@@ -65,6 +94,8 @@ function GroupDets() {
     if (currentUser.user === null) {
         render = false
     }
+
+
 
 
 
@@ -153,7 +184,7 @@ function GroupDets() {
                 {render && <button onClick={() => { alert("coming soon") }} className="Gd-join-btn">Join this group</button>}
                 {ownerCheck &&
                     <>
-                        <button className="Gd-action-btn">Create event</button>
+                        <Link to={`/groups/${id}/events/new`}><button className="Gd-action-btn">Create event</button></Link>
                         <Link to={`/groups/${id}/edit`}> <button className="Gd-action-btn" >update</button></Link>
                         <OpenModalButton buttonText='Delete' modalComponent={<DeleteGroupModal id={ id } />} />
                     </>

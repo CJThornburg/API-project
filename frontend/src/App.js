@@ -9,6 +9,7 @@ import GroupDets from "./components/GroupDets/index";
 import EventsList from "./components/EventsList";
 import EventDets from './components/EventDets';
 import GroupForm from './components/GroupForm'
+import EventForm from "./components/EventForm";
 
 function App() {
   const dispatch = useDispatch();
@@ -32,7 +33,10 @@ function App() {
         </Route>
         <Route exact path="/groups">
           <GroupsList></GroupsList>
-          {/* <h1>HEEELLLLLLLLLLLLLLLLLOOOOOOO</h1> */}
+
+        </Route>
+        <Route path="/groups/:id/events/new">
+        <EventForm></EventForm>
         </Route>
         <Route path='/groups/:id'>
           <GroupDets></GroupDets>
