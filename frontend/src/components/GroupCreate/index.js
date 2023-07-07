@@ -37,15 +37,13 @@ function GroupCreate() {
     useEffect(() => {
         const err = {}
         if (about.length < 30) err["About"] = "Description needs 30 or more characters"
-        if (type === "In person" && state === "") err["State3"] = "If group type is In person, State is required"
-        if (type === "In person" && state === "") err["City2"] = "If group type is In person, State is required"
-
-
-        if (name === "") err['Name'] = "Name is required"
-        if (img === "") err["Img"] = "img url is required"
-        if (city === "") err["City"] = "City is required"
         if (state === "") err["State"] = "State is required"
         if (!state.length === 2) err["State2"] = "State must be state abbreviation"
+        if (type === "In person" && state === "") err["State3"] = "If group type is In person, State is required"
+        if (city === "") err["City"] = "City is required"
+        if (type === "In person" && state === "") err["City2"] = "If group type is In person, State is required"
+        if (name === "") err['Name'] = "Name is required"
+        if (img === "") err["Img"] = "img url is required"
 
         setVaErrors(err)
     }, [about, name, state, city, type, img])
@@ -76,6 +74,7 @@ function GroupCreate() {
                         value={city}
                     />
                     {vaErrors.City && `* ${vaErrors.City}`}
+                    {vaErrors.City2 && `* ${vaErrors.City2}`}
                     <label htmlFor="state"></label>
                     {/* if time make this a select */}
                     <input
@@ -89,6 +88,7 @@ function GroupCreate() {
                     />
                     {vaErrors.State && `* ${vaErrors.State}`}
                     {vaErrors.State2 && `* ${vaErrors.State2}`}
+                    {vaErrors.State3 && `* ${vaErrors.State3}`}
                 </div>
                 <div className="Gc-div">
                     <h5>What will your group's name be?</h5>
