@@ -8,7 +8,9 @@ import { useParams } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 import * as groupsActions from '../../store/groups'
-
+import OpenModalButton from '../OpenModalButton';
+import DeleteGroupModal from "./DeleteGroupModal";
+import './GroupDets.css'
 
 function GroupDets() {
     const { id } = useParams()
@@ -17,6 +19,7 @@ function GroupDets() {
     // let events
     const dispatch = useDispatch()
     const group = useSelector(state => state.groups.singleGroup);
+
     const currentUser = useSelector(state => state.session)
 
 
@@ -34,6 +37,9 @@ function GroupDets() {
 
     }, [dispatch, id])
 
+
+    if (!Object.keys(group).length) return null
+    console.log(group, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     let ownerCheck = false
     let render = true
 
@@ -85,6 +91,15 @@ function GroupDets() {
 
     let upEvents = []
     let pastEvents = []
+    // let previewImageObj
+
+
+    // console.log("group", group)
+    // if(group.GroupImages > 0) {
+    //    previewImageObj = group.GroupImages.find(img => img.preview === true)
+    // }
+    // console.log(previewImageObj)
+
     if (group.events) {
         let currentDate = new Date().getTime()
 
@@ -113,6 +128,7 @@ function GroupDets() {
 
     }
 
+
     return (
         <>
             <div className="Gd-header-div">
@@ -120,7 +136,7 @@ function GroupDets() {
                     <p>{lessThan} <Link to="/groups" className="Gd-breadcrumb"> Groups
                     </Link> </p>
                 </div>
-                <img src="groups preview image" alt="group preview image"></img>
+                <img className="Gd-group-img" src={group.GroupImages?.find(img => img.preview)?.url} alt="group preview image"></img>
 
                 <div className="Gd-header-details">
                     <h3>{group?.name}</h3>
@@ -139,7 +155,8 @@ function GroupDets() {
                     <>
                         <button className="Gd-action-btn">Create event</button>
                         <button className="Gd-action-btn">update</button>
-                        <button className="Gd-action-btn">Delete</button>
+                        <button className="Gd-action-btn" onClick={() => { alert("hi") }}>Delete</button>
+                        <OpenModalButton buttonText='Delete' modalComponent={<DeleteGroupModal id={ id } />} />
                     </>
                 }
 

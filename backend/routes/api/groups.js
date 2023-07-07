@@ -398,7 +398,9 @@ router.get("/:groupId", async (req, res, next) => {
 
 
 
-router.post("/", requireAuth, grabCurrentUser, validateNewGroup, async (req, res, next) => {
+router.post("/", requireAuth, grabCurrentUser,
+// validateNewGroup,
+ async (req, res, next) => {
     const { name, about, type, private, city, state } = req.body
 
     let id = req.currentUser.data.id
@@ -764,7 +766,7 @@ router.post("/:groupId/events", requireAuth, grabCurrentUser, validateEvent, asy
                 dec[1] += "0"
 
                 const decF = dec.join(".")
-             
+
                 newEvent.dataValues.price = Number(decF)
             }
         }

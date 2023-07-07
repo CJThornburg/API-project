@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import * as groupsActions from '../../store/groups'
 
 function GroupCreate() {
     //   const sessionUser = useSelector(state => state.session.user);
@@ -8,40 +9,45 @@ function GroupCreate() {
     const [state, setState] = useState('')
     const [name, setName] = useState("");
     const [about, setAbout] = useState("");
-    const [type, setType] = useState("")
+    const [type, setType] = useState("In person")
     const [privacy, setPrivacy] = useState("public")
     const [img, setImg] = useState("")
     const [vaErrors, setVaErrors] = useState({})
     const his = useHistory()
     const dispatch = useDispatch()
+    const group = useSelector(state => state.groups.singleGroup);
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    const handleSubmit = async (e) => {
+        // e.preventDefault()
         let privateVar;
         if (privacy === "private") {
             privateVar = true
         } else { privateVar = false }
 
-        let pin
+
 
         const newGroup = {
             name, about, type, private: privateVar,
-            city, state
+            city, state, img
         }
-        console.log(pin)
-        console.log(newGroup)
 
-        // his.push('/')
+        console.log(newGroup)
+        const res = await dispatch(groupsActions.thunkCreateGroup(newGroup)).then(his.push(`/groups/${group.id}`))
+
+        console.log("hi", res)
+        console.log("group ID BEFORE PUSH", group.id)
+        his.push(`/groups/${res.id}`)
     }
 
     useEffect(() => {
         const err = {}
         if (about.length < 30) err["About"] = "Description needs 30 or more characters"
         if (state === "") err["State"] = "State is required"
-        if (!state.length === 2) err["State2"] = "State must be state abbreviation"
+        console.log(state.length === 2)
+        if (state.length !== 2) err["State2"] = "State must be state abbreviation"
         if (type === "In person" && state === "") err["State3"] = "If group type is In person, State is required"
-        if (city === "") err["City"] = "City is required"
-        if (type === "In person" && state === "") err["City2"] = "If group type is In person, State is required"
+
+        if (type === "In person" && city === "") err["City"] = "If group type is In person, City is required"
         if (name === "") err['Name'] = "Name is required"
         if (img === "") err["Img"] = "img url is required"
 
@@ -74,7 +80,7 @@ function GroupCreate() {
                         value={city}
                     />
                     {vaErrors.City && `* ${vaErrors.City}`}
-                    {vaErrors.City2 && `* ${vaErrors.City2}`}
+                    {vaErrors.CityCheck && `* ${vaErrors.CityCheck}`}
                     <label htmlFor="state"></label>
                     {/* if time make this a select */}
                     <input
@@ -177,8 +183,8 @@ function GroupCreate() {
 
                 </div>
                 <div className='Gc-footer Gc-div'>
-                    <button className='red-but'
-                        disabled={vaErrors["Name"] || vaErrors["About"] || vaErrors["State"] || vaErrors["State2"] ||vaErrors["City"] || vaErrors["Img"] ? true : false}
+                    <button className='red-but' type='submit'
+                        disabled={vaErrors["Name"] || vaErrors["About"] || vaErrors["State"] || vaErrors["State2"] || vaErrors["State3"] || vaErrors["City"] || vaErrors["Img"] ? true : false}
                     >Create group</button>
                 </div>
             </form>

@@ -22,7 +22,9 @@ function GroupsList() {
 
 
 
-    }, [])
+    }, [dispatch])
+
+    if (!Object.keys(groups).length ) return null
 
 
     return (
@@ -34,7 +36,7 @@ function GroupsList() {
             {groups.map((group) => (
                 <Link className="GL-link" to={`/groups/${group.id}`}>
                 <div key={group.id} className='GL-group'>
-                    <img src={group.previewImage} alt="puppy" className='GL-photo'></img>
+                    <img src={group?.previewImage} alt="alt descripiton" className='GL-photo'></img>
                     <div className='GL-dets'>
                         <h3>
                             {group.name}
@@ -42,7 +44,8 @@ function GroupsList() {
                         <p className="Groups-location">{`${group.city}, ${group.state}`}</p>
                         <p className="Groups-desc">{group.about}  </p>
                         <div className="GL-mini-dets">
-                            <EventNumber key={group.id} gid={group} ></EventNumber>
+                            {/* <EventNumber key={group.id} gid={group.id} ></EventNumber> */}
+                            <p> #{group.numMembers} member(s)</p>
                             <p className="dot">·</p>
                             <p>{group.private ? "Private" : "Public"}</p>
                         </div>

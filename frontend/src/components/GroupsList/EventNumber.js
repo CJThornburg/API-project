@@ -7,9 +7,9 @@ import * as groupsActions from '../../store/groups'
 
 
 function EventNumber({ gid }) {
-    let id = gid
+   console.log(gid)
     const dispatch = useDispatch()
-    const group = useSelector(state => state.groups.allGroups[gid.id]);
+    const group = useSelector(state => state.groups.allGroups[gid]);
 
 
 
@@ -17,10 +17,12 @@ function EventNumber({ gid }) {
 
 
 
-      
+
         dispatch(groupsActions.thunkGetEventsByGroup(gid.id))
 
-    }, [group])
+    }, [gid])
+
+
 
     return (
         <>
