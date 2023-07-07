@@ -36,7 +36,7 @@ const validateNewGroup = [
         })
         .withMessage("Type must be 'Online' or 'In person'"),
     check('private')
-        .exists({ checkFalsy: true })
+        .exists()
         .withMessage("private option must be selected")
         .isBoolean()
         .withMessage('Private must be a boolean'),
@@ -70,7 +70,7 @@ const validateUpdateGroup = [
         })
         .withMessage("Type must be 'Online' or 'In person'"),
     check('private')
-        .exists({ checkFalsy: true })
+        .exists()
         .withMessage("private option must be selected")
         .isBoolean()
         .withMessage('Private must be a boolean'),
@@ -399,54 +399,54 @@ router.get("/:groupId", async (req, res, next) => {
 
 
 router.post("/", requireAuth, grabCurrentUser,
-// validateNewGroup,
- async (req, res, next) => {
-    const { name, about, type, private, city, state } = req.body
+    validateNewGroup,
+    async (req, res, next) => {
+        const { name, about, type, private, city, state } = req.body
 
-    let id = req.currentUser.data.id
+        let id = req.currentUser.data.id
 
-    const exist = await Group.findOne({ where: { name: name } })
-
-
-    if (!exist) {
-        let newGroup = Group.build({
-            name,
-            about,
-            type,
-            private,
-            city,
-            state,
-            organizerId: id
-        })
-
-        await newGroup.save()
-
-        let grabNewGroup = await Group.findOne({ where: { name: name } })
-
-        let newMember = await Membership.build({
-            userId: id,
-            groupId: grabNewGroup.dataValues.id,
-            status: "co-host"
-        })
-
-        await newMember.save()
-        newGroup.dataValues.createdAt = dateF(newGroup.dataValues.createdAt)
-        newGroup.dataValues.updatedAt = dateF(newGroup.dataValues.updatedAt)
-        return res.json(
-            newGroup
-        )
+        const exist = await Group.findOne({ where: { name: name } })
 
 
-    } else {
-        const err = new Error()
-        err.message = "This group already exists :("
-        err.status = 400
-        return next(err)
-    }
+        if (!exist) {
+            let newGroup = Group.build({
+                name,
+                about,
+                type,
+                private,
+                city,
+                state,
+                organizerId: id
+            })
+
+            await newGroup.save()
+
+            let grabNewGroup = await Group.findOne({ where: { name: name } })
+
+            let newMember = await Membership.build({
+                userId: id,
+                groupId: grabNewGroup.dataValues.id,
+                status: "co-host"
+            })
+
+            await newMember.save()
+            newGroup.dataValues.createdAt = dateF(newGroup.dataValues.createdAt)
+            newGroup.dataValues.updatedAt = dateF(newGroup.dataValues.updatedAt)
+            return res.json(
+                newGroup
+            )
+
+
+        } else {
+            const err = new Error()
+            err.message = "This group already exists :("
+            err.status = 400
+            return next(err)
+        }
 
 
 
-})
+    })
 
 
 

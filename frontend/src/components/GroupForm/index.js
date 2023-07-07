@@ -4,8 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as groupsActions from '../../store/groups'
 
 function GroupCreate({ version }) {
-    //   const sessionUser = useSelector(state => state.session.user);
-    console.log(version)
+
     const [city, setCity] = useState("");
     const [state, setState] = useState('')
     const [name, setName] = useState("");
@@ -16,13 +15,15 @@ function GroupCreate({ version }) {
     const [vaErrors, setVaErrors] = useState({})
     const his = useHistory()
     const dispatch = useDispatch()
-    const group = useSelector(state => state.groups.singleGroup);
 
+    let create = version === "create"
+    let edit = version === "edit"
 
+    console.log(create)
     const { id } = useParams()
 
     const handleSubmit = async (e) => {
-        // e.preventDefault()
+        e.preventDefault()
 
 
         let privateVar;
@@ -39,37 +40,36 @@ function GroupCreate({ version }) {
                 city, state, img
             }
 
-            console.log(newGroup)
+            console.log("obj that will be passed to create group thunk", newGroup)
             const res = await dispatch(groupsActions.thunkCreateGroup(newGroup))
-                .then(his.push(`/groups/${group.id}`))
-            // console.log("res", res)
-            // console.log("hi", res)
-            // console.log("group ID BEFORE PUSH", group.id)
-            his.push(`/groups/${res.id}`)
 
-        } else {
+
+            if (res.id) {
+                his.push(`/groups/${res.id}`)
+            } else {
+                setVaErrors(res)
+            }
+
+        } else if (version === "edit") {
 
             const editGroup = {
                 name, about, type, private: privateVar,
                 city, state, img, id
             }
             // edit
-            const editRes = await dispatch(groupsActions.thunkEditGroup(editGroup))
-                .then(his.push(`/groups/${id}`))
+            let editRes = await dispatch(groupsActions.thunkEditGroup(editGroup))
 
-            editRes = await editRes.json()
-            // await his.push(`/groups/${id}`)
-            return editRes
-
-
+            if (editRes.id) {
+                his.push(`/groups/${editRes.id}`)
+            } else {
+                setVaErrors(editRes)
+            }
         }
-
-
     }
 
     useEffect(() => {
         const err = {}
-        if (about.length < 30) err["About"] = "Description needs 30 or more characters"
+        if (about.length < 50) err["About"] = "Description needs 50 or more characters"
         if (state === "") err["State"] = "State is required"
 
         if (state.length !== 2) err["State2"] = "State must be state abbreviation"
@@ -88,15 +88,21 @@ function GroupCreate({ version }) {
 
     return (
         <>
+
+
             <div className="Gc-div">
-                <h4 className="tealText">Start a New Group</h4>
-                <h5>We'll wall you through a few steps to build your local community</h5>
+                {create &&  <h4 className="tealText">Start a New Group</h4>}
+                {edit && <h4 className='teal-text'>UPDATE YOUR GROUP'S INFO</h4>}
+                {create && <h5>We'll walk you through a few steps to build your local community</h5>}
+                {edit && <h5>We'll walk you through a few steps to update your group's information</h5>}
             </div>
             <form onSubmit={handleSubmit} >
 
 
                 <div className="Gc-div">
-                    <h5>Set your group's location</h5>
+                {create &&   <h5>Set your group's location</h5>}
+                {edit &&   <h5>Set your group's location</h5>}
+
                     <p>
                         OrganizeDown groups meet locally, in person, and online. We'll connect you with people in your area.
                     </p>
@@ -129,9 +135,12 @@ function GroupCreate({ version }) {
                 </div>
                 <div className="Gc-div">
                     <h5>What will your group's name be?</h5>
-                    <p>
+                    {create &&    <p>
                         Choose a name that will give people a clear idea of what the group is about. Feel free to get creative! You can edit this later if you change your mind
-                    </p>
+                    </p>}
+                    {edit &&    <p>
+                        Edit your name so the people will have a clear idea of what the group is about. Feel free to get creative!
+                    </p>}
                     <label htmlFor="name"></label>
                     <input
                         type="text"
@@ -156,7 +165,7 @@ function GroupCreate({ version }) {
                         onChange={(e) => {
                             setAbout(e.target.value)
                         }}
-                        placeholder="Please write at least 30 characters"
+                        placeholder="Please write at least 50 characters"
                         value={about}
                     />
                     {vaErrors.About && `* ${vaErrors.About}`}
@@ -196,10 +205,11 @@ function GroupCreate({ version }) {
                             private
                         </option>
                     </select>
+                    {create && <>
                     <p>
                         Please add an image url for your group below
                     </p>
-                    <label htmlFor="img"></label>
+                        <label htmlFor="img"></label>
                     <input
                         type="text"
                         id="img"
@@ -212,11 +222,19 @@ function GroupCreate({ version }) {
                     {vaErrors.Img && `* ${vaErrors.Img}`}
 
 
+                    </>}
+
+
                 </div>
                 <div className='Gc-footer Gc-div'>
-                    <button className='red-but' type='submit'
+                {create && <button className='red-but' type='submit'
                         disabled={vaErrors["Name"] || vaErrors["About"] || vaErrors["State"] || vaErrors["State2"] || vaErrors["State3"] || vaErrors["City"] || vaErrors["Img"] ? true : false}
-                    >Create group</button>
+                    >Create group</button>}
+                    {edit && <button className='red-but' type='submit'
+                        disabled={vaErrors["Name"] || vaErrors["About"] || vaErrors["State"] || vaErrors["State2"] || vaErrors["State3"] || vaErrors["City"]  ? true : false}
+                    >Edit Group</button>}
+
+
                 </div>
             </form>
 

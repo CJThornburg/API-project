@@ -39,7 +39,7 @@ function GroupDets() {
 
 
     if (!Object.keys(group).length) return null
-    console.log(group, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    console.log( "single group state after state is not empty", group )
     let ownerCheck = false
     let render = true
 
@@ -154,8 +154,7 @@ function GroupDets() {
                 {ownerCheck &&
                     <>
                         <button className="Gd-action-btn">Create event</button>
-                        <button className="Gd-action-btn">update</button>
-                        <button className="Gd-action-btn" onClick={() => { alert("hi") }}>Delete</button>
+                        <Link to={`/groups/${id}/edit`}> <button className="Gd-action-btn" >update</button></Link>
                         <OpenModalButton buttonText='Delete' modalComponent={<DeleteGroupModal id={ id } />} />
                     </>
                 }

@@ -53,12 +53,9 @@ export const thunkGetEventsByGroup = (id) => async (dispatch) => {
 // create group
 export const thunkCreateGroup = (formData) => async (dispatch) => {
     const { name, about, type, city, state, img } = formData;
-    console.log("name", name, "about", about, "type", type, "city", city, "state", "private", formData.private,)
-
-
+    console.log( "START OF CREATE GROUP THUNK => is the passed in object deconstructed", "name", name, "about", about, "type", type, "city", city, "state", "private", formData.private,)
 
     let newGroup = await csrfFetch("/api/groups", {
-
 
         method: "POST",
         body: JSON.stringify({
@@ -66,8 +63,8 @@ export const thunkCreateGroup = (formData) => async (dispatch) => {
         }),
     });
 
+
     newGroup = await newGroup.json()
-    console.log(newGroup.id)
 
     const imgRes = await csrfFetch(`/api/groups/${newGroup.id}/images`, {
         method: "POST",
@@ -76,41 +73,22 @@ export const thunkCreateGroup = (formData) => async (dispatch) => {
         }),
     })
 
-
     newGroup.events = []
 
-
-
-
-
-
-
-
     const imgData = await imgRes.json()
+
     newGroup.GroupImages = [imgData]
-    // console.log("img data", imgData)
-    console.log(newGroup, "imgData", imgData)
+
     dispatch(createGroup(newGroup));
     return newGroup;
 };
 
-
 export const thunkDeleteGroup = (id) => async (dispatch) => {
 
     let deleteGroupInfo = await csrfFetch(`/api/groups/${id}`, {
-
         method: "DELETE"
-
     });
 
-    //    let groups = await csrfFetch(`/api/groups/${id}`);
-
-    //     groups = await response.json();
-
-
-    // const response = await csrfFetch("/api/groups");
-    // const data = await response.json();
-    // data.delete = id
     dispatch(deleteGroup(id));
     return deleteGroupInfo;
 
@@ -119,8 +97,9 @@ export const thunkDeleteGroup = (id) => async (dispatch) => {
 // !!!!!!!!!!!!!!!!!!! you are here need to figure out how to pass img only if it is there
 
 export const thunkEditGroup = (editGroup) => async (dispatch) => {
-    const { name, about, type, city, state, img, id } = editGroup
+    const { name, about, type, city, state, id } = editGroup
 
+    console.log(editGroup.private)
     let editGroupData = await csrfFetch(`/api/groups/${id}`, {
 
         method: "PUT",
@@ -128,24 +107,7 @@ export const thunkEditGroup = (editGroup) => async (dispatch) => {
             name, about, type, city, state, private: editGroup.private
         }),
     });
-
-    if (img) {
-
-        const imgRes = await csrfFetch(`/api/groups/${id}/images`, {
-            method: "POST",
-            body: JSON.stringify({
-                preview: false, url: img
-            }),
-        })
-
-        imgRes = await imgRes.json()
-        editGroupData.GroupImages.push(imgRes)
-    }
-
-
     editGroupData = editGroupData.json()
-
-
     dispatch(updateGroup(editGroupData))
     return editGroupData
 }
@@ -177,8 +139,9 @@ const updateGroup = (editGroup) => {
 }
 
 
-// !!! this was hella wrong
+
 const createGroup = (newGroup) => {
+    console.log("in create group action creator, this was what was passed to me", newGroup)
     return {
         type: CREATE_GROUP,
         newGroup
@@ -274,26 +237,16 @@ const groupsReducer = (state = initialState, action) => {
 
         case CREATE_GROUP:
             let createState = Object.assign({}, state)
-            console.log(action.newGroup, "action?")
+
             createState.allGroups[action.newGroup.id] = action.newGroup
-
-            // delete deleteState.allGroups[deleteId]
-
-
-
 
             return createState
 
 
         case UPDATE_GROUP:
             let updateState = Object.assign({}, state)
-            console.log(action.newGroup, "action?")
+        
             updateState.allGroups[action.editGroup.id] = action.editGroup
-
-            // delete deleteState.allGroups[deleteId]
-
-
-
 
             return updateState
 

@@ -564,7 +564,7 @@ router.get("/:eventId/attendees", grabCurrentUser, async (req, res, next) => {
         id = req.currentUser.data.id
     }
     let eventId = req.params.eventId
-    console.log("!!!!!!!!!!!!!hi i am in the /api/events/eventid/attendees get route", "my event id is ", eventId)
+    // console.log("!!!!!!!!!!!!!hi i am in the /api/events/eventid/attendees get route", "my event id is ", eventId)
 
     const event = await Event.findByPk(eventId)
 
