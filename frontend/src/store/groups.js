@@ -90,7 +90,7 @@ export const thunkCreateGroup = (formData) => async (dispatch) => {
     newGroup.GroupImages = [imgData]
     // console.log("img data", imgData)
     console.log(newGroup, "imgData", imgData)
-    dispatch(getGroup(newGroup));
+    dispatch(createGroup(newGroup));
     return newGroup;
 };
 
@@ -116,7 +116,39 @@ export const thunkDeleteGroup = (id) => async (dispatch) => {
 
 
 }
+// !!!!!!!!!!!!!!!!!!! you are here need to figure out how to pass img only if it is there
 
+export const thunkEditGroup = (editGroup) => async (dispatch) => {
+    const { name, about, type, city, state, img, id } = editGroup
+
+    let editGroupData = await csrfFetch(`/api/groups/${id}`, {
+
+        method: "PUT",
+        body: JSON.stringify({
+            name, about, type, city, state, private: editGroup.private
+        }),
+    });
+
+    if (img) {
+
+        const imgRes = await csrfFetch(`/api/groups/${id}/images`, {
+            method: "POST",
+            body: JSON.stringify({
+                preview: false, url: img
+            }),
+        })
+
+        imgRes = await imgRes.json()
+        editGroupData.GroupImages.push(imgRes)
+    }
+
+
+    editGroupData = editGroupData.json()
+
+
+    dispatch(updateGroup(editGroupData))
+    return editGroupData
+}
 
 
 
@@ -131,8 +163,27 @@ const GET_GROUPS = "Groups/getGroups";
 const GET_GROUP = "Groups/getGroup";
 const GET_GROUP_EVENTS = "EVENTS/GetGroupEvents";
 const DELETE_GROUP = "Group/delete"
+const CREATE_GROUP = "Group/create"
+const UPDATE_GROUP = 'GROUP/update'
 // // const CREATE_GROUP = "Group/create"
 // //actins
+
+
+const updateGroup = (editGroup) => {
+    return {
+        type: UPDATE_GROUP,
+        editGroup
+    }
+}
+
+
+// !!! this was hella wrong
+const createGroup = (newGroup) => {
+    return {
+        type: CREATE_GROUP,
+        newGroup
+    }
+}
 
 const deleteGroup = (id) => {
     return {
@@ -219,6 +270,32 @@ const groupsReducer = (state = initialState, action) => {
 
 
             return deleteState
+
+
+        case CREATE_GROUP:
+            let createState = Object.assign({}, state)
+            console.log(action.newGroup, "action?")
+            createState.allGroups[action.newGroup.id] = action.newGroup
+
+            // delete deleteState.allGroups[deleteId]
+
+
+
+
+            return createState
+
+
+        case UPDATE_GROUP:
+            let updateState = Object.assign({}, state)
+            console.log(action.newGroup, "action?")
+            updateState.allGroups[action.editGroup.id] = action.editGroup
+
+            // delete deleteState.allGroups[deleteId]
+
+
+
+
+            return updateState
 
         default:
             return state;

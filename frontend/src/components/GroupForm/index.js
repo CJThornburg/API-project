@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import * as groupsActions from '../../store/groups'
 
-function GroupCreate() {
+function GroupCreate({ version }) {
     //   const sessionUser = useSelector(state => state.session.user);
+    console.log(version)
     const [city, setCity] = useState("");
     const [state, setState] = useState('')
     const [name, setName] = useState("");
@@ -17,8 +18,13 @@ function GroupCreate() {
     const dispatch = useDispatch()
     const group = useSelector(state => state.groups.singleGroup);
 
+
+    const { id } = useParams()
+
     const handleSubmit = async (e) => {
         // e.preventDefault()
+
+
         let privateVar;
         if (privacy === "private") {
             privateVar = true
@@ -26,30 +32,55 @@ function GroupCreate() {
 
 
 
-        const newGroup = {
-            name, about, type, private: privateVar,
-            city, state, img
+        // create
+        if (version === "create") {
+            const newGroup = {
+                name, about, type, private: privateVar,
+                city, state, img
+            }
+
+            console.log(newGroup)
+            const res = await dispatch(groupsActions.thunkCreateGroup(newGroup))
+                .then(his.push(`/groups/${group.id}`))
+            // console.log("res", res)
+            // console.log("hi", res)
+            // console.log("group ID BEFORE PUSH", group.id)
+            his.push(`/groups/${res.id}`)
+
+        } else {
+
+            const editGroup = {
+                name, about, type, private: privateVar,
+                city, state, img, id
+            }
+            // edit
+            const editRes = await dispatch(groupsActions.thunkEditGroup(editGroup))
+                .then(his.push(`/groups/${id}`))
+
+            editRes = await editRes.json()
+            // await his.push(`/groups/${id}`)
+            return editRes
+
+
         }
 
-        console.log(newGroup)
-        const res = await dispatch(groupsActions.thunkCreateGroup(newGroup)).then(his.push(`/groups/${group.id}`))
 
-        console.log("hi", res)
-        console.log("group ID BEFORE PUSH", group.id)
-        his.push(`/groups/${res.id}`)
     }
 
     useEffect(() => {
         const err = {}
         if (about.length < 30) err["About"] = "Description needs 30 or more characters"
         if (state === "") err["State"] = "State is required"
-        console.log(state.length === 2)
+
         if (state.length !== 2) err["State2"] = "State must be state abbreviation"
         if (type === "In person" && state === "") err["State3"] = "If group type is In person, State is required"
 
         if (type === "In person" && city === "") err["City"] = "If group type is In person, City is required"
         if (name === "") err['Name'] = "Name is required"
-        if (img === "") err["Img"] = "img url is required"
+
+        if (version === "create") {
+            if (img === "") err["Img"] = "img url is required"
+        }
 
         setVaErrors(err)
     }, [about, name, state, city, type, img])
