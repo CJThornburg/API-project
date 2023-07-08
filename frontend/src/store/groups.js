@@ -88,13 +88,12 @@ export const thunkDeleteGroup = (id) => async (dispatch) => {
     let deleteGroupInfo = await csrfFetch(`/api/groups/${id}`, {
         method: "DELETE"
     });
-
+    deleteGroupInfo= deleteGroupInfo.json()
     dispatch(deleteGroup(id));
     return deleteGroupInfo;
 
 
 }
-// !!!!!!!!!!!!!!!!!!! you are here need to figure out how to pass img only if it is there
 
 export const thunkEditGroup = (editGroup) => async (dispatch) => {
     const { name, about, type, city, state, id } = editGroup
@@ -223,7 +222,7 @@ const groupsReducer = (state = initialState, action) => {
 
         case DELETE_GROUP:
             let deleteState = Object.assign({}, state)
-           
+
             let deleteId = action.id
 
             delete deleteState.allGroups[deleteId]

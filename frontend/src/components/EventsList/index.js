@@ -7,6 +7,7 @@ import * as eventsActions from '../../store/events'
 import { Link } from "react-router-dom";
 import EventCard from "../EventCard";
 import './EventsList.css'
+
 // import * as eventsActions from '../../store/events'
 
 
@@ -88,23 +89,6 @@ function EventsList() {
 
                 <EventCard key={event.id} event={event}></EventCard>
             ))}
-            {/* <Link className="GL-link" to={`/events/${event.id}`}>
-                <div key={event.id} className='GL-group'>
-                    <img src={event.previewImage} alt="puppy" className='GL-photo'></img>
-                    <div className='GL-dets'>
-                        <h3>
-                            {event.name}
-                        </h3>
-                       {event.venueId &&  <p className="Event-location">{`${event.Venue.city}, ${event.Venue.state}`}</p>}
-                       {!event.venueId && <p className="Event-location">Online</p>}
-                        <p className="Groups-desc">{event.about}  </p>
-                        <div className="GL-mini-dets">
-
-                        </div>
-                    </div>
-                </div>
-                </Link>
-            ))} */}
 
 
         </>

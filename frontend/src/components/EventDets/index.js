@@ -5,7 +5,8 @@ import { useEffect } from "react";
 import * as eventsActions from '../../store/events'
 import * as groupsActions from '../../store/groups'
 import { useState } from "react";
-
+import OpenModalButton from '../OpenModalButton';
+import DeleteEventModal from "./DeleteEventModal";
 
 
 
@@ -67,8 +68,10 @@ function EventDets() {
 
     let host
     if (event.attendance?.length > 0) {
+        console.log("ATTENDANCE", event.attendance)
         host = (event.attendance.find(atten => atten.Attendance.status === "host")
         )
+        console.log(host)
     }
 
     let hostCheck = false
@@ -127,7 +130,10 @@ function EventDets() {
                 <div className="Ed-title-div">
                     <h3>{event?.name}</h3>
                     <h5>Hosted by  {host?.firstName} {host?.lastName} </h5>
-                    {hostCheck && <><button>update</button> <button>Delete</button></>}
+                    {hostCheck &&
+                     <> <OpenModalButton buttonText='Delete' modalComponent={<DeleteEventModal id={ id } />} /></>
+
+                     }
                 </div>
             </div>
             <div className="Ed-main">

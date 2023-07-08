@@ -23,8 +23,8 @@ function GroupDets() {
 
 
     const currentUser = useSelector(state => state.session)
-    let [groups, setGroups] = useState({})
-    let [img, setImg] = useState("https://t4.ftcdn.net/jpg/04/70/29/97/240_F_470299797_UD0eoVMMSUbHCcNJCdv2t8B2g1GVqYgs.jpg")
+    // let [groups, setGroups] = useState({})
+    // let [img, setImg] = useState("https://t4.ftcdn.net/jpg/04/70/29/97/240_F_470299797_UD0eoVMMSUbHCcNJCdv2t8B2g1GVqYgs.jpg")
 
 
 
@@ -42,22 +42,7 @@ function GroupDets() {
 
     }, [dispatch, id])
 
-    // useEffect(() => {
-    //     async function loadGroups() {
-    //         let groups = await dispatch(groupsActions.thunkGetGroups());
-    //         console.log("groups in groups", groups)
-    //        await setGroups(groups)
-    //      console.log("in use effect", groups.Groups)
-    //         let groupsArr = Object.values(groups)
-    //         console.log("groups array", groupsArr)
-    //         console.log(id)
-    //         let curGroup = groupsArr[0][id].previewImage
 
-    //                     console.log("cur group", curGroup)
-    //      setImg("https://t4.ftcdn.net/jpg/04/70/29/97/240_F_470299797_UD0eoVMMSUbHCcNJCdv2t8B2g1GVqYgs.jpg")
-    //     }
-    //         loadGroups()
-    // }, [dispatch])
 
 
 
@@ -121,14 +106,7 @@ function GroupDets() {
 
     let upEvents = []
     let pastEvents = []
-    // let previewImageObj
-
-
-    // console.log("group", group)
-    // if(group.GroupImages > 0) {
-    //    previewImageObj = group.GroupImages.find(img => img.preview === true)
-    // }
-    // console.log(previewImageObj)
+   
 
     if (group.events) {
         let currentDate = new Date().getTime()

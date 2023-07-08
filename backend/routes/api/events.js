@@ -529,6 +529,24 @@ router.delete("/:eventId", requireAuth, grabCurrentUser, async (req, res, next) 
         }],
     })
 
+
+
+    const aten = await Attendance.findAll({
+        where: {
+            eventId: eventId,
+            status: "host"
+        },
+        attributes: ["status"],
+        include: [{
+            model: User,
+            attributes: ["id", "firstName", "lastName"]
+        }],
+
+    })
+
+    let host = aten[0].toJSON().User.id
+
+
     if (!event) {
         const err = new Error()
         err.message = "Event couldn't be found"
@@ -538,8 +556,8 @@ router.delete("/:eventId", requireAuth, grabCurrentUser, async (req, res, next) 
     }
 
     let oI = event.toJSON().Group.organizerId
-
-    if (event.toJSON().Group.Memberships[0] || oI === id) {
+    console.log("host check or somthing", event.toJSON())
+    if (event.toJSON().Group.Memberships[0] || oI === id || host === id) {
         delete event.dataValues.Group
         await event.destroy()
         return res.json({

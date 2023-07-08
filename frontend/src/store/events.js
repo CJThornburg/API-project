@@ -12,6 +12,21 @@ import { csrfFetch } from "./csrf";
 
 
 // get all groups
+export const thunkDeleteEvent = (id) => async (dispatch) => {
+console.log("delete Id", id)
+    let deleteEventInfo = await csrfFetch(`/api/events/${id}`, {
+        method: "DELETE"
+    });
+
+    deleteEventInfo= deleteEventInfo.json()
+    dispatch(deleteEvent(id));
+    return deleteEventInfo;
+
+
+}
+
+
+
 export const thunkGetEventsByGroup = (id) => async (dispatch) => {
 
     const response = await csrfFetch(`/api/groups/${id}/events`);
@@ -93,7 +108,18 @@ const GET_GROUP_EVENTS = "EVENTS/GetGroupEvents";
 const GET_ALL_EVENTS = 'EVENTS/getAllEvents'
 const GET_EVENT = 'EVENTS/getEvent'
 const CREATE_EVENT = 'EVENT/create'
+const DELETE_EVENT = "EVENT/delete"
 //actins
+
+
+
+const deleteEvent = (id) => {
+    return {
+        type: DELETE_EVENT,
+        id
+    }
+}
+
 const createEvent = (newEvent) => {
     return {
         type: CREATE_EVENT,
@@ -149,7 +175,7 @@ const eventsReducer = (state = initialState, action) => {
             stateReset.singleEvent = action.eventData
 
 
-          
+
             return stateReset
 
 
@@ -159,6 +185,21 @@ const eventsReducer = (state = initialState, action) => {
             createState.allEvents[action.newEvent.id] = action.newEvent
 
             return createState
+
+
+            case DELETE_EVENT:
+            let deleteState = Object.assign({}, state)
+
+            let deleteId = action.id
+
+            console.log("before", deleteState)
+            delete deleteState.allEvents[deleteId]
+
+            console.log("after", deleteState)
+
+
+            return deleteState
+
         default:
             return state;
     }
