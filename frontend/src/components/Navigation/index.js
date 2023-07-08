@@ -14,7 +14,7 @@ function Navigation({ isLoaded }){
         <NavLink  exact to="/"><img className='logo' src={OrganizeDown}></img></NavLink>
 
       {isLoaded && (
-        <div>
+        <div className='right-nav'>
           <ProfileButton user={sessionUser} />
         </div>
       )}

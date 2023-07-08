@@ -14,6 +14,11 @@
     align-items: center;
 }
 
+.right-nav {
+    margin-right: 20px;
+}
+
+
 ul {
     list-style: none;
   }
