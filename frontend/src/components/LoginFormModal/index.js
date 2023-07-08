@@ -11,10 +11,12 @@ function LoginFormModal() {
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
   const [frontErr, setFrontErr] = useState({})
+  const [dis, setDis] = useState(true)
 
 
   const handleDemo = (e) => {
     e.preventDefault();
+    if(frontErr) return
     return dispatch(sessionActions.thunkLogin({ credential:"user1@user.io", password: "password2" }))
     .then(closeModal)
     .catch(async (res) => {
@@ -32,7 +34,13 @@ function LoginFormModal() {
     if (credential.length <4) err["pass"] = "Cred needs to be 5 or more characters"
     if (password.length < 6) err["cred"] = "Password needs 6 or more characters"
 
+
     setFrontErr(err)
+    if((!err["pass"] && !err["cred"] )) {
+      setDis(false)
+    } else {
+      setDis(true)
+    }
     }
   )
   const handleSubmit = (e) => {
@@ -77,7 +85,9 @@ function LoginFormModal() {
           />
         </label>
 
-        <button className="login-but" type="submit" disabled={frontErr["pass"] || frontErr['cred']}>Log In</button>
+        <button className={dis?"dis-login": "login-but cursor" } type="submit" disabled={dis}
+
+        >Log In</button>
       </form>
       <p className="teal-text underline-text login-demo cursor" onClick={handleDemo}>Demo User</p>
     </div>

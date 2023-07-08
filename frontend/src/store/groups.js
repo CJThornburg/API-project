@@ -201,12 +201,12 @@ const groupsReducer = (state = initialState, action) => {
             return newGroupsState;
 
         case GET_GROUP:
-            console.log("in get group :)")
+
             let stateReset = Object.assign({}, state)
             stateReset.singleGroup = action.groupData
 
 
-            console.log(stateReset.singleGroup)
+       
             return stateReset
 
         case GET_GROUP_EVENTS:

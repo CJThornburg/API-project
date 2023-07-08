@@ -556,7 +556,7 @@ router.delete("/:eventId", requireAuth, grabCurrentUser, async (req, res, next) 
     }
 
     let oI = event.toJSON().Group.organizerId
-    console.log("host check or somthing", event.toJSON())
+   
     if (event.toJSON().Group.Memberships[0] || oI === id || host === id) {
         delete event.dataValues.Group
         await event.destroy()

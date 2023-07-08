@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import * as sessionActions from "../../store/session";
@@ -14,9 +14,14 @@ function SignupFormModal() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
+  const [dis, setDis] = useState(true)
+  const [frontErr, setFrontErr] = useState({})
+  const [sub, setSub] = useState(false)
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (Object.keys(frontErr).length >0) return
     if (password === confirmPassword) {
       setErrors({});
       return dispatch(
@@ -41,75 +46,116 @@ function SignupFormModal() {
     });
   };
 
+
+  useEffect(() => {
+    const err = {}
+    if (username.length < 4) err["user"] = "Username needs to be at least 4 characters"
+    if (password.length < 6) err["pass"] = "password needs to be at least 6 characters"
+    if (email === "") err["email"] = "email is required"
+    if (username === "") err["username"] = "username is required"
+    if (firstName === "") err["firstName"] = "firstName is required"
+    if (lastName === "") err["lastName"] = "lastName is required"
+    if (password === "") err["password"] = "password is required"
+    if (confirmPassword === "") err["confirmPassword"] = "confirmPassword is required"
+    // if (confirmPassword !== password) err["match"] = "Password and Confirm password do not match"
+
+
+
+
+
+
+    setFrontErr(err)
+    if (Object.keys(frontErr).length === 0) {
+      setDis(false)
+    } else {
+      setDis(true)
+    }
+  }
+  )
+
+
+
   return (
-    <>
-      <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Email
+    <> <div className="login-div">
+      <h1 className="login-title">Sign Up</h1>
+      <form className="login-form" id="signup" onSubmit={handleSubmit}>
+        <label className="login-label">
+
           <input
             type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            className="login-input"
+            placeholder="Email"
           />
         </label>
-        {errors.email && <p>{errors.email}</p>}
-        <label>
-          Username
+        {frontErr.email &&  sub&&  <p>{frontErr.email}</p>}
+        <label className="login-label">
+
           <input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
+            className="login-input"
+            placeholder=" Username"
           />
         </label>
-        {errors.username && <p>{errors.username}</p>}
-        <label>
-          First Name
+        {frontErr.username &&  sub&& <p>{frontErr.username}</p>}
+        <label className="login-label">
+
           <input
             type="text"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             required
+            className="login-input"
+            placeholder="  First Name"
           />
         </label>
-        {errors.firstName && <p>{errors.firstName}</p>}
-        <label>
-          Last Name
+        {frontErr.firstName &&  sub&& <p>{frontErr.firstName}</p>}
+        <label className="login-label">
+
           <input
             type="text"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             required
+            className="login-input"
+            placeholder=" Last Name"
           />
         </label>
-        {errors.lastName && <p>{errors.lastName}</p>}
-        <label>
-          Password
+        {frontErr.lastName &&  sub&& <p>{frontErr.lastName}</p>}
+        <label className="login-label">
+
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            className="login-input"
+            placeholder=" Password"
           />
         </label>
-        {errors.password && <p>{errors.password}</p>}
-        <label>
-          Confirm Password
+        {frontErr.password &&  sub&& <p>{frontErr.password}</p>}
+        <label className="login-label">
+
           <input
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
+            className="login-input"
+            placeholder=" Confirm Password"
           />
         </label>
-        {errors.confirmPassword && (
-          <p>{errors.confirmPassword}</p>
+        {frontErr.confirmPassword && sub&&  (
+          <p>{frontErr.confirmPassword}</p>
         )}
-        <button type="submit">Sign Up</button>
+        <button className={dis ? "dis-login" : "login-but cursor"} type="submit" disabled={dis}>Sign Up</button>
       </form>
-    </>
+    </div>    </>
   );
 }
 

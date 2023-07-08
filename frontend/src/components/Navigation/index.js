@@ -21,21 +21,22 @@ function Navigation({ isLoaded }) {
       {isLoaded && (
         <div className='right-nav'>
           {!sessionUser && <>
-            <div className='cursor'>
+            <div className='cursor loginText'>
               <OpenModalMenuItem
-                itemText="Log In"
+                itemText="Log in"
 
                 // onItemClick={closeMenu}
                 modalComponent={<LoginFormModal />}
               />
             </div>
-
-            <OpenModalButton
-              buttonText="Sign Up"
+            <div className='cursor loginText'>
+            <OpenModalMenuItem
+             itemText="Sign up"
               className='cursor'
               // onButtonClick={closeMenu}
               modalComponent={<SignupFormModal />}
             />
+               </div>
           </>}
           {sessionUser &&
             <>

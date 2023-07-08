@@ -5,8 +5,9 @@
     align-items: center;
     width: 500px;
     margin-top: 10px;
-    height: 250px;
+    height: fit-content;
     border-radius: 25px;
+    padding-bottom: 40px;
 }
 
 
@@ -47,6 +48,18 @@
     border: 1px solid black;
     color: white;
 }
+
+.dis-login{
+    width: 87%;
+    margin-right: 5px;
+    height: 35px;
+    font-size: 1rem;
+    background-color: white;
+    box-shadow: 2px 5px grey;
+    border: 1px solid grey;
+    color: grey;
+}
+
 
 .login-demo {
     font-size: 1.2rem;

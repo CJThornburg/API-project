@@ -17,8 +17,9 @@ function EventDets() {
     const dispatch = useDispatch()
     const event = useSelector(state => state.events.singleEvent);
     const groupI = useSelector(state => state.groups.singleGroup);
-    const currentUser = useSelector(state => state.session)
+    const currentUser = useSelector(state => state.session.user)
     const [groupInfo, setGroupInfo] = useState({})
+    console.log("current user", currentUser)
     // .user becuse the inital state is {user: null}
 
     useEffect(() => {
@@ -44,11 +45,10 @@ function EventDets() {
     }
 
     let groupPI = "https://t4.ftcdn.net/jpg/04/70/29/97/240_F_470299797_UD0eoVMMSUbHCcNJCdv2t8B2g1GVqYgs.jpg"
-    console.log(groupI.GroupImages)
+
     if (groupI.GroupImages.length > 0) {
         let groupPreviewImgObj = groupI.GroupImages.find(image => image.preview === true)
-        console.log("GROUP IMAGEs",groupI.GroupImages)
-        console.log("gPIO", groupPreviewImgObj)
+
         if (groupPreviewImgObj) {
             groupPI = groupPreviewImgObj.url
         }
@@ -68,16 +68,16 @@ function EventDets() {
 
     let host
     if (event.attendance?.length > 0) {
-        console.log("ATTENDANCE", event.attendance)
+
         host = (event.attendance.find(atten => atten.Attendance.status === "host")
         )
-        console.log(host)
+        
     }
 
     let hostCheck = false
 
-    if (currentUser.user.id !== null && host) {
-        if (currentUser.user.id === host.id) {
+    if (currentUser && host) {
+        if (currentUser.id === host.id) {
             hostCheck = true
         }
 
