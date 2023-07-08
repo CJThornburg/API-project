@@ -1,3 +1,50 @@
 .hidden {
     display: none;
 }
+
+.logo {
+    width: 60px;
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+.nav-div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+ul {
+    list-style: none;
+  }
+
+
+  a,
+  article,
+  body,
+  div,
+  h1,
+  h2,
+  header,
+  html,
+  i,
+  label,
+  li,
+  nav,
+  p,
+  span,
+  strong,
+  ul
+   {
+    background: transparent;
+    border: 0;
+    box-sizing: inherit;
+    color: inherit;
+    font: inherit;
+    margin: 0;
+    outline: 0;
+    padding: 0;
+    text-align: inherit;
+    text-decoration: inherit;
+    vertical-align: inherit;
+  }
