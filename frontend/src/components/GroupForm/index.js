@@ -30,13 +30,25 @@ function GroupForm({ version }) {
         setSub(true)
 
         if (Object.keys(vaErrors).length) { return }
+
+
+        if (version === "create") {
+
+
+
+
+            let imgCheck = await checkImage(img)
+
+            if (!imgCheck) {
+
+                setVaErrors({ Img: "url needs to be an image" })
+                return
+            }
+        }
         let privateVar;
         if (privacy === "private") {
             privateVar = true
         } else { privateVar = false }
-
-
-
 
         // create
         if (version === "create") {
@@ -45,7 +57,7 @@ function GroupForm({ version }) {
                 city, state, img
             }
 
-            console.log("obj that will be passed to create group thunk", newGroup)
+
             const res = await dispatch(groupsActions.thunkCreateGroup(newGroup))
 
 
@@ -72,6 +84,15 @@ function GroupForm({ version }) {
         }
     }
 
+    async function checkImage(url) {
+
+        const res = await fetch(url);
+        const buff = await res.blob();
+
+        return buff.type.startsWith('image/')
+
+    }
+
     useEffect(() => {
         const err = {}
         if (about.length < 50) err["About"] = "Description needs 50 or more characters"
@@ -94,7 +115,7 @@ function GroupForm({ version }) {
     useEffect(() => {
         async function loadGroup() {
             let group = await dispatch(groupsActions.thunkGetGroup(id));
-            console.log(group)
+           
             setCity(group.city)
             setState(group.state)
             setName(group.name)

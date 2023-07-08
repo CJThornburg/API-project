@@ -4,6 +4,7 @@ import './EventDets.css'
 import { useEffect } from "react";
 import * as eventsActions from '../../store/events'
 import * as groupsActions from '../../store/groups'
+import { useState } from "react";
 
 
 
@@ -14,18 +15,27 @@ function EventDets() {
 
     const dispatch = useDispatch()
     const event = useSelector(state => state.events.singleEvent);
-    const groupS = useSelector(state => state.groups.singleGroup);
+    const groupI = useSelector(state => state.groups.singleGroup);
     const currentUser = useSelector(state => state.session)
+    const [groupInfo, setGroupInfo] = useState({})
     // .user becuse the inital state is {user: null}
 
     useEffect(() => {
-        dispatch(eventsActions.thunkGetEvent(id))
-        dispatch(groupsActions.thunkGetGroup(id))
+        const thunks = async()=>{
+         let eventInfo =await dispatch(eventsActions.thunkGetEvent(id))
+            // need to chancge this to group id
+
+
+        let groupData = await dispatch(groupsActions.thunkGetGroup(eventInfo.groupId))
+
+
+        }
+        thunks()
 
     }, [dispatch, id])
 
-    //! short circuit to confirm state is full, used to confirm state is loaded before loading full jsx, and used to make loading animation
-    if (!(Object.keys(event).length && Object.keys(groupS).length)) return null
+
+    if (!(Object.keys(event).length && Object.keys(groupI).length )) return null
 
     let group
     if (event?.Group) {
@@ -33,10 +43,13 @@ function EventDets() {
     }
 
     let groupPI = "https://t4.ftcdn.net/jpg/04/70/29/97/240_F_470299797_UD0eoVMMSUbHCcNJCdv2t8B2g1GVqYgs.jpg"
-    if (groupS.GroupImages > 0) {
-        let groupPreviewImgObj = (groupS.GroupImages.find(image => image.preview === true))
+    console.log(groupI.GroupImages)
+    if (groupI.GroupImages.length > 0) {
+        let groupPreviewImgObj = groupI.GroupImages.find(image => image.preview === true)
+        console.log("GROUP IMAGEs",groupI.GroupImages)
+        console.log("gPIO", groupPreviewImgObj)
         if (groupPreviewImgObj) {
-            groupPI = groupPreviewImgObj?.url
+            groupPI = groupPreviewImgObj.url
         }
     }
 

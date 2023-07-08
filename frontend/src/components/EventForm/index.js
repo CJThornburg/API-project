@@ -45,12 +45,25 @@ function EventForm() {
         setSub(true)
 
         if (Object.keys(vaErrors).length) { return }
+
+        let imgCheck = await checkImage(img)
+
+        if (!imgCheck) {
+
+            setVaErrors({ Img: "url needs to be an image" })
+            return
+        }
+
+
+
+
+
         let privateVar;
         if (privacy === "private") {
             privateVar = true
         } else { privateVar = false }
 
-        console.log(startTime)
+
 
 
         // create
@@ -73,24 +86,32 @@ function EventForm() {
 
     }
 
-    // useEffect(() => {
-    //     const err = {}
-    //     if (about.length < 50) err["About"] = "Description needs 50 or more characters"
-    //     if (state === "") err["State"] = "State is required"
+    async function checkImage(url) {
 
-    //     if (state.length !== 2) err["State2"] = "State must be state abbreviation"
-    //     if (type === "In person" && state === "") err["State3"] = "If group type is In person, State is required"
+        const res = await fetch(url);
+        const buff = await res.blob();
 
-    //     if (type === "In person" && city === "") err["City"] = "If group type is In person, City is required"
-    //     if (name === "") err['Name'] = "Name is required"
+        return buff.type.startsWith('image/')
 
-    //     if (version === "create") {
-    //         if (img === "") err["Img"] = "img url is required"
-    //     }
+    }
+    useEffect(() => {
+        const err = {}
 
-    //     setVaErrors(err)
+        if (name.length < 5) err['Name'] = "Name must be at least 5 characters "
+        if (type === "") err["Type"] = "Event Type is required"
+        if (privacy === "") err["Privacy"] = "Visibility is required"
+        if (price === "") err["Price"] = "Price is required"
+    
+        if (new Date(endTime).getTime() < new Date(startTime).getTime()) err["EndDate"] = "End date must be after start date"
 
-    // }, [about, name, state, city, type, img])
+
+
+        if (new Date().getTime() > new Date(startTime).getTime()) err["StartDate"] = "Start date must be after right now"
+        if (img === "") err["Img"] = "img url is required"
+        if (about.length < 50) err['About'] = "Description needs to be at least 50 characters"
+        setVaErrors(err)
+
+    }, [about, name, startTime, endTime, price, privacy, type, img])
 
 
 
@@ -105,7 +126,7 @@ function EventForm() {
 
 
                 <div className="Gc-div">
-                    <h4 className="">Create an event for "GROUP"</h4>
+                    <h4 className="">Create an event for {group.name}</h4>
 
                     <p>What is the name of the event</p>
                     <label htmlFor="name"></label>
@@ -121,7 +142,7 @@ function EventForm() {
                     {vaErrors.Name && sub && `* ${vaErrors.Name}`}
                 </div>
                 <div>
-                        <p>Is this an in person or online event</p>
+                    <p>Is this an in person or online event</p>
                     <label htmlFor="eventType"></label>
                     <select
                         value={type}
@@ -136,7 +157,7 @@ function EventForm() {
                             In person
                         </option>
                     </select>
-
+                    {vaErrors.Type && sub && `* ${vaErrors.Type}`}
 
                     <p>Is this event private or public?</p>
                     <label htmlFor="eventPrivacy"></label>
@@ -153,7 +174,7 @@ function EventForm() {
                             private
                         </option>
                     </select>
-
+                    {vaErrors.Privacy && sub && `* ${vaErrors.Privacy}`}
 
                     <p>What is the price of the event</p>
                     <label for="price"></label>
@@ -164,29 +185,32 @@ function EventForm() {
                         placeholder='0'
                         value={price}
                     ></input>
-
+                    {vaErrors.Price && sub && `* ${vaErrors.Price}`}
                 </div>
 
 
                 <div>
                     <p>When does your event start?</p>
                     <input type='datetime-local' onChange={(e) => setStartTime(e.target.value)} value={startTime} />
-
+                    {vaErrors.StartDate && sub && `* ${vaErrors.StartDate}`}
                     <p>When does your event end?</p>
                     <input type='datetime-local' onChange={(e) => setEndTime(e.target.value)} value={endTime} />
+                    {vaErrors.EndDate && sub && `* ${vaErrors.EndDate}`}
 
                 </div>
                 <div>
                     <p>Please add an image url for your event below:</p>
                     <input placeholder='Image URL' value={img} onChange={(e) => setImg(e.target.value)} />
-
+                    {vaErrors.Img && sub && `* ${vaErrors.Img}`}
                 </div>
                 <div>
                     <p>Please describe you event:</p>
                     <textarea placeholder='Please write at least 50 characters' onChange={(e) => setAbout(e.target.value)} value={about} />
-
+                    {vaErrors.About && sub && `* ${vaErrors.About}`}
                 </div>
-                <button type='submit'>Create Event</button>
+                <button type='submit'
+                disabled={sub && (vaErrors["Name"] || vaErrors["About"] || vaErrors["StartDate"] || vaErrors["EndDate"] || vaErrors["Img"] || vaErrors["Price"] || vaErrors["Privacy"] || vaErrors["Type"]) ? true : false}
+                >Create Event</button>
 
             </form>
         </>

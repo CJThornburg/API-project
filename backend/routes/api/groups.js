@@ -237,7 +237,7 @@ router.get("/", async (req, res) => {
         const preImage = await GroupImage.findOne({ where: { groupId: groups[i].dataValues.id, preview: true } })
         if (preImage) {
             let trimmed = preImage.toJSON()
-            console.log("!!!!!!!!!!!!!!!!!!!!!.", trimmed)
+          
             groups[i].dataValues.previewImage = trimmed.url
         } else {
             groups[i].dataValues.previewImage = null

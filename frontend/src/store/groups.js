@@ -46,7 +46,7 @@ export const thunkGetEventsByGroup = (id) => async (dispatch) => {
     let data = await response.json();
 
     dispatch(getGroupEvents({ ...data, id: id }));
-    return response;
+    return data;
 };
 
 
@@ -99,7 +99,6 @@ export const thunkDeleteGroup = (id) => async (dispatch) => {
 export const thunkEditGroup = (editGroup) => async (dispatch) => {
     const { name, about, type, city, state, id } = editGroup
 
-    console.log(editGroup.private)
     let editGroupData = await csrfFetch(`/api/groups/${id}`, {
 
         method: "PUT",
@@ -141,7 +140,7 @@ const updateGroup = (editGroup) => {
 
 
 const createGroup = (newGroup) => {
-    console.log("in create group action creator, this was what was passed to me", newGroup)
+
     return {
         type: CREATE_GROUP,
         newGroup
@@ -193,7 +192,7 @@ const groupsReducer = (state = initialState, action) => {
     switch (action.type) {
         case GET_GROUPS:
             let newGroupsState = Object.assign({}, state)
-            console.log("action", action)
+
             action.groupsData.forEach((group) => {
 
                 newGroupsState.allGroups[group.id] = group
@@ -224,7 +223,7 @@ const groupsReducer = (state = initialState, action) => {
 
         case DELETE_GROUP:
             let deleteState = Object.assign({}, state)
-            console.log(action.id, "action id?")
+           
             let deleteId = action.id
 
             delete deleteState.allGroups[deleteId]

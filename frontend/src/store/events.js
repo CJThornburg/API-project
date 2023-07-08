@@ -27,14 +27,14 @@ export const thunkGetEvents = () => async (dispatch) => {
     const response = await csrfFetch('/api/events')
     const data = await response.json()
     dispatch(getAllEvents(data.Events))
-    return response
+    return data
 }
 
 
 export const thunkCreateEvent = (formData) => async (dispatch) => {
     const { name, about, type, price, startTime, endTime, privacy, img, id } = formData;
 
-    console.log(price, startTime, endTime)
+
     let capacity = 100;
 
     let newEvent = await csrfFetch(`/api/groups/${id}/events`, {
@@ -45,7 +45,7 @@ export const thunkCreateEvent = (formData) => async (dispatch) => {
         }),
     });
     newEvent = await newEvent.json()
-    console.log("NEW EVENT!", newEvent)
+
     let imgRes = await csrfFetch(`/api/events/${newEvent.id}/images`, {
         method: "POST",
         body: JSON.stringify({
@@ -68,7 +68,7 @@ eventid/attendance  find attending marked as host
 
 
 export const thunkGetEvent = (id) => async (dispatch) => {
-    console.log("in start of getventthunk =>", "eventid", id, "!!!!!!!!!!!!!!!!!!!!!!!")
+
     const response = await csrfFetch(`/api/events/${id}`);
 
     const data = await response.json();
@@ -79,12 +79,12 @@ export const thunkGetEvent = (id) => async (dispatch) => {
 
     const attendance = await response2.json();
     data.attendance = attendance.Attendees
-    console.log("after second fetch", data)
+
 
 
 
     dispatch(getEvent(data));
-    return response;
+    return data;
 };
 
 
@@ -144,13 +144,12 @@ const eventsReducer = (state = initialState, action) => {
 
 
         case GET_EVENT:
-            console.log("in reducer", action.eventData)
-            console.log("reducer", action.eventData)
+
             let stateReset = Object.assign({}, state)
             stateReset.singleEvent = action.eventData
 
 
-            console.log("right before setting state in reducer")
+          
             return stateReset
 
 

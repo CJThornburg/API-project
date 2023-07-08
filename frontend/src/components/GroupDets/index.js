@@ -66,9 +66,8 @@ function GroupDets() {
 
     if (!Object.keys(group).length ) return null
 
-    console.log("groups", groups)
 
-    console.log( "single group state after state is not empty", group )
+
     let ownerCheck = false
     let render = true
 
