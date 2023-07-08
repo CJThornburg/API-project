@@ -29,8 +29,8 @@ function LoginFormModal() {
 
   useEffect(() => {
     const err = {}
-    if (password < 50) err["cred"] = "Description needs 50 or more characters"
-    if (credential === "") err["pass"] = "State is required"
+    if (credential.length <4) err["pass"] = "Cred needs to be 5 or more characters"
+    if (password.length < 6) err["cred"] = "Password needs 6 or more characters"
 
     setFrontErr(err)
     }
@@ -49,34 +49,38 @@ function LoginFormModal() {
   };
 
   return (
-    <>
-      <h1>Log In</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Username or Email
-          <input
+    <div className="login-div">
+
+      <h2 className="login-title">Log In</h2>
+      {errors.credential && (
+          <p className="error-text">{errors.credential}</p>
+        )}
+      <form className="login-form" onSubmit={handleSubmit}>
+        <label  className="login-label">
+
+          <input  className="login-input"
             type="text"
             value={credential}
             onChange={(e) => setCredential(e.target.value)}
             required
+            placeholder="Username or Email"
           />
-        </label>
-        <label>
-          Password
-          <input
+        </label >
+        <label className="login-label">
+
+          <input className="login-input"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            placeholder=" Password"
           />
         </label>
-        {errors.credential && (
-          <p>{errors.credential}</p>
-        )}
-        <button type="submit">Log In</button>
+
+        <button className="login-but" type="submit" disabled={frontErr["pass"] || frontErr['cred']}>Log In</button>
       </form>
-      <button onClick={ handleDemo}>demo</button>
-    </>
+      <p className="teal-text underline-text login-demo cursor" onClick={handleDemo}>Demo User</p>
+    </div>
   );
 }
 

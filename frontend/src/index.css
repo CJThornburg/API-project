@@ -1,1 +1,16 @@
 /* TODO Add site wide styles */
+
+.teal-text{
+    color: teal;
+}
+
+.error-text { color: red}
+
+.underline-text {
+    text-decoration: underline;
+}
+
+
+.cursor:hover {
+    cursor: pointer;
+}

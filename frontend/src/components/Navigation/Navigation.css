@@ -8,6 +8,15 @@
     margin-top: 10px;
 }
 
+.profile-but {
+    height: 20px;
+}
+
+.profile-div {
+    display: flex;
+    align-items: center;
+}
+
 .nav-div {
     display: flex;
     justify-content: space-between;
@@ -17,32 +26,31 @@
 .right-nav {
     margin-right: 20px;
     display: flex;
-    gap:20px
+    gap: 20px
 }
 
 
 ul {
     list-style: none;
-  }
+}
 
 
-  a,
-  article,
-  body,
-  div,
-  h1,
-  h2,
-  header,
-  html,
-  i,
-  label,
-  li,
-  nav,
-  p,
-  span,
-  strong,
-  ul
-   {
+a,
+article,
+body,
+div,
+h1,
+h2,
+header,
+html,
+i,
+label,
+li,
+nav,
+p,
+span,
+strong,
+ul {
     background: transparent;
     border: 0;
     box-sizing: inherit;
@@ -54,4 +62,42 @@ ul {
     text-align: inherit;
     text-decoration: inherit;
     vertical-align: inherit;
-  }
+}
+
+
+.login-icon {
+    color: #f64060;
+    font-size: 1.5rem;
+    margin-bottom: 3px;
+}
+
+
+.pop-up-div {
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    width: 120px;
+    border: 2px solid black;
+    height: fit-content;
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    background-color: white;
+}
+
+.pop-item {
+    margin-left: 5px;
+    padding: 3px;
+}
+
+.popHr {
+    width: 93%;
+}
+
+.pop-bottom {
+    padding-bottom: 5px;
+}
+
+i {
+    margin: 3px;
+}
