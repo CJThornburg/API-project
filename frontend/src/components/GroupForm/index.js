@@ -122,7 +122,7 @@ function GroupForm({ version }) {
     let group
     useEffect(() => {
         async function loadGroup() {
-             group = await dispatch(groupsActions.thunkGetGroup(id));
+            group = await dispatch(groupsActions.thunkGetGroup(id));
 
             setCity(group.city)
             setState(group.state)
@@ -196,7 +196,7 @@ function GroupForm({ version }) {
                                 value={state}
                                 className="Gc-input Gc-location-state"
                             />
-                             {vaErrors.City && sub &&  <p className='error-text'>*{vaErrors.City}</p> }
+                            {vaErrors.City && sub && <p className='error-text'>*{vaErrors.City}</p>}
                             {vaErrors.CityCheck && sub && <p className='error-text'>*{vaErrors.CityCheck}</p>}
                             {vaErrors.State && sub && <p className='error-text'>*{vaErrors.State}</p>}
                             {vaErrors.State2 && sub && <p className='error-text'>*{vaErrors.State2}</p>}
@@ -225,9 +225,18 @@ function GroupForm({ version }) {
                         </div>
                         <div className="Gc-div">
                             <h5 className="Gc-div-title">Describe the purpose of your group.</h5>
-                            <p className="Gc-text">
-                                People will see this when we promote your group, but you'll be able to add to it later, too. 1. What's the purpose of the group? 2. Who should join? 3. What will you do at your events?
+                            <p className="Gc-purpose">
+                                People will see this when we promote your group, but you'll be able to add to it later, too.
                             </p>
+
+                                <p className='Gc-purpose Gc-m'>1.What's the purpose of the group?</p>
+                                <p className='Gc-purpose Gc-m'>2.Who should join?</p>
+                                <p className='Gc-purpose Gc-m'>3.What will you do at your events?</p>
+
+
+
+
+
                             <label htmlFor="about"></label>
                             <textarea
 

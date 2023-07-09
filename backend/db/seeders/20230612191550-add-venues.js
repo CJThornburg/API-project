@@ -30,7 +30,7 @@ module.exports = {
       {
         groupId: 3,
         address: "1234 MadeUp St",
-        city: "liesville",
+        city: "madeupville",
         state: "Maryland",
         "lat": 39.7645358,
         "lng": 122.4730327,
@@ -38,7 +38,7 @@ module.exports = {
       {
         groupId: 2,
         address: "12347 MadeUp St",
-        city: "liesville",
+        city: "madeUpville2",
         state: "Maryland",
         "lat": 40.7645358,
         "lng": 122.4730327,
