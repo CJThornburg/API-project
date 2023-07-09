@@ -35,7 +35,6 @@ function GroupDets() {
 
 
 
-
     // one thunk that does two fetches
     useEffect(() => {
         dispatch(groupsActions.thunkGetGroup(id))
@@ -49,10 +48,10 @@ function GroupDets() {
 
 
 
-    if (!Object.keys(group).length ) return null
+    if (!Object.keys(group).length) return null
 
 
-
+    console.log(group)
     let ownerCheck = false
     let render = true
 
@@ -106,7 +105,7 @@ function GroupDets() {
 
     let upEvents = []
     let pastEvents = []
-   
+
 
     if (group.events) {
         let currentDate = new Date().getTime()
@@ -139,59 +138,79 @@ function GroupDets() {
 
     return (
         <>
-            <div className="Gd-header-div">
-                <div className="Gd-breadcrumb-div">
-                    <p>{lessThan} <Link to="/groups" className="Gd-breadcrumb"> Groups
-                    </Link> </p>
-                </div>
-                <img className="Gd-group-img" src={group.GroupImages?.find(img => img.preview)?.url} alt="group preview image"></img>
+            <div className="column-holder Gd-nav-padding">
+                <div className="column">
+                    <div className="Gd-breadcrumb-div">
+                        <p className="bread-text">{lessThan} <Link to="/groups" className="Gd-breadcrumb"> Groups
+                        </Link> </p>
+                    </div>
+                    <div className="Gd-header-div">
+                        <img className="Gd-group-img" src={group.GroupImages?.find(img => img.preview)?.url} alt="group preview image"></img>
 
-                <div className="Gd-header-details">
-                    <h3>{group?.name}</h3>
-                    <div className="Gd-mini-dets">
-                        {`${group?.city}, ${group?.state}`}
+                        <div className="Gd-header-details overflow">
+                            <h3 className="Gd-name">{group?.name}</h3>
+                            <div className="Gd-mini-dets">
+                                <p className="Gd-dets-item">
+                                    {`${group?.city}, ${group?.state}`}
 
-                        <p className="dot">·</p>
-                        <p>{group?.private ? "Private" : "Public"}</p>
-                        <p>
-                            Organized by {group.Organizer?.firstName} {group.Organizer?.lastName}
-                        </p>
+                                </p>
+
+                                <div className="Gd-events-privacy Gd-dets-item">
+                                    <p>{group.events[0] ? `# ${group.events.length} events` : `#0 events`}   </p>
+                                    <p className="dot">·</p>
+                                    <p>{group?.private ? "Private" : "Public"}</p>
+                                </div>
+                                <p className="Gd-dets-item">
+                                    Organized by {group.Organizer?.firstName} {group.Organizer?.lastName}
+                                </p>
+                            </div>
+                        </div>
+                        {render && <button onClick={() => { alert("coming soon") }} className="Gd-join-btn">Join this group</button>}
+                        {ownerCheck &&
+                            <>
+                                <Link to={`/groups/${id}/events/new`}><button className="Gd-action-btn">Create event</button></Link>
+                                <Link to={`/groups/${id}/edit`}> <button className="Gd-action-btn" >update</button></Link>
+                                <OpenModalButton buttonText='Delete' modalComponent={<DeleteGroupModal id={id} />} />
+                            </>
+                        }
+
                     </div>
                 </div>
-                {render && <button onClick={() => { alert("coming soon") }} className="Gd-join-btn">Join this group</button>}
-                {ownerCheck &&
-                    <>
-                        <Link to={`/groups/${id}/events/new`}><button className="Gd-action-btn">Create event</button></Link>
-                        <Link to={`/groups/${id}/edit`}> <button className="Gd-action-btn" >update</button></Link>
-                        <OpenModalButton buttonText='Delete' modalComponent={<DeleteGroupModal id={ id } />} />
-                    </>
-                }
-
             </div>
-            <div>
+
+            <div className="Gd-grey">
+            <div className="column-holder">
+                <div className="column">
                 <div className="Gd-details-Organizer-div">
-                    <h3>Organizer</h3>
-                    <p>
+                    <h3 className="Gd-org2">Organizer</h3>
+                    <p className="Gd-mini-dets Gd-org-name">
                         {group.Organizer?.firstName} {group.Organizer?.lastName}
                     </p>
                 </div>
                 <div className="Gd-details-about-div">
-                    <h3>What we're about</h3>
-                    <p>{group?.about}</p>
+                    <h3 className="Gd-what">What we're about</h3>
+                    <p className="Gd-about">{group?.about}</p>
                 </div>
-                <div className="Gd-details-Events-div">
 
-                    {upEvents.length > 0 && <h2>Upcoming Events ({upEvents.length})</h2>}
+
+                <div className="Gd-details-Events-div">
+                    <div className="Gd-details-Events-inner-div">
+
+                    {upEvents.length > 0 && <h2 className="Gd-event-sec-title">Upcoming Events ({upEvents.length})</h2>}
                     {upEvents.map((event) => (
                         <EventCard key={event.id} event={event}></EventCard>
                     ))}
-                    {pastEvents.length > 0 && <h2>Past Events ({pastEvents.length})</h2>}
+                    {pastEvents.length > 0 && <h2 className="Gd-event-sec-title">Past Events ({pastEvents.length})</h2>}
                     {pastEvents.map((event) => (
                         <EventCard key={event.id} event={event}></EventCard>
                     ))}
+                    </div>
 
                 </div>
             </div>
+            </div>
+            </div>
+
         </>
     );
 }

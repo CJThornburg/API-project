@@ -1,9 +1,85 @@
 .Gd-breadcrumb {
     color: teal;
+    text-decoration: underline;
+
 }
 
 
 .Gd-group-img {
-    min-width: 700px;
-    height: 400px;
+    min-width: 500px;
+    max-width: 550px;
+    min-height: 350px;
+    max-height: 450px;
+}
+
+.bread-text {
+    padding-top: 50px;
+}
+
+.Gd-header-div {
+    display: flex;
+
+}
+
+.Gd-header-details{
+    padding-left: 25px;
+}
+
+.Gd-name{
+    font-size: 3vh;
+    padding-top: 0;
+    margin-top: 0;
+}
+
+.Gd-mini-dets {
+    color: gray;
+}
+
+.Gd-events-privacy {
+    display: flex;
+}
+
+.Gd-dets-item{
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.Gd-grey {
+    background-color: rgba(190, 190, 190, 0.397);
+}
+
+
+
+.Gd-org2 {
+    font-size: 2.8vh;
+    margin-bottom: 10px;
+}
+
+.Gd-org-name {
+    font-size: 1.8vh;
+}
+
+
+.Gd-what {
+    font-size: 2.5vh;
+}
+
+.Gd-about {
+    margin-bottom: 20px;
+    font-size: 2vh;
+}
+
+.Gd-event-sec-title {
+    font-size: 2.5vh;
+    margin-bottom: 10px;
+}
+
+
+.Gd-details-Events-div {
+    background-color: white;
+    border-radius: 25px;
+}
+
+.Gd-details-Events-inner-div{
+    
 }
