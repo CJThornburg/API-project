@@ -25,12 +25,12 @@ module.exports = {
       {
         "url": "https://ychef.files.bbci.co.uk/1280x720/p08jfwky.jpg",
         "eventId": 3,
-        "preview": false
+        "preview": true
       },
       {
         "url": "https://ychef.files.bbci.co.uk/1280x720/p08jfwky.jpg",
         "eventId": 4,
-        "preview": false
+        "preview": true
       },
       {
         "url": "https://m.media-amazon.com/images/I/61BKYlNqH6L._AC_UF894,1000_QL80_.jpg",
