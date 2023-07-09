@@ -23,18 +23,18 @@ module.exports = {
         "preview": true
       },
       {
-        "url": "https://www.interweave.com/wp-content/uploads/Repeats_Header.jpg.optimal.jpg",
+        "url": "https://ychef.files.bbci.co.uk/1280x720/p08jfwky.jpg",
         "eventId": 3,
         "preview": false
       },
       {
-        "url": "https://www.interweave.com/wp-content/uploads/Repeats_Header.jpg.optimal.jpg",
+        "url": "https://ychef.files.bbci.co.uk/1280x720/p08jfwky.jpg",
         "eventId": 4,
         "preview": false
       },
       {
         "url": "https://m.media-amazon.com/images/I/61BKYlNqH6L._AC_UF894,1000_QL80_.jpg",
-        "eventId":5,
+        "eventId": 5,
         "preview": true
       },
 
@@ -45,7 +45,7 @@ module.exports = {
     options.tableName = 'EventImages';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      id: { [Op.in]: [1, 2, 3, 4,5] }
+      id: { [Op.in]: [1, 2, 3, 4, 5] }
     }, {});
   }
 };
