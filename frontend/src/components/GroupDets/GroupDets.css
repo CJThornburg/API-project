@@ -45,8 +45,6 @@
     padding-bottom: 8px;
 }
 
-
-
 .Gd-buttons-div{
     margin-top: 30px;
 }
@@ -54,12 +52,15 @@
 .Gd-action-btn {
     /* width: 87%; */
     margin: 1px;
-    height: 35px;
-    font-size: 1.5vh;
+    padding: 8px 15px;
+    font-size: 1.7h;
     background-color: #f64060;
     box-shadow: 2px 5px black;
     border: 1px solid black;
     color: white;
+}
+.Gd-join-btn {
+    margin-top: 30px;
 }
 
 .margin-right {

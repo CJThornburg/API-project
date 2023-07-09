@@ -164,11 +164,11 @@ function GroupDets() {
                                     Organized by {group.Organizer?.firstName} {group.Organizer?.lastName}
                                 </p>
                             </div>
-                            {render && <button onClick={() => { alert("coming soon") }} className="Gd-join-btn">Join this group</button>}
+                            {render && <button onClick={() => { alert("coming soon") }} className="Gd-join-btn Gd-action-btn">Join this group</button>}
                             {ownerCheck &&
                                 <div className="Gd-buttons-div">
-                                    <Link to={`/groups/${id}/events/new`}><button className="Gd-action-btn">Create event</button></Link>
-                                    <Link to={`/groups/${id}/edit`}> <button className="Gd-action-btn margin-right" >update</button></Link>
+                                    <Link to={`/groups/${id}/events/new`}><button className="Gd-action-btn cursor">Create event</button></Link>
+                                    <Link to={`/groups/${id}/edit`}> <button className="Gd-action-btn margin-right cursor" >update</button></Link>
 
                                     <OpenModalButton buttonText='Delete' from="GD" modalComponent={<DeleteGroupModal id={id} />} />
                                 </div>

@@ -23,12 +23,12 @@ function EventDets() {
     // .user becuse the inital state is {user: null}
 
     useEffect(() => {
-        const thunks = async()=>{
-         let eventInfo =await dispatch(eventsActions.thunkGetEvent(id))
+        const thunks = async () => {
+            let eventInfo = await dispatch(eventsActions.thunkGetEvent(id))
             // need to chancge this to group id
 
 
-        let groupData = await dispatch(groupsActions.thunkGetGroup(eventInfo.groupId))
+            let groupData = await dispatch(groupsActions.thunkGetGroup(eventInfo.groupId))
 
 
         }
@@ -37,7 +37,7 @@ function EventDets() {
     }, [dispatch, id])
 
 
-    if (!(Object.keys(event).length && Object.keys(groupI).length )) return null
+    if (!(Object.keys(event).length && Object.keys(groupI).length)) return null
 
     let group
     if (event?.Group) {
@@ -71,7 +71,7 @@ function EventDets() {
 
         host = (event.attendance.find(atten => atten.Attendance.status === "host")
         )
-        
+
     }
 
     let hostCheck = false
@@ -115,63 +115,85 @@ function EventDets() {
 
 
 
-
+    console.log("EVENT", event)
 
 
 
 
     return (
         <>
-            <div className="Ed-header">
-                <div className="Ed-breadcrumb-div">
-                    <p>{lessThan} <Link to="/events" className="Gd-breadcrumb"> Events
-                    </Link> </p>
-                </div>
-                <div className="Ed-title-div">
-                    <h3>{event?.name}</h3>
-                    <h5>Hosted by  {host?.firstName} {host?.lastName} </h5>
-                    {hostCheck &&
-                     <> <OpenModalButton buttonText='Delete' modalComponent={<DeleteEventModal id={ id } />} /></>
+            <div className="column-holder Gd-nav-padding">
+                <div className="column">
 
-                     }
+                    <div className="Ed-header">
+                        <div className="Ed-breadcrumb-div">
+                            <p>{lessThan} <Link to="/events" className="Gd-breadcrumb"> Events
+                            </Link> </p>
+                        </div>
+                        <div className="Ed-title-div">
+                            <h3 className="Ed-event-name">{event?.name}</h3>
+                            <h5 className="Ed-Host">Hosted by  {host?.firstName} {host?.lastName} </h5>
+                            {hostCheck &&
+                                <> <OpenModalButton buttonText='Delete' from="GD" modalComponent={<DeleteEventModal id={id} />} /></>
+
+                            }
+                        </div>
+                    </div>
+
                 </div>
             </div>
+
             <div className="Ed-main">
-                <div className="Ed-image-cards-div">
-                    <img className="Ed-event-img" src={previewImg && previewImg}></img>
-                    <div className="Ed-cards-div">
-                        <img className="Ed-group-img" src={groupPI}></img>
-                        <div className="Ed-group-card-text">
-                            <h6> {group?.name}</h6>
-                            <p>{group?.private ? "Private" : "Public"}</p>
-                        </div>
-                    </div>
-                    <div className="Ed-event-card">
-                        <div className="Ed-times">
-                            <p>clock icon</p>
-                            <div className="Ec-time-div">
-                                <p><span className="Ec-grey">START</span> <span className="Ed-teal"> {event?.justDate} · {event?.time}</span></p>
-                                <p><span className="Ec-grey">END</span> <span className="Ed-teal">  {event?.justDateEnd} · {event?.timeEnd}</span></p>
-                            </div>
+                <div className="column-holder Gd-nav-padding">
+                    <div className="column">
 
+                        <div className="Ed-image-cards-div">
+                            <img className="Ed-event-img" src={previewImg && previewImg}></img>
+                            <div className="Ed-cards-div">
+
+
+                                <div className="Ed-group-card">
+                                    <img className="Ed-group-img" src={groupPI}></img>
+                                    <div className="Ed-group-card-text overflow">
+                                        <h6 className="Ed-group-name"> {group?.name}</h6>
+                                        <p className="Ed-group-name grey-text" >{group?.private ? "Private" : "Public"}</p>
+                                    </div>
+                                </div>
+
+
+
+
+                                <div className="Ed-event-card">
+                                    <div className="Ed-times Ed-icon-row">
+                                    <i class="Ed-icon fas fa-regular fa-clock"></i>
+                                        <div className="Ec-time-div">
+                                            <p><span className="Ec-grey grey-text Ec-start">START</span> <span className="Ed-teal teal-text"> {event?.justDate} · {event?.time}</span></p>
+                                            <p><span className="Ec-grey grey-text Ec-end">END</span> <span className="Ed-teal teal-text">  {event?.justDateEnd} · {event?.timeEnd}</span></p>
+                                        </div>
+
+                                    </div>
+                                    <div className="Ed-price Ed-icon-row">
+                                    <i class="fas fa-solid fa-dollar-sign Ed-icon Ed-dollar"></i>
+                                        <p className="Ed-price-value grey-text"> {event.price? event.price : "Free"}</p>
+                                    </div>
+                                    <div className="Ed-privacy Ed-icon-row">
+                                    <i class=" fas fa-solid fa-map-pin  Ed-icon  Ed-pin"></i>
+                                        <p className="Ed-type-text grey-text" >{event?.Venue === null ? "online" : "in person"}</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div className="Ed-price">
-                            <p>icon</p>
-                            <p>{event?.price}</p>
-                        </div>
-                        <div className="Ed-price">
-                            <p>icon</p>
-                            <p>{event?.Venue === null ? "online" : "in person"}</p>
+                        <div className="Ed-details overflow">
+                            <h4 className="Ed-dets-title">Details</h4>
+                            <p className="Ed-dets">
+                                {event?.description}
+                            </p>
                         </div>
                     </div>
-                </div>
-                <div className="Ed-details">
-                    <h4>Details</h4>
-                    <p>
-                        {event?.description}
-                    </p>
                 </div>
             </div>
+
+
         </>
     );
 }
