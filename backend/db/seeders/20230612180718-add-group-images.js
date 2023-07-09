@@ -14,27 +14,32 @@ module.exports = {
     return queryInterface.bulkInsert(options, [
       {
         groupId: 1,
-        url: "https://www.google.com/url?sa=i&url=https%3A%2F%2Funsplash.com%2Fimages%2Fanimals%2Fcat&psig=AOvVaw051KC6Ua-MDtjlJxdSb-HW&ust=1686679888255000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCPDDnq6qvv8CFQAAAAAdAAAAABAD",
+        url: "https://i.etsystatic.com/10787697/r/il/2fdd34/3705714440/il_fullxfull.3705714440_oyaj.jpg",
         preview: true
       },
       {
         groupId: 2,
-        url: "https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8M3x8fGVufDB8fHx8fA%3D%3D&w=1000&q=80",
+        url: "https://media.contentapi.ea.com/content/dam/apex-legends/images/2019/01/apex-featured-image-16x9.jpg.adapt.crop16x9.1023w.jpg",
         preview: true
       },
       {
         groupId: 3,
-        url: "https://hips.hearstapps.com/hmg-prod/images/cute-cat-photos-1593441022.jpg?crop=1.00xw:0.753xh;0,0.153xh&resize=1200:*",
-        preview: false
+        url: "https://www.bhg.com/thmb/WJktvf63Wc9BKKDycxnA4utyJ1g=/1983x0/filters:no_upscale():strip_icc()/Knitting-101-c4dc7f4edd724662bf422c05f555f04a.jpg",
+        preview: true
+      },
+      {
+        groupId: 4,
+        url: "https://images.unsplash.com/photo-1607462109225-6b64ae2dd3cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHBob3RvZ3JhcGh5fGVufDB8fDB8fHww&w=1000&q=80",
+        preview: true
       },
       {
         groupId: 1,
-        url: "https://cdn.pixabay.com/photo/2014/11/30/14/11/cat-551554_640.jpg",
+        url: "https://blog.padi.com/wp-content/uploads/2013/03/padi-enriched-air-nitrox-diver-underwater-scaled.jpg",
         preview: false
       },
       {
         groupId: 2,
-        url: "https://t4.ftcdn.net/jpg/00/97/58/97/360_F_97589769_t45CqXyzjz0KXwoBZT9PRaWGHRk5hQqQ.jpg",
+        url: "https://seeklogo.com/images/A/apex-logo-C3478A4601-seeklogo.com.png",
         preview: false
       },
 
@@ -48,7 +53,7 @@ module.exports = {
     options.tableName = 'GroupImages';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      id: { [Op.in]: [1, 2, 3, 4, 5] }
+      id: { [Op.in]: [1, 2, 3, 4, 5,6] }
     }, {});
   }
 };

@@ -13,24 +13,29 @@ module.exports = {
     return queryInterface.bulkInsert(options, [
 
       {
-        "url": "https://i.natgeofe.com/n/4f5aaece-3300-41a4-b2a8-ed2708a0a27c/domestic-dog_thumb_16x9.jpg?w=1200",
+        "url": "https://cdn.britannica.com/17/83817-050-67C814CD/Mount-Everest.jpg",
         "eventId": 1,
-        "preview": false
+        "preview": true
       },
       {
-        "url": "https://www.petfinder.com/sites/default/files/images/content/shelter-dog-cropped-1.jpeg",
+        "url": "https://assets.xboxservices.com/assets/20/86/208687a2-75e8-4b8e-8b13-2845ecc4ed95.jpg?n=Apex-Legends_GLP-Page-Hero-1084_Revelry_1920x1080_02.jpg",
         "eventId": 2,
         "preview": true
       },
       {
-        "url": "https://www.cdc.gov/healthypets/images/pets/cute-dog-headshot.jpg?_=42445",
+        "url": "https://www.interweave.com/wp-content/uploads/Repeats_Header.jpg.optimal.jpg",
         "eventId": 3,
         "preview": false
       },
       {
-        "url": "https://www.cdc.gov/healthypets/images/pets/cute-dog-headshot.jpg?_=42445",
-        "eventId":5,
+        "url": "https://www.interweave.com/wp-content/uploads/Repeats_Header.jpg.optimal.jpg",
+        "eventId": 4,
         "preview": false
+      },
+      {
+        "url": "https://m.media-amazon.com/images/I/61BKYlNqH6L._AC_UF894,1000_QL80_.jpg",
+        "eventId":5,
+        "preview": true
       },
 
     ], {});
@@ -40,7 +45,7 @@ module.exports = {
     options.tableName = 'EventImages';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      id: { [Op.in]: [1, 2, 3, 4] }
+      id: { [Op.in]: [1, 2, 3, 4,5] }
     }, {});
   }
 };
