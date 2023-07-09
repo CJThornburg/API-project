@@ -36,15 +36,8 @@ const validateEvent = [
         .isInt()
         .withMessage("Capacity must be an integer"),
     check('price')
-        .exists({ checkFalsy: true })
-        .isDecimal()
-        .withMessage('Price must be decimal')
-        .custom(async (price, { req }) => {
+        .exists({ checkFalsy: true }),
 
-            price = price.toString().split('.');
-            if (price[1].length > 2 || Number(price[0]) < 0)
-                throw new Error('Please provide a valid price')
-        }),
     check('description')
         .exists({ checkFalsy: true })
         .withMessage("Description is required"),
@@ -556,7 +549,7 @@ router.delete("/:eventId", requireAuth, grabCurrentUser, async (req, res, next) 
     }
 
     let oI = event.toJSON().Group.organizerId
-   
+
     if (event.toJSON().Group.Memberships[0] || oI === id || host === id) {
         delete event.dataValues.Group
         await event.destroy()

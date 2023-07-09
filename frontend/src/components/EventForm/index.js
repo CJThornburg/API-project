@@ -43,32 +43,7 @@ function EventForm() {
     const handleSubmit = async (e) => {
         e.preventDefault()
         setSub(true)
-        if(price === 0) {
-            setPrice("00.00")
-        }
 
-        let priceFormatted = price.toString().split('.');
-        console.log(priceFormatted)
-
-        if(priceFormatted.length === 1) {
-          let priceNo = priceFormatted[0]
-         priceNo = priceNo + ".00"
-         console.log(priceNo)
-        setPrice(priceNo)
-        }
-        if(priceFormatted.length === 2 && priceFormatted[1].length === 1) {
-            console.log("hi")
-            let priceNo2 = priceFormatted[1]
-            priceNo2 = priceNo2 + "0"
-            priceFormatted[1] = priceNo2
-            setPrice(priceFormatted.join("."))
-            console.log(price)
-        }
-
-        // if (price[1].length > 2 || Number(price[0]) < 0){
-
-
-        console.log(price)
         if (Object.keys(vaErrors).length) { return }
 
         let imgCheck = await checkImage(img)
@@ -126,15 +101,12 @@ function EventForm() {
         if (type === "") err["Type"] = "Event Type is required"
         if (privacy === "") err["Privacy"] = "Visibility is required"
         if (price === "") err["Price"] = "Price is required"
+        console.log(typeof parseInt(price))
+        if (parseFloat(price) === NaN)  {
+            err["Price"] ="Please provide $$.¢¢ value"
+            console.log("hi")
+        }
 
-
-        //  if(price) {
-        //         let priceCheck = price.toString().split('.');
-
-        //         if (priceCheck[1]?.length > 2 || Number(price[0]) < 0) err["Price"] = "Please provide price in standard money value format "
-
-        //  }
-        // if (!Number.isInteger(price)) err["Price"] ="Please use numeric values"
 
 
 
@@ -146,7 +118,7 @@ function EventForm() {
         if (img === "") err["Img"] = "img url is required"
         if (about.length < 50) err['About'] = "Description needs to be at least 50 characters"
         setVaErrors(err)
-
+        console.log(err)
     }, [about, name, startTime, endTime, price, privacy, type, img])
 
 
