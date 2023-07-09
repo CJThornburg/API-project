@@ -84,12 +84,12 @@ function EventsList() {
 
                     {upEvents.map((event) => (
 
-                        <EventCard key={event.id} event={event}></EventCard>
+                        <EventCard key={event.id} event={event} from="Events"></EventCard>
                     ))}
 
                     {pastEvents.map((event) => (
 
-                        <EventCard key={event.id} event={event}></EventCard>
+                        <EventCard key={event.id} event={event} from="Events"></EventCard>
                     ))}
                 </div>
             </div>

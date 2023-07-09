@@ -8,8 +8,8 @@ import './EventCard.css'
 
 
 
-function EventCard({ event }) {
-    
+function EventCard({ event, from }) {
+
 
 
 
@@ -18,7 +18,7 @@ function EventCard({ event }) {
     return (
         <>
             <Link className="Ec-link GL-link" to={`/events/${event.id}`}>
-                <div className="Ec-card">
+                <div className={from === "Events"? "Ec-card-events": ""}>
 
                 <div className="Ec-upper-half Gl-group">
 

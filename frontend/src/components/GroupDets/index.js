@@ -156,59 +156,73 @@ function GroupDets() {
                                 </p>
 
                                 <div className="Gd-events-privacy Gd-dets-item">
-                                    <p>{group.events[0] ? `# ${group.events.length} events` : `#0 events`}   </p>
-                                    <p className="dot">·</p>
-                                    <p>{group?.private ? "Private" : "Public"}</p>
+                                    <p>{group.events[0] ? `# ${group.events.length} events ` : `#0 events `}
+                                        ·
+                                        {group?.private ? " Private" : " Public"}</p>
                                 </div>
                                 <p className="Gd-dets-item">
                                     Organized by {group.Organizer?.firstName} {group.Organizer?.lastName}
                                 </p>
                             </div>
+                            {render && <button onClick={() => { alert("coming soon") }} className="Gd-join-btn">Join this group</button>}
+                            {ownerCheck &&
+                                <div className="Gd-buttons-div">
+                                    <Link to={`/groups/${id}/events/new`}><button className="Gd-action-btn">Create event</button></Link>
+                                    <Link to={`/groups/${id}/edit`}> <button className="Gd-action-btn margin-right" >update</button></Link>
+
+                                    <OpenModalButton buttonText='Delete' from="GD" modalComponent={<DeleteGroupModal id={id} />} />
+                                </div>
+                            }
                         </div>
-                        {render && <button onClick={() => { alert("coming soon") }} className="Gd-join-btn">Join this group</button>}
-                        {ownerCheck &&
-                            <>
-                                <Link to={`/groups/${id}/events/new`}><button className="Gd-action-btn">Create event</button></Link>
-                                <Link to={`/groups/${id}/edit`}> <button className="Gd-action-btn" >update</button></Link>
-                                <OpenModalButton buttonText='Delete' modalComponent={<DeleteGroupModal id={id} />} />
-                            </>
-                        }
+
 
                     </div>
                 </div>
             </div>
 
             <div className="Gd-grey">
-            <div className="column-holder">
-                <div className="column">
-                <div className="Gd-details-Organizer-div">
-                    <h3 className="Gd-org2">Organizer</h3>
-                    <p className="Gd-mini-dets Gd-org-name">
-                        {group.Organizer?.firstName} {group.Organizer?.lastName}
-                    </p>
-                </div>
-                <div className="Gd-details-about-div">
-                    <h3 className="Gd-what">What we're about</h3>
-                    <p className="Gd-about">{group?.about}</p>
-                </div>
+                <div className="column-holder">
+                    <div className="column">
+                        <div className="Gd-details-Organizer-div">
+                            <h3 className="Gd-org2">Organizer</h3>
+                            <p className="Gd-mini-dets Gd-org-name">
+                                {group.Organizer?.firstName} {group.Organizer?.lastName}
+                            </p>
+                        </div>
+                        <div className="Gd-details-about-div overflow">
+                            <h3 className="Gd-what">What we're about</h3>
+                            <p className="Gd-about">{group?.about}</p>
+                        </div>
 
 
-                <div className="Gd-details-Events-div">
-                    <div className="Gd-details-Events-inner-div">
+                        {upEvents.length > 0 ? <h2 className="Gd-event-sec-title">Upcoming Events ({upEvents.length})</h2> : <h2 className="Gd-event-sec-title no-events">No upcoming events</h2>}
 
-                    {upEvents.length > 0 && <h2 className="Gd-event-sec-title">Upcoming Events ({upEvents.length})</h2>}
-                    {upEvents.map((event) => (
-                        <EventCard key={event.id} event={event}></EventCard>
-                    ))}
-                    {pastEvents.length > 0 && <h2 className="Gd-event-sec-title">Past Events ({pastEvents.length})</h2>}
-                    {pastEvents.map((event) => (
-                        <EventCard key={event.id} event={event}></EventCard>
-                    ))}
+                        {upEvents.map((event) => (
+                            <div className="Gd-details-Events-div">
+                                <div className="Gd-details-Events-inner-div">
+
+
+                                    <EventCard key={event.id} event={event} from="Group"></EventCard>
+                                </div>
+
+                            </div>
+                        ))}
+
+                        {pastEvents.length > 0 ? <h2 className="Gd-event-sec-title">Past Events ({pastEvents.length})</h2> :
+                            <h2 className="Gd-event-sec-title no-events">No past events</h2>
+                        }
+
+                        {pastEvents.map((event) => (
+                            <div className="Gd-details-Events-div">
+                                <div className="Gd-details-Events-inner-div">
+                                    <EventCard key={event.id} event={event} from="Group"></EventCard>
+                                </div>
+                            </div>
+                        ))}
+
+                        {group.events.length === 0 && <div className="no-event-filler"></div>}
                     </div>
-
                 </div>
-            </div>
-            </div>
             </div>
 
         </>

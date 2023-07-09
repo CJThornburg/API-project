@@ -18,6 +18,7 @@
 
 .Gd-header-div {
     display: flex;
+    margin-bottom: 20px;
 
 }
 
@@ -44,8 +45,29 @@
     padding-bottom: 8px;
 }
 
+
+
+.Gd-buttons-div{
+    margin-top: 30px;
+}
+
+.Gd-action-btn {
+    /* width: 87%; */
+    margin: 1px;
+    height: 35px;
+    font-size: 1.5vh;
+    background-color: #f64060;
+    box-shadow: 2px 5px black;
+    border: 1px solid black;
+    color: white;
+}
+
+.margin-right {
+    margin-right: 5px;
+}
 .Gd-grey {
     background-color: rgba(190, 190, 190, 0.397);
+    padding-bottom: 20px;
 }
 
 
@@ -78,8 +100,20 @@
 .Gd-details-Events-div {
     background-color: white;
     border-radius: 25px;
+    margin-top: 15px ;
+    width: 700px;
 }
 
 .Gd-details-Events-inner-div{
-    
+    padding: 10px;
+    width: 650px;
+}
+
+.no-events {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.no-event-filler{
+height: 100px;
 }
