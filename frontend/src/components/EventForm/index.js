@@ -22,6 +22,7 @@ function EventForm() {
     const dispatch = useDispatch()
     const [sub, setSub] = useState(false)
     const [group, setGroup] = useState({})
+    const [backErrors, setBackErrors] = useState({})
 
 
     // console.log(create)
@@ -43,6 +44,7 @@ function EventForm() {
     const handleSubmit = async (e) => {
         e.preventDefault()
         setSub(true)
+        setBackErrors({})
 
         if (Object.keys(vaErrors).length) { return }
 
@@ -76,11 +78,36 @@ function EventForm() {
         const res = await dispatch(eventsActions.thunkCreateEvent(newEvent))
 
 
-        if (res.id) {
-            his.push(`/events/${res.id}`)
+
+        // .catch(async (res) => {
+        //     const data = await res.json();
+        //     console.log(data)
+        //     if (data && data.errors) {
+        //       setBackErrors(data.errors);
+        //       console.log(backErrors)
+        //       return
+        //     }
+
+
+        if (res.errors) {
+            setBackErrors(res.errors)
+            console.log("back errrors after response", backErrors)
+
         } else {
-            setVaErrors(res)
+            his.push(`/events/${res.id}`)
         }
+
+
+
+
+        // });
+
+
+        // if (res.id) {
+        //     his.push(`/events/${res.id}`)
+        // } else {
+        //     setVaErrors(res)
+        // }if (Object.keys(vaErrors).length)
 
 
 
@@ -101,11 +128,11 @@ function EventForm() {
         if (type === "") err["Type"] = "Event Type is required"
         if (privacy === "") err["Privacy"] = "Visibility is required"
         if (price === "") err["Price"] = "Price is required"
-        console.log(typeof parseInt(price))
-        if (parseFloat(price) === NaN)  {
-            err["Price"] ="Please provide $$.¢¢ value"
-            console.log("hi")
-        }
+
+        // if (parseFloat(price) === NaN)  {
+        //     err["Price"] ="Please provide $$.¢¢ value"
+
+        // }
 
 
 
@@ -118,7 +145,7 @@ function EventForm() {
         if (img === "") err["Img"] = "img url is required"
         if (about.length < 50) err['About'] = "Description needs to be at least 50 characters"
         setVaErrors(err)
-        console.log(err)
+
     }, [about, name, startTime, endTime, price, privacy, type, img])
 
 
@@ -198,6 +225,7 @@ function EventForm() {
                                 value={price}
                             ></input>
                             {vaErrors.Price && sub && <p className='error-text'>*{vaErrors.Price}</p>}
+                            {backErrors.price && sub && <p className='error-text'>*please provide a valid price</p>}
                         </div>
 
 

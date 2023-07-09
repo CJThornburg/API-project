@@ -1,3 +1,4 @@
+
 import { csrfFetch } from "./csrf";
 
 
@@ -18,7 +19,7 @@ export const thunkDeleteEvent = (id) => async (dispatch) => {
         method: "DELETE"
     });
 
-    deleteEventInfo= deleteEventInfo.json()
+    deleteEventInfo = deleteEventInfo.json()
     dispatch(deleteEvent(id));
     return deleteEventInfo;
 
@@ -46,8 +47,8 @@ export const thunkGetEvents = () => async (dispatch) => {
     const data = await response.json()
 
     let events = data.Events
-    for(let i = 0; i < events.length; i ++  ) {
-       
+    for (let i = 0; i < events.length; i++) {
+
         let eventRes = await csrfFetch(`/api/events/${events[i].id}`);
         eventRes = await eventRes.json()
 
@@ -60,32 +61,67 @@ export const thunkGetEvents = () => async (dispatch) => {
 
 
 export const thunkCreateEvent = (formData) => async (dispatch) => {
+
+
+    try {
     const { name, about, type, price, startTime, endTime, privacy, img, id } = formData;
 
-
+console.log("id for thunk", id)
     let capacity = 100;
 
-    let newEvent = await csrfFetch(`/api/groups/${id}/events`, {
 
-        method: "POST",
-        body: JSON.stringify({
-            name, about, type, capacity, private: formData.private, price, startDate: startTime, endDate: endTime, description: about, capacity: 100, venueId: 1
-        }),
-    });
-    newEvent = await newEvent.json()
+        let newEvent = await csrfFetch(`/api/groups/${id}/events`, {
 
-    let imgRes = await csrfFetch(`/api/events/${newEvent.id}/images`, {
-        method: "POST",
-        body: JSON.stringify({
-            preview: true, url: img
-        }),
-    })
+            method: "POST",
+            body: JSON.stringify({
+                name, about, type, capacity, private: formData.private, price, startDate: startTime, endDate: endTime, description: about, capacity: 100, venueId: 1
+            }),
+        });
 
-    imgRes = imgRes.json()
 
-    newEvent.EventImages = [imgRes]
-    dispatch(createEvent(newEvent));
-    return newEvent
+
+        if (newEvent.ok) {
+            let data = await newEvent.json()
+
+
+
+            console.log("event data",data)
+
+            let imgRes = await csrfFetch(`/api/events/${data.id}/images`, {
+                method: "POST",
+                body: JSON.stringify({
+                    preview: true, url: img
+                }),
+            })
+
+            imgRes = imgRes.json()
+
+            data.EventImages = [imgRes]
+
+
+            dispatch(createEvent(data));
+
+            return data
+
+        }
+
+
+    } catch (error) {
+
+
+        let err = await error.json()
+        console.log( "error from create thunk", err)
+        return err
+
+    }
+
+
+
+
+
+
+
+
 }
 
 /*
@@ -200,7 +236,7 @@ const eventsReducer = (state = initialState, action) => {
             return createState
 
 
-            case DELETE_EVENT:
+        case DELETE_EVENT:
             let deleteState = Object.assign({}, state)
 
             let deleteId = action.id

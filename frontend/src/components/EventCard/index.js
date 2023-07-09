@@ -31,7 +31,7 @@ function EventCard({ event, from }) {
                         <h4 className="Ec-event-title">
                             {event.name.toUpperCase()}
                         </h4>
-                        <p >{event.Venue.city} , {event.Venue.state} </p>
+                        <p >{event.Venue?.city} , {event.Venue?.state} </p>
                     </div>
                 </div>
                 <div className="overflow">
