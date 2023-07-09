@@ -43,7 +43,7 @@ module.exports = {
       },
       {
         organizerId: 4,
-        name: "photogarphy fanclub",
+        name: "photography fanclub",
         about: "group that love photos",
         type: "Hybrid",
         private: false,
