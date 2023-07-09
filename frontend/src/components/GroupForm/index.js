@@ -43,7 +43,7 @@ function GroupForm({ version }) {
 
             if (!imgCheck) {
 
-                setVaErrors({ Img: "url needs to be an image" })
+                setVaErrors({ Img: "url needs to be an accepted image format" })
                 return
             }
         }
@@ -97,13 +97,18 @@ function GroupForm({ version }) {
 
     useEffect(() => {
         const err = {}
+
+
         if (about.length < 50) err["About"] = "Description needs 50 or more characters"
         if (state === "") err["State"] = "State is required"
+        if (city === "") err["City"] = "City is required"
 
         if (state.length !== 2) err["State2"] = "State must be state abbreviation"
-        if (type === "In person" && state === "") err["State3"] = "If group type is In person, State is required"
 
-        if (type === "In person" && city === "") err["City"] = "If group type is In person, City is required"
+        if (type === "") err["Type"] = "Type is required"
+        if (privacy === "") err["Privacy"] = "Privacy is required"
+
+
         if (name === "") err['Name'] = "Name is required"
 
         if (version === "create") {
@@ -178,8 +183,7 @@ function GroupForm({ version }) {
                                 value={city}
                                 className="Gc-input Gc-location"
                             />
-                            {vaErrors.City && sub && `* ${vaErrors.City}`}
-                            {vaErrors.CityCheck && sub && `* ${vaErrors.CityCheck}`}
+
                             <label htmlFor="state"></label>
                             {/* if time make this a select */}
                             <input
@@ -192,9 +196,11 @@ function GroupForm({ version }) {
                                 value={state}
                                 className="Gc-input Gc-location-state"
                             />
-                            {vaErrors.State && sub && `* ${vaErrors.State}`}
-                            {vaErrors.State2 && sub && `* ${vaErrors.State2}`}
-                            {vaErrors.State3 && sub && `* ${vaErrors.State3}`}
+                             {vaErrors.City && sub &&  <p className='error-text'>*{vaErrors.City}</p> }
+                            {vaErrors.CityCheck && sub && <p className='error-text'>*{vaErrors.CityCheck}</p>}
+                            {vaErrors.State && sub && <p className='error-text'>*{vaErrors.State}</p>}
+                            {vaErrors.State2 && sub && <p className='error-text'>*{vaErrors.State2}</p>}
+                            {vaErrors.State3 && sub && <p className='error-text'>*{vaErrors.State3}</p>}
                         </div>
                         <div className="Gc-div">
                             <h5 className="Gc-div-title">What will your group's name be?</h5>
@@ -215,7 +221,7 @@ function GroupForm({ version }) {
                                 value={name}
                                 className="Gc-input"
                             />
-                            {vaErrors.Name && sub && `* ${vaErrors.Name}`}
+                            {vaErrors.Name && sub && <p className='error-text'>*{vaErrors.Name}</p>}
                         </div>
                         <div className="Gc-div">
                             <h5 className="Gc-div-title">Describe the purpose of your group.</h5>
@@ -234,7 +240,7 @@ function GroupForm({ version }) {
                                 value={about}
                                 className="Gc-input Gc-textarea"
                             />
-                            {vaErrors.About && sub && `* ${vaErrors.About}`}
+                            {vaErrors.About && sub && <p className='error-text'>*{vaErrors.About}</p>}
                         </div>
                         <div className="Gc-div">
                             <h5 className="Gc-div-title">Final steps...</h5>
@@ -255,7 +261,7 @@ function GroupForm({ version }) {
                                     In person
                                 </option>
                             </select>
-
+                            {vaErrors.Type && sub && <p className='error-text'>*{vaErrors.Type}</p>}
                             <p className="Gc-text-final">
                                 Is this group private or public
                             </p>
@@ -273,6 +279,7 @@ function GroupForm({ version }) {
                                     private
                                 </option>
                             </select>
+                            {vaErrors.Privacy && sub && <p className='error-text'>*{vaErrors.Privacy}</p>}
                             {create && <>
                                 <p className="Gc-text-final">
                                     Please add an image url for your group below
@@ -288,7 +295,7 @@ function GroupForm({ version }) {
                                     value={img}
                                     className="Gc-input"
                                 />
-                                {vaErrors.Img && sub && `* ${vaErrors.Img}`}
+                                {vaErrors.Img && sub && <p className='error-text'>*{vaErrors.Img}</p>}
 
 
                             </>}
@@ -296,7 +303,7 @@ function GroupForm({ version }) {
 
                         </div>
                         <div className='Gc-footer Gc-div'>
-                            {create && <button className='red-but' type='submit'
+                            {create && <button className={sub && (vaErrors["Name"] || vaErrors["About"] || vaErrors["State"] || vaErrors["State2"] || vaErrors["State3"] || vaErrors["City"] || vaErrors["Img"]) ? "dis-but" : "red-but cursor"} type='submit'
                                 disabled={sub && (vaErrors["Name"] || vaErrors["About"] || vaErrors["State"] || vaErrors["State2"] || vaErrors["State3"] || vaErrors["City"] || vaErrors["Img"]) ? true : false}
                             >Create group</button>}
                             {edit && <button className='red-but' type='submit'

@@ -43,14 +43,39 @@ function EventForm() {
     const handleSubmit = async (e) => {
         e.preventDefault()
         setSub(true)
+        if(price === 0) {
+            setPrice("00.00")
+        }
 
+        let priceFormatted = price.toString().split('.');
+        console.log(priceFormatted)
+
+        if(priceFormatted.length === 1) {
+          let priceNo = priceFormatted[0]
+         priceNo = priceNo + ".00"
+         console.log(priceNo)
+        setPrice(priceNo)
+        }
+        if(priceFormatted.length === 2 && priceFormatted[1].length === 1) {
+            console.log("hi")
+            let priceNo2 = priceFormatted[1]
+            priceNo2 = priceNo2 + "0"
+            priceFormatted[1] = priceNo2
+            setPrice(priceFormatted.join("."))
+            console.log(price)
+        }
+
+        // if (price[1].length > 2 || Number(price[0]) < 0){
+
+
+        console.log(price)
         if (Object.keys(vaErrors).length) { return }
 
         let imgCheck = await checkImage(img)
 
         if (!imgCheck) {
 
-            setVaErrors({ Img: "url needs to be an image" })
+            setVaErrors({ Img: "url needs to be an accepted image format" })
             return
         }
 
@@ -101,7 +126,18 @@ function EventForm() {
         if (type === "") err["Type"] = "Event Type is required"
         if (privacy === "") err["Privacy"] = "Visibility is required"
         if (price === "") err["Price"] = "Price is required"
-    
+
+
+        //  if(price) {
+        //         let priceCheck = price.toString().split('.');
+
+        //         if (priceCheck[1]?.length > 2 || Number(price[0]) < 0) err["Price"] = "Please provide price in standard money value format "
+
+        //  }
+        // if (!Number.isInteger(price)) err["Price"] ="Please use numeric values"
+
+
+
         if (new Date(endTime).getTime() < new Date(startTime).getTime()) err["EndDate"] = "End date must be after start date"
 
 
@@ -122,97 +158,106 @@ function EventForm() {
 
     return (
         <>
-            <form onSubmit={handleSubmit}>
+            <div className="column-holder">
+                <div className="column">
 
 
-                <div className="Gc-div">
-                    <h4 className="">Create an event for {group.name}</h4>
+                    <form onSubmit={handleSubmit}>
 
-                    <p>What is the name of the event</p>
-                    <label htmlFor="name"></label>
-                    <input
-                        type="text"
-                        id="name"
-                        onChange={(e) => {
-                            setName(e.target.value)
-                        }}
-                        placeholder="Event Name"
-                        value={name}
-                    />
-                    {vaErrors.Name && sub && `* ${vaErrors.Name}`}
+
+                        <div className="">
+                            <h4 className='form-title'>Create an event for {group.name}</h4>
+
+                            <p className="Ef-text">What is the name of the event?</p>
+                            <label htmlFor="name"></label>
+                            <input className="Gc-input"
+                                type="text"
+                                id="name"
+                                onChange={(e) => {
+                                    setName(e.target.value)
+                                }}
+                                placeholder="Event Name"
+                                value={name}
+                            />
+                            {vaErrors.Name && sub && <p className='error-text'>*{vaErrors.Name}</p>}
+                        </div>
+                        <div className='Gc-div'>
+                            <p className="Ef-text">Is this an in person or online event?</p>
+                            <label htmlFor="eventType"></label>
+                            <select className="Gc-input"
+                                value={type}
+                                onChange={e => setType(e.target.value)}
+                                id="eventType"
+                            >
+                                <option value='' disabled>{'(Select one)'}</option>
+                                <option>
+                                    Online
+                                </option>
+                                <option>
+                                    In person
+                                </option>
+                            </select>
+                            {vaErrors.Type && sub && `* ${vaErrors.Type}`}
+
+                            <p className="Ef-text">Is this event private or public?</p>
+                            <label htmlFor="eventPrivacy"></label>
+                            <select className="Gc-input"
+                                value={privacy}
+                                onChange={e => setPrivacy(e.target.value)}
+                                id="eventPrivacy"
+                            >
+                                <option value='' disabled>{'(Select one)'}</option>
+                                <option>
+                                    public
+                                </option>
+                                <option>
+                                    private
+                                </option>
+                            </select>
+                            {vaErrors.Privacy && sub && <p className='error-text'>*{vaErrors.Privacy}</p>}
+
+                            <p className="Ef-text">What is the price of the event?</p>
+                            <label for="price"></label>
+                            <input className="Gc-input" type="text" id="price" name="price" onChange={(e) => {
+                                setPrice(e.target.value)
+
+                            }}
+                                placeholder='0'
+                                value={price}
+                            ></input>
+                            {vaErrors.Price && sub && <p className='error-text'>*{vaErrors.Price}</p>}
+                        </div>
+
+
+                        <div className='Gc-div'>
+                            <p className="Ef-text">When does your event start?</p>
+                            <input className="Gc-input" type='datetime-local' onChange={(e) => setStartTime(e.target.value)} value={startTime} />
+                            {vaErrors.StartDate && sub && <p className='error-text'>*{vaErrors.StartDate}</p>}
+                            <p className="Ef-text">When does your event end?</p>
+                            <input className="Gc-input" type='datetime-local' onChange={(e) => setEndTime(e.target.value)} value={endTime} />
+                            {vaErrors.EndDate && sub && <p className='error-text'>*{vaErrors.EndDate}</p>}
+
+                        </div>
+                        <div className='Gc-div'>
+                            <p className="Ef-text">Please add an image url for your event below:</p>
+                            <input className="Gc-input" placeholder='Image URL' value={img} onChange={(e) => setImg(e.target.value)} />
+                            {vaErrors.Img && sub && <p className='error-text'>*{vaErrors.Img}</p>}
+                        </div>
+                        <div>
+                            <p className="Ef-text">Please describe you event:</p>
+                            <textarea className="Gc-input Gc-textarea" placeholder='Please write at least 50 characters' onChange={(e) => setAbout(e.target.value)} value={about} />
+                            {vaErrors.About && sub && <p className='error-text'>*{vaErrors.Name}</p>}
+                        </div>
+                        <button type='submit' className={sub && (vaErrors["Name"] || vaErrors["About"] || vaErrors["StartDate"] || vaErrors["EndDate"] || vaErrors["Img"] || vaErrors["Price"] || vaErrors["Privacy"] || vaErrors["Type"]) ? "dis-but" : "red-but cursor"}
+                            disabled={sub && (vaErrors["Name"] || vaErrors["About"] || vaErrors["StartDate"] || vaErrors["EndDate"] || vaErrors["Img"] || vaErrors["Price"] || vaErrors["Privacy"] || vaErrors["Type"]) ? true : false}
+                        >Create Event</button>
+
+                    </form>
                 </div>
-                <div>
-                    <p>Is this an in person or online event</p>
-                    <label htmlFor="eventType"></label>
-                    <select
-                        value={type}
-                        onChange={e => setType(e.target.value)}
-                        id="eventType"
-                    >
-                        <option value='' disabled>{'(Select one)'}</option>
-                        <option>
-                            Online
-                        </option>
-                        <option>
-                            In person
-                        </option>
-                    </select>
-                    {vaErrors.Type && sub && `* ${vaErrors.Type}`}
-
-                    <p>Is this event private or public?</p>
-                    <label htmlFor="eventPrivacy"></label>
-                    <select
-                        value={privacy}
-                        onChange={e => setPrivacy(e.target.value)}
-                        id="eventPrivacy"
-                    >
-                        <option value='' disabled>{'(Select one)'}</option>
-                        <option>
-                            public
-                        </option>
-                        <option>
-                            private
-                        </option>
-                    </select>
-                    {vaErrors.Privacy && sub && `* ${vaErrors.Privacy}`}
-
-                    <p>What is the price of the event</p>
-                    <label for="price"></label>
-                    <input type="text" id="price" name="price" onChange={(e) => {
-                        setPrice(e.target.value)
-
-                    }}
-                        placeholder='0'
-                        value={price}
-                    ></input>
-                    {vaErrors.Price && sub && `* ${vaErrors.Price}`}
-                </div>
+            </div>
 
 
-                <div>
-                    <p>When does your event start?</p>
-                    <input type='datetime-local' onChange={(e) => setStartTime(e.target.value)} value={startTime} />
-                    {vaErrors.StartDate && sub && `* ${vaErrors.StartDate}`}
-                    <p>When does your event end?</p>
-                    <input type='datetime-local' onChange={(e) => setEndTime(e.target.value)} value={endTime} />
-                    {vaErrors.EndDate && sub && `* ${vaErrors.EndDate}`}
 
-                </div>
-                <div>
-                    <p>Please add an image url for your event below:</p>
-                    <input placeholder='Image URL' value={img} onChange={(e) => setImg(e.target.value)} />
-                    {vaErrors.Img && sub && `* ${vaErrors.Img}`}
-                </div>
-                <div>
-                    <p>Please describe you event:</p>
-                    <textarea placeholder='Please write at least 50 characters' onChange={(e) => setAbout(e.target.value)} value={about} />
-                    {vaErrors.About && sub && `* ${vaErrors.About}`}
-                </div>
-                <button type='submit'
-                disabled={sub && (vaErrors["Name"] || vaErrors["About"] || vaErrors["StartDate"] || vaErrors["EndDate"] || vaErrors["Img"] || vaErrors["Price"] || vaErrors["Privacy"] || vaErrors["Type"]) ? true : false}
-                >Create Event</button>
-
-            </form>
         </>
 
     );

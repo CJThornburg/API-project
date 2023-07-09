@@ -22,11 +22,11 @@
 
 }
 
-.Gd-header-details{
+.Gd-header-details {
     padding-left: 25px;
 }
 
-.Gd-name{
+.Gd-name {
     font-size: 3vh;
     padding-top: 0;
     margin-top: 0;
@@ -40,12 +40,12 @@
     display: flex;
 }
 
-.Gd-dets-item{
+.Gd-dets-item {
     padding-top: 8px;
     padding-bottom: 8px;
 }
 
-.Gd-buttons-div{
+.Gd-buttons-div {
     margin-top: 30px;
 }
 
@@ -59,6 +59,7 @@
     border: 1px solid black;
     color: white;
 }
+
 .Gd-join-btn {
     margin-top: 30px;
 }
@@ -66,6 +67,7 @@
 .margin-right {
     margin-right: 5px;
 }
+
 .Gd-grey {
     background-color: rgba(190, 190, 190, 0.397);
     padding-bottom: 20px;
@@ -101,11 +103,11 @@
 .Gd-details-Events-div {
     background-color: white;
     border-radius: 25px;
-    margin-top: 15px ;
+    margin-top: 15px;
     width: 700px;
 }
 
-.Gd-details-Events-inner-div{
+.Gd-details-Events-inner-div {
     padding: 10px;
     width: 650px;
 }
@@ -115,6 +117,55 @@
     margin-bottom: 30px;
 }
 
-.no-event-filler{
-height: 100px;
+.no-event-filler {
+    height: 100px;
+}
+
+
+.Gd-delete-pop-div {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+.delete-but-yes {
+    margin-top: 5px;
+    /* height: 35px; */
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 8px;
+    padding-left: 12px;
+    padding-right: 14px;
+
+    background-color: #f64060;
+    box-shadow: 2px 5px black;
+    border: 2px solid black;
+    color: white;
+    margin-bottom: 10px;
+}
+.confirm-delete{
+font-size: 4.7vh;
+}
+
+.delete-but-no {
+    margin-top: 5px;
+    /* height: 35px; */
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 8px;
+    padding-left: 12px;
+    padding-right: 14px;
+
+    background-color: grey;
+    box-shadow: 2px 5px black;
+    border: 2px solid black;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.delete-text{
+    font-size: 2.2vh
 }

@@ -4,7 +4,11 @@
     color: teal;
 }
 
-.error-text { color: red}
+.error-text { color: red;
+    margin-top: 2px;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+}
 
 .underline-text {
     text-decoration: underline;

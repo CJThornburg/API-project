@@ -21,6 +21,7 @@ function SignupFormModal() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setSub(true)
     if (Object.keys(frontErr).length > 0) return
     if (password === confirmPassword) {
       setErrors({});
@@ -52,18 +53,20 @@ function SignupFormModal() {
 
   useEffect(() => {
     const err = {}
-    if (username.length < 4) err["user"] = "Username needs to be at least 4 characters"
-    if (password.length < 6) err["pass"] = "password needs to be at least 6 characters"
+
     if (email === "") err["email"] = "email is required"
     if (username === "") err["username"] = "username is required"
-    if (firstName === "") err["firstName"] = "firstName is required"
-    if (lastName === "") err["lastName"] = "lastName is required"
-    if (password === "") err["password"] = "password is required"
+    if (firstName === "") err["firstName"] = "First name is required"
+    if (lastName === "") err["lastName"] = "Last name is required"
+    if (password === "") err["password"] = "Password is required"
     if (confirmPassword === "") err["confirmPassword"] = "confirmPassword is required"
     // if (confirmPassword !== password) err["match"] = "Password and Confirm password do not match"
 
 
-
+ if(sub) {
+  if (username.length < 4) err["user"] = "Username needs to be at least 4 characters"
+  if (password.length < 6) err["pass"] = "Password needs to be at least 6 characters"
+ }
 
 
 
@@ -159,7 +162,7 @@ function SignupFormModal() {
           <p className="error-text">{frontErr.confirmPassword}</p>
         )}
         {errors.confirmPassword && (
-          <p>{errors.confirmPassword}</p>
+          <p className="error-text">{errors.confirmPassword}</p>
         )}
         {errors.email && <p className="error-text">email is already tied to an account </p>}
         {errors.username && <p className="error-text">{errors.username}</p>}

@@ -3,24 +3,30 @@ import { useModal } from '../../context/Modal';
 import { useDispatch } from 'react-redux';
 import * as groupsActions from '../../store/groups'
 
-function DeleteGroupModal({id}) {
+function DeleteGroupModal({ id }) {
     const dispatch = useDispatch();
     const his = useHistory()
     const { closeModal } = useModal();
 
     const handleSubmit = async () => {
-     await dispatch(groupsActions.thunkDeleteGroup(id))
-     await his.push('/groups')
-     await closeModal()
+        await dispatch(groupsActions.thunkDeleteGroup(id))
+        await his.push('/groups')
+        await closeModal()
     };
 
     return (
         <>
             <>
-                <h1>Confirm Delete</h1>
-                <h3>Are you sure you want to remove this group?</h3>
-                <button onClick={handleSubmit}>Yes (Delete group)</button>
-                <button onClick={closeModal}>No (Keep group)</button>
+                <div className='Gd-delete-pop-div'>
+
+                    <h1 className='confirm-delete'>Confirm Delete</h1>
+                    <h3 className='delete-text'>Are you sure you want to remove this group?</h3>
+                    <button  className='delete-but-yes ' onClick={handleSubmit}>Yes (Delete group)</button>
+                    <button  className='delete-but-no' onClick={closeModal}>No (Keep group)</button>
+
+
+
+                </div>
             </>
         </>
     );

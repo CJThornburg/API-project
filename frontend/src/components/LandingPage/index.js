@@ -97,7 +97,7 @@ function LandingPage() {
                         <img className="lP-card-img" src="https://secure.meetupstatic.com/next/images/shared/joinGroup.svg?w=256"></img>
                         {/* to="See all groups" */}
 
-                        <h3 className=" lp-link-title lp-start lP-link" >Start a new group</h3>
+                        <h3 className=" lp-link-title lp-start lP-link teal-text" >Start a new group</h3>
 
                         <div className="lp-link-text">
                             <p>You don’t have to be an expert to gather people together and explore shared interests. </p>

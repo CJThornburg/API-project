@@ -17,10 +17,12 @@ function DeleteEventModal({id}) {
     return (
         <>
             <>
-                <h1>Confirm Delete</h1>
-                <h3>Are you sure you want to remove this group?</h3>
-                <button onClick={handleSubmit}>Yes (Delete event)</button>
-                <button onClick={closeModal}>No (Keep event)</button>
+            <div className='Gd-delete-pop-div'>
+                <h1 className='confirm-delete'>Confirm Delete</h1>
+                <h3 className='delete-text'> Are you sure you want to remove this group?</h3>
+                <button  className='delete-but-yes'  onClick={handleSubmit}>Yes (Delete event)</button>
+                <button className='delete-but-no'  onClick={closeModal}>No (Keep event)</button>
+                </div>
             </>
         </>
     );
