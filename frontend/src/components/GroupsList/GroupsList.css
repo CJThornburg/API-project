@@ -1,8 +1,14 @@
 .GL-group {
     display: flex;
-    align-items: center;
-    border-top: 2px solid grey;
+
+    border-top: 2px solid rgba(161, 161, 161, 0.507);
+
+    overflow-wrap: break-word;
+
+    word-break: break-word;
+
 }
+
 
 
 .GL-group:hover {
@@ -10,23 +16,55 @@
 }
 
 .GL-photo {
-    min-width: 400px;
-    height: 250px;
+    min-width: 330px;
+    max-width: 500px;
+    height: 200px;
+    max-height: 400;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
 }
+
+.GL-name {
+    font-size: 2.8vh;
+    margin-bottom: 8px;
+}
+
+
+.Groups-location {
+    font-size: 1.7vh;
+    margin-bottom: 15px;
+}
+
 
 
 .GL-dets {
     margin-left: 3%;
+    display: inline;
+    overflow-wrap: break-word;
 }
+
+.groups-desc {
+    font-size: 1.7vh;
+    margin-bottom: 20px;
+}
+
 
 .GL-mini-dets {
     display: flex;
     gap: 10px 3%;
     align-items: center;
+    overflow-wrap: break-word;
 }
 
 
 .GL-link {
     text-decoration: none;
-    color: black
+    color: black;
+
+}
+
+.column-holder {
+    display: flex;
+    justify-content: center;
 }

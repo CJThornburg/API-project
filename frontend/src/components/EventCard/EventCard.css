@@ -1,13 +1,61 @@
-.Ec-outer-Card {
+/* .Ec-outer-Card {
     background-color: rgb(141, 140, 140);
+    background-color: red;
+} */
+
+.Ec-card {
+    border-top: 2px solid rgba(161, 161, 161, 0.507);
+
 }
 
-.Ec-photo {
+.Ec-upper-half {
+
+    overflow-wrap: break-word;
+
+    word-break: break-word;
+
+}
+
+/* .Ec-photo {
     min-width: 400px;
     height: 250px;
-}
+} */
 
 .Ec-link {
     color: black;
     text-decoration: none;
+
+}
+
+.Ec-photo {
+    min-width: 200px;
+    max-width: 150px;
+    height: 200px;
+    max-height: 400;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+}
+
+.Ec-upper-half {
+    display: flex;
+
+}
+
+.Ec-upper-right {
+    padding-top: 15px;
+}
+
+.Ec-dateInfo {
+    font-size: 1.8vh;
+}
+
+.Ec-event-title {
+    font-size: 2.2vh;
+}
+
+.Ec-desc {
+    font-size: 1.8vh;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }

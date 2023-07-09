@@ -21,7 +21,7 @@ function SignupFormModal() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (Object.keys(frontErr).length >0) return
+    if (Object.keys(frontErr).length > 0) return
     if (password === confirmPassword) {
       setErrors({});
       return dispatch(
@@ -36,16 +36,19 @@ function SignupFormModal() {
         .then(closeModal)
         .catch(async (res) => {
           const data = await res.json();
+          console.log(data)
           if (data && data.errors) {
             setErrors(data.errors);
+            console.log(errors)
           }
         });
     }
+
     return setErrors({
       confirmPassword: "Confirm Password field must be the same as the Password field"
     });
   };
-
+  console.log(errors)
 
   useEffect(() => {
     const err = {}
@@ -65,12 +68,13 @@ function SignupFormModal() {
 
 
     setFrontErr(err)
-    if (Object.keys(frontErr).length === 0) {
+    // console.log(frontErr, err)
+    if (Object.keys(err).length === 0) {
       setDis(false)
     } else {
       setDis(true)
     }
-  }
+  }, [username, password, email, firstName, lastName, password, confirmPassword]
   )
 
 
@@ -78,6 +82,7 @@ function SignupFormModal() {
   return (
     <> <div className="login-div">
       <h1 className="login-title">Sign Up</h1>
+
       <form className="login-form" id="signup" onSubmit={handleSubmit}>
         <label className="login-label">
 
@@ -90,7 +95,7 @@ function SignupFormModal() {
             placeholder="Email"
           />
         </label>
-        {frontErr.email &&  sub&&  <p>{frontErr.email}</p>}
+        {frontErr.email && sub && <p className="error-text">{frontErr.email}</p>}
         <label className="login-label">
 
           <input
@@ -102,7 +107,7 @@ function SignupFormModal() {
             placeholder=" Username"
           />
         </label>
-        {frontErr.username &&  sub&& <p>{frontErr.username}</p>}
+        {frontErr.username && sub && <p className="error-text">{frontErr.username}</p>}
         <label className="login-label">
 
           <input
@@ -114,7 +119,7 @@ function SignupFormModal() {
             placeholder="  First Name"
           />
         </label>
-        {frontErr.firstName &&  sub&& <p>{frontErr.firstName}</p>}
+        {frontErr.firstName && sub && <p className="error-text">{frontErr.firstName}</p>}
         <label className="login-label">
 
           <input
@@ -126,7 +131,7 @@ function SignupFormModal() {
             placeholder=" Last Name"
           />
         </label>
-        {frontErr.lastName &&  sub&& <p>{frontErr.lastName}</p>}
+        {frontErr.lastName && sub && <p className="error-text">{frontErr.lastName}</p>}
         <label className="login-label">
 
           <input
@@ -138,7 +143,7 @@ function SignupFormModal() {
             placeholder=" Password"
           />
         </label>
-        {frontErr.password &&  sub&& <p>{frontErr.password}</p>}
+        {frontErr.password && sub && <p className="error-text">{frontErr.password}</p>}
         <label className="login-label">
 
           <input
@@ -150,9 +155,17 @@ function SignupFormModal() {
             placeholder=" Confirm Password"
           />
         </label>
-        {frontErr.confirmPassword && sub&&  (
-          <p>{frontErr.confirmPassword}</p>
+        {frontErr.confirmPassword && sub && (
+          <p className="error-text">{frontErr.confirmPassword}</p>
         )}
+        {errors.confirmPassword && (
+          <p>{errors.confirmPassword}</p>
+        )}
+        {errors.email && <p className="error-text">email is already tied to an account </p>}
+        {errors.username && <p className="error-text">{errors.username}</p>}
+        {errors.password && <p className="error-text">{errors.password}</p>}
+        {errors.firstName && <p className="error-text">{errors.firstName}</p>}
+        {errors.lastName && <p className="error-text">{errors.lastName}</p>}
         <button className={dis ? "dis-login" : "login-but cursor"} type="submit" disabled={dis}>Sign Up</button>
       </form>
     </div>    </>

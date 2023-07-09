@@ -75,21 +75,25 @@ function EventsList() {
 
     return (
         <>
-            <Header active="Events"></Header>
-            {/* array map */}
+            <div className="column-holder">
+                <div className="column">
+                    <Header active="Events"></Header>
+                    {/* array map */}
 
 
 
-            {upEvents.map((event) => (
+                    {upEvents.map((event) => (
 
-                <EventCard key={event.id} event={event}></EventCard>
-            ))}
+                        <EventCard key={event.id} event={event}></EventCard>
+                    ))}
 
-            {pastEvents.map((event) => (
+                    {pastEvents.map((event) => (
 
-                <EventCard key={event.id} event={event}></EventCard>
-            ))}
-
+                        <EventCard key={event.id} event={event}></EventCard>
+                    ))}
+                </div>
+            </div>
+                <div className="bottom-padding"></div>
 
         </>
     );

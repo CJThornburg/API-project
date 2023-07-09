@@ -13,14 +13,38 @@
 
 h1.website-title {
     display: inline;
+    font-size: 3rem;
+    font-size: 3.7vw;
+    font-weight: bold;
+
 }
 
 .title-hook {
     display: inline-flex;
     flex-direction: column;
     justify-content: center;
+    padding: 40px 20px 40px 60px;
+
+    height: 250px;
+
 }
 
+
+.hook{
+    font-size: 1.2rem;
+}
+.meetupImg-div {
+    display: flex;
+    justify-content: start;
+  width:  100%
+}
+.meetupImg{
+    padding: 20px;
+    max-width: 80%;
+    height: auto;
+    margin-left: 5px;
+
+}
 /* ======================End of section 1 ======*/
 
 
@@ -31,12 +55,25 @@ h1.website-title {
     display: flex;
     justify-content: center;
     text-align: center;
+    padding: 30px 40px 30px 100px;
+    /* width: 50%; */
+}
+
+.sec2-title{
+    font-size: 3rem;
+    font-size: 2.3vw;
+    font-weight: bold;
+}
+
+.lP-subtitle-sentence{
+    width: 50%;
 }
 
 
-
-
-
+.s2-text {
+    padding-top: 10px;
+    font-size: 2vh;
+}
 
 /* ======================End of section 2 ======*/
 
@@ -74,8 +111,10 @@ h1.website-title {
     display: flex;
     justify-content: center;
     text-align: center;
+
     flex-direction: row;
-    gap: 20px;
+    /* gap: 20px; */
+    padding-top: 10px;
 }
 
 .lP-card-img {
@@ -88,12 +127,17 @@ h1.website-title {
 
 .lP-card {
     display: inline;
+    width: 30%;
 
+}
+.lp-start{
+    color:grey
 }
 
 
+
 .lP-card:hover {
-    cursor: pointer;
+
 
     .lP-link {
         text-decoration: underline;
@@ -101,14 +145,25 @@ h1.website-title {
     }
 }
 
+.teal-text {
+    color:teal
+}
 .lP-link {
     text-decoration: none;
-    color: black
+
 }
 
 
+.lp-link-text{
+    padding: 0 15px;
+    font-size: 1.8vh;
+}
 
-
+.lp-link-title {
+    padding-bottom: 0px;
+    margin-bottom: 8px;
+    font-size: 2.2vh;
+}
 
 
 
@@ -129,6 +184,18 @@ h1.website-title {
 .section4 {
     display: flex;
     justify-content: center;
+    padding-top: 40px;
+    padding-bottom: 70px;
+}
+
+
+.join-Down {
+    background-color: teal;
+    color:white;
+    border: 2px solid black;
+    box-shadow: 2px 5px black;
+    font-size: 2vh;
+    padding: 8px;
 }
 
 

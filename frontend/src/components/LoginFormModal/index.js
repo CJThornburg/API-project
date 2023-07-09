@@ -16,7 +16,7 @@ function LoginFormModal() {
 
   const handleDemo = (e) => {
     e.preventDefault();
-    if(frontErr) return
+    // if(Object.kefrontErr) return
     return dispatch(sessionActions.thunkLogin({ credential:"user1@user.io", password: "password2" }))
     .then(closeModal)
     .catch(async (res) => {

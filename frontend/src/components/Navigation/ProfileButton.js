@@ -6,6 +6,7 @@ import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import { useHistory } from "react-router-dom";
+import {Link} from "react-router-dom"
 
 function ProfileButton({ user }) {
     const dispatch = useDispatch();
@@ -46,8 +47,8 @@ function ProfileButton({ user }) {
         <>
 
             <i className="fas fa-user-circle login-icon profile-but cursor" onClick={openMenu} />
-            {showMenu && <i className="fas fa-solid fa-angle-up"></i>}
-            {!showMenu && <i className="fas fa-solid fa-angle-down"></i>}
+            {showMenu && <i className="fas fa-solid fa-angle-up cursor" onClick={openMenu}></i>}
+            {!showMenu && <i className="fas fa-solid fa-angle-down cursor " onClick={openMenu}></i>}
 
             <ul className={ulClassName} ref={ulRef}>
                 {user ? (
@@ -55,6 +56,10 @@ function ProfileButton({ user }) {
                         <div className="pop-up-div">
                             <li className="pop-item">Hello, {user.firstName}</li>
                             <li className="pop-item">{user.email}</li>
+                            <hr className="popHr"></hr>
+                            <li className="pop-item" ><Link to="/groups">See all groups</Link></li>
+                            <hr className="popHr"></hr>
+                            <li className="pop-item" ><Link to="/events">See all events</Link></li>
                             <hr className="popHr"></hr>
                             <li onClick={logout} className="cursor pop-item pop-bottom">Log Out
 

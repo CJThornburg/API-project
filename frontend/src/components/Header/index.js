@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import './Header.css'
 
 function Header({ active }) {
-   
+
 
 
     return (
         <>
-            <div>
+            <div >
                 <div className="header-links">
                     <h2 className="header-link" >
                         <Link to="/events" className={active === "Events" ? 'header-active' : "header-un-active"}>Events</Link>
@@ -19,7 +19,9 @@ function Header({ active }) {
                     </h2>
                 </div>
                 <div>
+                <p className='header-p'>
                     {active} in OrganizeDown
+                </p>
                 </div>
             </div>
         </>

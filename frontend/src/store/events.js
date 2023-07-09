@@ -11,7 +11,7 @@ import { csrfFetch } from "./csrf";
 
 
 
-// get all groups
+
 export const thunkDeleteEvent = (id) => async (dispatch) => {
 
     let deleteEventInfo = await csrfFetch(`/api/events/${id}`, {
@@ -40,7 +40,20 @@ export const thunkGetEventsByGroup = (id) => async (dispatch) => {
 
 export const thunkGetEvents = () => async (dispatch) => {
     const response = await csrfFetch('/api/events')
+
+
+
     const data = await response.json()
+
+    let events = data.Events
+    for(let i = 0; i < events.length; i ++  ) {
+       
+        let eventRes = await csrfFetch(`/api/events/${events[i].id}`);
+        eventRes = await eventRes.json()
+
+        data.Events[i].description = eventRes.description
+    }
+
     dispatch(getAllEvents(data.Events))
     return data
 }
@@ -195,7 +208,7 @@ const eventsReducer = (state = initialState, action) => {
 
             delete deleteState.allEvents[deleteId]
 
-            
+
 
 
             return deleteState

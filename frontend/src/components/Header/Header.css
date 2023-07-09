@@ -12,6 +12,18 @@
 
 .header-links {
     display: flex;
-    gap: 10px 3%;
+    gap: 0px 2.5%;
     justify-content: flex-start;
+    padding-top: 60px;
+    padding-bottom: 10px;
+}
+.header-link{
+    font-size: 3vh;
+}
+
+
+.header-p{
+    color: rgba(161, 161, 161, 0.507);
+    padding-bottom: 20px;
+    padding-top: 5px;
 }

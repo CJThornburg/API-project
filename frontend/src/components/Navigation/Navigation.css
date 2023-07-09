@@ -2,6 +2,10 @@
     display: none;
 }
 
+.nav-div {
+    border-bottom: 2px solid rgba(170, 170, 170, 0.651);
+    padding-bottom: 15px;
+}
 .logo {
     width: 60px;
     margin-left: 20px;

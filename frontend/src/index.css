@@ -14,3 +14,10 @@
 .cursor:hover {
     cursor: pointer;
 }
+
+.overflow {
+    overflow-wrap: break-word;
+
+    word-break: break-word;
+
+}
