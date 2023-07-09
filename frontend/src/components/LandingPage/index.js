@@ -26,7 +26,7 @@ function LandingPage() {
                     </div>
                     <div className="meetupImg-div">
 
-                        <img className="meetupImg" src={meetupGraphicPlaceHolder} >
+                        <img className="meetupImg" src="https://secure.meetupstatic.com/next/images/shared/online_events.svg?w=640" >
                         </img>
                     </div>
 

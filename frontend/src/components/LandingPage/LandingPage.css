@@ -31,7 +31,7 @@ h1.website-title {
 
 
 .hook{
-    font-size: 1.2rem;
+    font-size: 2vh;
 }
 .meetupImg-div {
     display: flex;
@@ -39,10 +39,11 @@ h1.website-title {
   width:  100%
 }
 .meetupImg{
-    padding: 20px;
-    max-width: 80%;
-    height: auto;
+    /* padding: 20px;
+
+    height: auto; */
     margin-left: 5px;
+    width: 100%;
 
 }
 /* ======================End of section 1 ======*/
