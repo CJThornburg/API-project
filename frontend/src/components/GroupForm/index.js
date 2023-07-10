@@ -39,13 +39,12 @@ function GroupForm({ version }) {
 
 
 
-            let imgCheck = await checkImage(img)
-
-            if (!imgCheck) {
-
-                setVaErrors({ Img: "url needs to be an accepted image format" })
+            if (!(img.includes(".jpg") || img.includes(".png") || img.includes(".webp"))) {
+                setVaErrors({ Img: "url needs to include .jpg, .png or webp" })
                 return
             }
+
+
         }
         let privateVar;
         if (privacy === "private") {
@@ -229,9 +228,9 @@ function GroupForm({ version }) {
                                 People will see this when we promote your group, but you'll be able to add to it later, too.
                             </p>
 
-                                <p className='Gc-purpose Gc-m'>1.What's the purpose of the group?</p>
-                                <p className='Gc-purpose Gc-m'>2.Who should join?</p>
-                                <p className='Gc-purpose Gc-m'>3.What will you do at your events?</p>
+                            <p className='Gc-purpose Gc-m'>1.What's the purpose of the group?</p>
+                            <p className='Gc-purpose Gc-m'>2.Who should join?</p>
+                            <p className='Gc-purpose Gc-m'>3.What will you do at your events?</p>
 
 
 

@@ -48,14 +48,11 @@ function EventForm() {
 
         if (Object.keys(vaErrors).length) { return }
 
-        let imgCheck = await checkImage(img)
 
-        if (!imgCheck) {
-
-            setVaErrors({ Img: "url needs to be an accepted image format" })
+        if ( !(img.includes(".jpg")||img.includes(".png")|| img.includes(".webp"))) {
+            setVaErrors({ Img: "url needs to include .jpg, .png or webp" })
             return
         }
-
 
 
 
