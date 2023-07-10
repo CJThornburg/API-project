@@ -74,7 +74,7 @@ console.log("id for thunk", id)
 
             method: "POST",
             body: JSON.stringify({
-                name, about, type, capacity, private: formData.private, price, startDate: startTime, endDate: endTime, description: about, capacity: 100, venueId: 1
+                name, about, type, capacity, private: formData.private, price, startDate: startTime, endDate: endTime, description: about, capacity: 100, venueId: 3
             }),
         });
 
