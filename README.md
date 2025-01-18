@@ -16,7 +16,6 @@
 <!--!!ADD -->
 <!-- `<insert database schema design here>` -->
 <!--!!END_ADD -->
-
 ## API Documentation
 
 ## USER AUTHENTICATION/AUTHORIZATION
